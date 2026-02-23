@@ -1118,6 +1118,7 @@
             border-radius: 4px 16px 16px 16px;
             padding: 16px;
             color: #ffffff;
+            line-height: 1.6;
             font-size: 14px;
             line-height: 1.6;
             word-wrap: break-word;
@@ -1127,6 +1128,23 @@
             background: rgba(0, 217, 192, 0.08);
             border-color: rgba(0, 217, 192, 0.2);
             border-radius: 16px 4px 16px 16px;
+        }
+
+        .lesson-message-content p {
+            margin: 0 0 10px 0;
+        }
+        .lesson-message-content p:last-child {
+            margin-bottom: 0;
+        }
+        .lesson-message-content ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        .lesson-message-content li {
+            margin-bottom: 4px;
+        }
+        .lesson-message-content strong {
+            color: #00d9c0;
         }
 
         .lesson-message-timestamp {
@@ -4604,6 +4622,14 @@ Exchange Count: ${conversationState.exchangeCount}
    - Always relate back to the learner's actual role and work context.
    - Ask "What would this look like in your workflow?" not "What do you think about this concept?"
    - The goal is changed behaviour at work, not theoretical understanding.
+
+6. RESPONSE FORMAT:
+   - Keep responses SHORT — aim for 3-5 short paragraphs maximum. This is a chat interface, not an essay.
+   - Use blank lines between paragraphs so the text is easy to scan.
+   - If you use a list, keep it to 3-4 items maximum. Use "- " for bullet points.
+   - Bold key terms sparingly with **double asterisks**.
+   - Never write a wall of text. Break ideas into separate short paragraphs.
+   - End with ONE clear question or action for the learner — not multiple questions.
 `;
 
             const fullSystemPrompt = systemPrompt + unitContext;
@@ -4718,6 +4744,40 @@ Exchange Count: ${conversationState.exchangeCount}
             return verbs[phaseType] || 'experienced';
         }
 
+        // Simple markdown to HTML renderer for chat messages
+        function renderMarkdown(text) {
+            if (!text) return '';
+            let html = text;
+            // Escape HTML entities first
+            html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            // Bold: **text** or __text__
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
+            // Italic: *text* or _text_
+            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            html = html.replace(/(?<!\w)_(.+?)_(?!\w)/g, '<em>$1</em>');
+            // Bullet lists: lines starting with - or *
+            html = html.replace(/^[\-\*]\s+(.+)$/gm, '<li>$1</li>');
+            // Wrap consecutive <li> items in <ul>
+            html = html.replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
+            // Numbered lists: lines starting with 1. 2. etc
+            html = html.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
+            html = html.replace(/((?:<li>.*<\/li>\n?)+)/g, function(match) {
+                // Only wrap if not already wrapped
+                if (match.startsWith('<ul>') || match.startsWith('<ol>')) return match;
+                return '<ul>' + match + '</ul>';
+            });
+            // Paragraphs: double newlines
+            html = html.replace(/\n\n+/g, '</p><p>');
+            // Single newlines to <br>
+            html = html.replace(/\n/g, '<br>');
+            // Wrap in paragraph tags
+            html = '<p>' + html + '</p>';
+            // Clean up empty paragraphs
+            html = html.replace(/<p>\s*<\/p>/g, '');
+            return html;
+        }
+
         function addMessageToChat(name, content, colour, phaseType = 'TEACH', progressHTML = '') {
             const chatOutput = document.getElementById('chat-output');
             const bubble = document.createElement('div');
@@ -4729,10 +4789,13 @@ Exchange Count: ${conversationState.exchangeCount}
             const now = new Date();
             const timeString = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
+            // Render markdown for character messages, plain text for learner
+            const renderedContent = isLearner ? content.replace(/\n/g, '<br>') : renderMarkdown(content);
+
             bubble.innerHTML = `
                 <div class="lesson-character-avatar" id="msg-avatar">≋</div>
                 <div class="lesson-message-bubble">
-                    <div class="lesson-message-content">${content}</div>
+                    <div class="lesson-message-content">${renderedContent}</div>
                     <div class="lesson-message-timestamp">${timeString}</div>
                 </div>
             `;
