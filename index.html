@@ -1733,6 +1733,44 @@
         /* XAPI STATEMENT */
         /* xAPI styles now in sidebar feed */
 
+        /* RECOMMENDATIONS ENGINE */
+        .rec-panel { margin-bottom: 32px; }
+        .rec-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .rec-tab-btn { background: none; border: none; color: rgba(255,255,255,0.4); padding: 10px 20px; cursor: pointer; font-size: 13px; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .rec-tab-btn:hover { color: rgba(255,255,255,0.7); }
+        .rec-tab-btn.active { color: #00d9c0; border-bottom-color: #00d9c0; }
+        .rec-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+        .rec-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .rec-priority { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .rec-priority.critical { background: rgba(255,107,107,0.15); color: #ff6b6b; }
+        .rec-priority.high { background: rgba(240,173,78,0.15); color: #f0ad4e; }
+        .rec-priority.medium { background: rgba(255,217,102,0.15); color: #ffd966; }
+        .rec-priority.low { background: rgba(0,217,192,0.15); color: #00d9c0; }
+        .rec-title { color: #ffffff; font-size: 14px; font-weight: 600; }
+        .rec-desc { color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6; margin-bottom: 12px; }
+        .rec-meta { display: flex; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+        .rec-meta-item { font-size: 11px; color: rgba(255,255,255,0.4); }
+        .rec-meta-item strong { color: rgba(255,255,255,0.7); }
+        .rec-change { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+        .rec-change-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
+        .rec-change-target { font-size: 12px; color: #00d9c0; margin-bottom: 8px; }
+        .rec-change-text { font-size: 11px; color: rgba(255,255,255,0.7); line-height: 1.6; font-family: 'SF Mono', 'Fira Code', monospace; white-space: pre-wrap; }
+        .rec-impact { font-size: 11px; color: rgba(0,217,192,0.8); margin-bottom: 14px; }
+        .rec-actions { display: flex; gap: 8px; }
+        .rec-btn { padding: 7px 18px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; border: none; transition: all 0.2s; }
+        .rec-btn.approve { background: #00d9c0; color: #1a1a2e; }
+        .rec-btn.approve:hover { background: #00f0d4; }
+        .rec-btn.reject { background: rgba(255,107,107,0.15); color: #ff6b6b; border: 1px solid rgba(255,107,107,0.3); }
+        .rec-btn.reject:hover { background: rgba(255,107,107,0.25); }
+        .rec-approved-badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+        .rec-approved-badge.approved { background: rgba(0,217,192,0.15); color: #00d9c0; }
+        .rec-approved-badge.rejected { background: rgba(255,107,107,0.15); color: #ff6b6b; }
+        .rec-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+        .rec-stat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; text-align: center; }
+        .rec-stat-value { font-size: 24px; font-weight: 700; color: #ffffff; }
+        .rec-stat-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+        .rec-empty { text-align: center; padding: 40px; color: rgba(255,255,255,0.3); font-size: 13px; }
+
         /* TOAST NOTIFICATIONS */
         .toast-container {
             position: fixed;
@@ -2976,6 +3014,42 @@
                                 </div>
                             </div>
 
+                            <!-- RECOMMENDATIONS ENGINE -->
+                            <div class="rec-panel">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                    <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Recommendations Engine</h3>
+                                    <span style="background: rgba(240,173,78,0.15); color: #f0ad4e; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">TIER 3 — ADMIN APPROVAL</span>
+                                </div>
+                                <p style="color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.6; margin-bottom: 20px;">Agent 13 analyses session data and surfaces improvement recommendations. Tier 1-2 decisions (monitoring, adaptive instructions) happen automatically. Tier 3 changes (prompts, charter, thresholds) require your approval.</p>
+
+                                <!-- Session stats -->
+                                <div class="rec-stats" id="rec-stats">
+                                    <div class="rec-stat-card">
+                                        <div class="rec-stat-value" id="rec-stat-sessions">0</div>
+                                        <div class="rec-stat-label">Sessions Tracked</div>
+                                    </div>
+                                    <div class="rec-stat-card">
+                                        <div class="rec-stat-value" id="rec-stat-avg-flow">—</div>
+                                        <div class="rec-stat-label">Avg Flow Score</div>
+                                    </div>
+                                    <div class="rec-stat-card">
+                                        <div class="rec-stat-value" id="rec-stat-trend">—</div>
+                                        <div class="rec-stat-label">Flow Trend</div>
+                                    </div>
+                                </div>
+
+                                <!-- Tabs -->
+                                <div class="rec-tabs">
+                                    <button class="rec-tab-btn active" onclick="switchRecTab('pending')">Pending <span id="rec-pending-count"></span></button>
+                                    <button class="rec-tab-btn" onclick="switchRecTab('approved')">Approved <span id="rec-approved-count"></span></button>
+                                    <button class="rec-tab-btn" onclick="switchRecTab('rejected')">Rejected <span id="rec-rejected-count"></span></button>
+                                </div>
+
+                                <!-- Content -->
+                                <div id="rec-content">
+                                    <div class="rec-empty">No recommendations yet. Run simulation sessions to generate data for Agent 13 to analyse.</div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -4149,6 +4223,7 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             loadTeachingCharter();
             loadAgent13Charter();
             loadAgent13PromptEditor();
+            displayRecommendationsPanel();
 
             // Comparison
             document.getElementById('compare-teachers-btn').addEventListener('click', compareTeachers);
@@ -4873,6 +4948,10 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             conversationState.exchangeCount = 0;
             conversationState.learnerResponses = [];
 
+            // Reset flow tracking for new session
+            sessionStartTime = Date.now();
+            sessionFlowScores = [];
+
             // Switch UI from pre-lesson to lesson view
             document.getElementById('pre-lesson-view').style.display = 'none';
             document.getElementById('lesson-view').style.display = 'flex';
@@ -5551,6 +5630,13 @@ ${getTeachingCharter()}
             const xapiFeed = document.getElementById('xapi-feed');
             if (!xapiFeed) return;
 
+            // Track flow score for learner messages
+            const isLearnerMsg = name.includes('You');
+            if (isLearnerMsg && content && sessionStartTime) {
+                const flowScore = calculateFlowScore(content);
+                sessionFlowScores.push(flowScore);
+            }
+
             const feedItem = document.createElement('div');
             feedItem.className = 'xapi-feed-item';
 
@@ -5818,12 +5904,29 @@ ${getTeachingCharter()}
         }
 
         function endSession() {
+            // Capture session data BEFORE clearing UI
+            if (sessionStartTime) {
+                try {
+                    const snapshot = captureSessionData();
+                    saveSessionToHistory(snapshot);
+                    generateRecommendations();
+                    displayRecommendationsPanel();
+                    showToast('Session data captured — check Agent 13 for recommendations', 'success');
+                } catch (e) {
+                    console.warn('Session capture error:', e);
+                }
+            }
+
             clearChat();
             // Switch UI from lesson view back to pre-lesson view
             document.getElementById('lesson-view').style.display = 'none';
             document.getElementById('pre-lesson-view').style.display = 'flex';
             document.getElementById('xapi-feed').innerHTML = '';
             updatePhaseIndicator();
+
+            // Reset session tracking
+            sessionStartTime = null;
+            sessionFlowScores = [];
         }
 
         function updateXAPIPreview(character, topic) {
@@ -6295,6 +6398,404 @@ Agent 13 measures its own success by:
             navigator.clipboard.writeText(textarea.value).then(() => {
                 showToast('Agent 13 prompt copied to clipboard', 'success');
             });
+        }
+
+        // ==========================================
+        // AGENT 13 RECOMMENDATIONS ENGINE
+        // ==========================================
+        let sessionStartTime = null;
+        let sessionFlowScores = [];
+
+        function calculateFlowScore(learnerMessage) {
+            if (!conversationState.unit) return 0.5;
+            const loTotal = Object.keys(progressState.loStatuses).length || 1;
+            const loProgress = Object.values(progressState.loStatuses).filter(s => s !== 'not-started').length / loTotal;
+            const acTotal = Object.keys(progressState.acStatuses).length || 1;
+            const acProgress = Object.values(progressState.acStatuses).filter(s => s !== 'not-started').length / acTotal;
+            const challengeSkill = (loProgress + acProgress) / 2;
+            // Engagement proxy: longer, more thoughtful responses = higher engagement
+            const msgLen = (learnerMessage || '').length;
+            const engagement = msgLen > 200 ? 0.8 : msgLen > 100 ? 0.7 : msgLen > 50 ? 0.6 : msgLen > 20 ? 0.5 : 0.35;
+            // Cognitive load: increases with exchange count within a phase
+            const exchangesInPhase = conversationState.exchangeCount % 4;
+            const cogLoad = exchangesInPhase > 3 ? 0.7 : exchangesInPhase > 2 ? 0.55 : 0.4;
+            // Growth mindset boost
+            const gmIndicators = typeof detectGrowthMindset === 'function' ? detectGrowthMindset(learnerMessage || '') : [];
+            const gmBoost = gmIndicators.filter(i => i.type === 'growth').length * 0.05;
+            const gmPenalty = gmIndicators.filter(i => i.type === 'fixed').length * 0.08;
+            let flow = (challengeSkill * 0.4 + engagement * 0.35 + (1 - cogLoad) * 0.25) + gmBoost - gmPenalty;
+            return Math.max(0, Math.min(1, parseFloat(flow.toFixed(2))));
+        }
+
+        function getFlowState(score) {
+            if (score >= 0.85) return 'PEAK_FLOW';
+            if (score >= 0.75) return 'FLOW';
+            if (score >= 0.45) return 'ENGAGEMENT';
+            if (score >= 0.30) return 'STRUGGLE';
+            return 'DISENGAGEMENT';
+        }
+
+        function captureSessionData() {
+            const flows = sessionFlowScores.length > 0 ? sessionFlowScores : [0.5];
+            const avgFlow = flows.reduce((a, b) => a + b, 0) / flows.length;
+            const distribution = {};
+            ['DISENGAGEMENT', 'STRUGGLE', 'ENGAGEMENT', 'FLOW', 'PEAK_FLOW'].forEach(state => {
+                const stateFlows = {
+                    'DISENGAGEMENT': flows.filter(f => f < 0.30),
+                    'STRUGGLE': flows.filter(f => f >= 0.30 && f < 0.45),
+                    'ENGAGEMENT': flows.filter(f => f >= 0.45 && f < 0.75),
+                    'FLOW': flows.filter(f => f >= 0.75 && f < 0.85),
+                    'PEAK_FLOW': flows.filter(f => f >= 0.85)
+                };
+                distribution[state] = Math.round((stateFlows[state].length / flows.length) * 100);
+            });
+            const loMet = Object.values(progressState.loStatuses).filter(s => s === 'met').length;
+            const loIP = Object.values(progressState.loStatuses).filter(s => s === 'in-progress').length;
+            const loNS = Object.values(progressState.loStatuses).filter(s => s === 'not-started').length;
+            const acMet = Object.values(progressState.acStatuses).filter(s => s === 'met').length;
+            const acIP = Object.values(progressState.acStatuses).filter(s => s === 'in-progress').length;
+            const acNS = Object.values(progressState.acStatuses).filter(s => s === 'not-started').length;
+            const total = acMet + acIP + acNS || 1;
+            const gmAll = conversationState.learnerResponses.flatMap(msg => typeof detectGrowthMindset === 'function' ? detectGrowthMindset(msg) : []);
+            return {
+                sessionId: 'session_' + Date.now(),
+                startTime: sessionStartTime ? new Date(sessionStartTime).toISOString() : new Date().toISOString(),
+                endTime: new Date().toISOString(),
+                durationSeconds: sessionStartTime ? Math.floor((Date.now() - sessionStartTime) / 1000) : 0,
+                unit: conversationState.unit ? { title: conversationState.unit.title, id: conversationState.unit.id } : null,
+                character: currentCharacter,
+                characterName: characters[currentCharacter]?.name || currentCharacter,
+                phaseReached: conversationState.phase,
+                metrics: {
+                    averageFlowScore: parseFloat(avgFlow.toFixed(2)),
+                    peakFlow: parseFloat(Math.max(...flows).toFixed(2)),
+                    lowFlow: parseFloat(Math.min(...flows).toFixed(2)),
+                    flowDistribution: distribution,
+                    exchangeCount: conversationState.exchangeCount,
+                    flowScores: flows.slice(-20) // Last 20 for trend analysis
+                },
+                progress: {
+                    loMet, loInProgress: loIP, loNotStarted: loNS,
+                    acMet, acPartial: acIP, acNotMet: acNS,
+                    completionPct: Math.round(((acMet + acIP * 0.4) / total) * 100)
+                },
+                growthMindset: {
+                    growth: gmAll.filter(i => i.type === 'growth').map(i => i.indicator),
+                    fixed: gmAll.filter(i => i.type === 'fixed').map(i => i.indicator)
+                },
+                xapiFeedCount: document.querySelectorAll('.xapi-feed-item').length
+            };
+        }
+
+        function saveSessionToHistory(snapshot) {
+            const history = JSON.parse(localStorage.getItem('zavmo_session_history') || '[]');
+            history.push(snapshot);
+            if (history.length > 50) history.shift();
+            localStorage.setItem('zavmo_session_history', JSON.stringify(history));
+        }
+
+        function generateRecommendations() {
+            const history = JSON.parse(localStorage.getItem('zavmo_session_history') || '[]');
+            if (history.length === 0) return;
+            const pending = JSON.parse(localStorage.getItem('zavmo_pending_recommendations') || '[]');
+            const existingTypes = new Set(pending.map(r => r.type + '_' + (r.characterKey || '')));
+            const newRecs = [];
+            const latest = history[history.length - 1];
+
+            // Pattern 1: persistent_struggle — 2+ sessions with avg flow < 0.45
+            if (history.length >= 2) {
+                const recent = history.slice(-3);
+                const lowFlowSessions = recent.filter(s => s.metrics.averageFlowScore < 0.45);
+                if (lowFlowSessions.length >= 2) {
+                    const charName = latest.characterName;
+                    const key = 'persistent_struggle_' + latest.character;
+                    if (!existingTypes.has(key)) {
+                        newRecs.push({
+                            recommendationId: 'rec_' + Date.now() + '_ps',
+                            type: 'persistent_struggle', characterKey: latest.character,
+                            priority: 'critical',
+                            title: 'Persistent Struggle Pattern',
+                            description: `Learners using ${charName} show sustained low flow (avg ${lowFlowSessions.map(s => s.metrics.averageFlowScore).join(', ')}) across ${lowFlowSessions.length} recent sessions. This suggests the content delivery needs more scaffolding.`,
+                            suggestedChange: { target: 'prompt', targetKey: latest.character,
+                                proposedValue: 'EMERGENCY SCAFFOLDING: If learner shows hesitation or says "I don\'t understand", immediately break content into atomic units — ONE concept per exchange. Use a concrete example from the learner\'s industry before introducing any theory. Celebrate understanding of each unit before moving forward.' },
+                            sessionsAffected: lowFlowSessions.length,
+                            expectedImpact: '+0.12 flow improvement, reduced dropout risk',
+                            status: 'pending', createdAt: new Date().toISOString()
+                        });
+                    }
+                }
+            }
+
+            // Pattern 2: peak_flow_underutilized — <10% time in peak flow
+            if (latest.metrics.flowDistribution.PEAK_FLOW < 10 && latest.metrics.averageFlowScore > 0.55) {
+                const key = 'peak_flow_underutilized_' + latest.character;
+                if (!existingTypes.has(key)) {
+                    newRecs.push({
+                        recommendationId: 'rec_' + Date.now() + '_pf',
+                        type: 'peak_flow_underutilized', characterKey: latest.character,
+                        priority: 'high',
+                        title: 'Peak Flow Underutilised',
+                        description: `Learner maintained decent engagement (avg ${latest.metrics.averageFlowScore}) but rarely reached peak flow (${latest.metrics.flowDistribution.PEAK_FLOW}% of session). ${latest.characterName} may not be stretching them enough.`,
+                        suggestedChange: { target: 'charter', targetKey: 'agent13_charter',
+                            proposedValue: 'ACCELERATION RULE: When learner sustains FLOW state (0.75+) for 2+ consecutive exchanges with quality responses (>100 chars), immediately escalate to next Bloom\'s level. Offer a stretch challenge: "You\'re clearly comfortable with this — let me push you further."' },
+                        sessionsAffected: 1,
+                        expectedImpact: '+0.08 flow, deeper learning, faster Bloom\'s progression',
+                        status: 'pending', createdAt: new Date().toISOString()
+                    });
+                }
+            }
+
+            // Pattern 3: assessment_phase_anxiety — flow drops in CHECK/ASSESS phases
+            if (latest.metrics.flowScores.length >= 4) {
+                const phases = ['CHECK_1', 'CHECK_2', 'ASSESS_1', 'ASSESS_2'];
+                if (phases.includes(latest.phaseReached) || latest.phaseReached === 'COMPLETE') {
+                    const lastFlows = latest.metrics.flowScores;
+                    const midpoint = Math.floor(lastFlows.length / 2);
+                    const firstHalf = lastFlows.slice(0, midpoint);
+                    const secondHalf = lastFlows.slice(midpoint);
+                    const avgFirst = firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length;
+                    const avgSecond = secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length;
+                    if (avgFirst - avgSecond > 0.12) {
+                        const key = 'assessment_anxiety_';
+                        if (!existingTypes.has(key)) {
+                            newRecs.push({
+                                recommendationId: 'rec_' + Date.now() + '_aa',
+                                type: 'assessment_anxiety', characterKey: '',
+                                priority: 'medium',
+                                title: 'Assessment Phase Flow Drop',
+                                description: `Flow dropped significantly in the second half of the session (${avgFirst.toFixed(2)} → ${avgSecond.toFixed(2)}). This often indicates assessment anxiety — learners tense up when they feel they\'re being evaluated.`,
+                                suggestedChange: { target: 'charter', targetKey: 'teaching_charter',
+                                    proposedValue: 'TRANSITION REASSURANCE: Before any CHECK or ASSESS phase, the current character must say something like: "Let\'s see what you\'ve picked up — this isn\'t a test, it\'s a conversation to celebrate your progress. There are no wrong answers here."' },
+                                sessionsAffected: 1,
+                                expectedImpact: '+0.06 flow during assessment, smoother transitions',
+                                status: 'pending', createdAt: new Date().toISOString()
+                            });
+                        }
+                    }
+                }
+            }
+
+            // Pattern 4: low_ac_coverage — <50% ACs addressed
+            if (latest.progress.completionPct < 50 && latest.metrics.exchangeCount >= 6) {
+                const key = 'low_ac_coverage_';
+                if (!existingTypes.has(key)) {
+                    newRecs.push({
+                        recommendationId: 'rec_' + Date.now() + '_ac',
+                        type: 'low_ac_coverage', characterKey: latest.character,
+                        priority: 'high',
+                        title: 'Low Assessment Criteria Coverage',
+                        description: `Session ended with only ${latest.progress.completionPct}% of assessment criteria addressed after ${latest.metrics.exchangeCount} exchanges. Pacing may be too slow, or the character is spending too long on foundational concepts.`,
+                        suggestedChange: { target: 'prompt', targetKey: latest.character,
+                            proposedValue: 'PACING AWARENESS: After every 3 exchanges, internally check how many assessment criteria have been addressed. If less than 30% after 5 exchanges, accelerate by combining related concepts and using the learner\'s own examples to cover multiple criteria simultaneously. Reference specific ACs: "This connects to [AC ID] — you\'ve just demonstrated [criterion]."' },
+                        sessionsAffected: 1,
+                        expectedImpact: '+20% AC coverage rate, more efficient sessions',
+                        status: 'pending', createdAt: new Date().toISOString()
+                    });
+                }
+            }
+
+            // Pattern 5: growth_mindset_concern — more fixed than growth indicators
+            if (latest.growthMindset.fixed.length > latest.growthMindset.growth.length && latest.growthMindset.fixed.length >= 2) {
+                const key = 'growth_mindset_concern_';
+                if (!existingTypes.has(key)) {
+                    newRecs.push({
+                        recommendationId: 'rec_' + Date.now() + '_gm',
+                        type: 'growth_mindset_concern', characterKey: latest.character,
+                        priority: 'high',
+                        title: 'Fixed Mindset Signals Detected',
+                        description: `Learner showed ${latest.growthMindset.fixed.length} fixed mindset indicators (${latest.growthMindset.fixed.join(', ')}) vs ${latest.growthMindset.growth.length} growth indicators. This suggests the learner may be losing confidence with ${latest.characterName}.`,
+                        suggestedChange: { target: 'prompt', targetKey: latest.character,
+                            proposedValue: 'GROWTH MINDSET RESPONSE: When learner uses language like "I can\'t", "this is too hard", or "I\'m not good at this", NEVER dismiss their feeling. Instead: (1) Acknowledge honestly — "This IS challenging, and that\'s OK." (2) Reframe — "The fact you\'re finding this difficult means you\'re learning something new." (3) Scaffold — break the next step into something achievable within 60 seconds. (4) Celebrate the attempt, not the outcome.' },
+                        sessionsAffected: 1,
+                        expectedImpact: 'Improved learner confidence, reduced dropout risk',
+                        status: 'pending', createdAt: new Date().toISOString()
+                    });
+                }
+            }
+
+            // Pattern 6: session_too_long — >25 mins with declining flow trend
+            if (latest.durationSeconds > 1500 && latest.metrics.flowScores.length >= 6) {
+                const scores = latest.metrics.flowScores;
+                const firstThird = scores.slice(0, Math.floor(scores.length / 3));
+                const lastThird = scores.slice(-Math.floor(scores.length / 3));
+                const avgFirst = firstThird.reduce((a, b) => a + b, 0) / firstThird.length;
+                const avgLast = lastThird.reduce((a, b) => a + b, 0) / lastThird.length;
+                if (avgFirst - avgLast > 0.1) {
+                    const key = 'session_fatigue_';
+                    if (!existingTypes.has(key)) {
+                        const mins = Math.round(latest.durationSeconds / 60);
+                        newRecs.push({
+                            recommendationId: 'rec_' + Date.now() + '_sf',
+                            type: 'session_fatigue', characterKey: '',
+                            priority: 'medium',
+                            title: 'Session Fatigue Detected',
+                            description: `Session lasted ${mins} minutes with a declining flow trend (${avgFirst.toFixed(2)} → ${avgLast.toFixed(2)}). Learner engagement dropped in the final third. Consider suggesting breaks or shorter session targets.`,
+                            suggestedChange: { target: 'charter', targetKey: 'agent13_charter',
+                                proposedValue: 'SESSION LENGTH RULE: Monitor session duration. After 20 minutes, if flow trend is declining (2+ consecutive lower scores), instruct the current character to suggest a natural break point: "You\'ve done great work. This is a good moment to take a short break — your brain needs time to consolidate what you\'ve learned. Come back in 5 minutes and we\'ll pick up exactly where we left off."' },
+                            sessionsAffected: 1,
+                            expectedImpact: 'Reduced fatigue, better retention, improved completion rates',
+                            status: 'pending', createdAt: new Date().toISOString()
+                        });
+                    }
+                }
+            }
+
+            if (newRecs.length > 0) {
+                pending.push(...newRecs);
+                localStorage.setItem('zavmo_pending_recommendations', JSON.stringify(pending));
+                showToast(`Agent 13 generated ${newRecs.length} new recommendation${newRecs.length > 1 ? 's' : ''}`, 'info');
+            }
+        }
+
+        function approveRecommendation(recId) {
+            const pending = JSON.parse(localStorage.getItem('zavmo_pending_recommendations') || '[]');
+            const rec = pending.find(r => r.recommendationId === recId);
+            if (!rec) return;
+            const change = rec.suggestedChange;
+            // Apply the change
+            if (change.target === 'prompt' && change.targetKey && characters[change.targetKey]) {
+                const currentPrompt = promptsSaved[change.targetKey] || characters[change.targetKey].prompt;
+                const newPrompt = currentPrompt + '\n\n' + change.proposedValue;
+                promptsSaved[change.targetKey] = newPrompt;
+                localStorage.setItem('zavmo_prompt_' + change.targetKey, newPrompt);
+                // Refresh editor if this character is currently loaded
+                if (currentCharacter === change.targetKey) {
+                    loadCharacterData(change.targetKey);
+                }
+                // Refresh Agent 13 prompt editor if agent-13
+                if (change.targetKey === 'agent-13') loadAgent13PromptEditor();
+            } else if (change.target === 'charter') {
+                if (change.targetKey === 'agent13_charter') {
+                    currentAgent13Charter = currentAgent13Charter + '\n\n' + change.proposedValue;
+                    localStorage.setItem('zavmo_agent13_charter', currentAgent13Charter);
+                    loadAgent13Charter();
+                } else if (change.targetKey === 'teaching_charter') {
+                    currentTeachingCharter = currentTeachingCharter + '\n\n' + change.proposedValue;
+                    localStorage.setItem('zavmo_teaching_charter', currentTeachingCharter);
+                    loadTeachingCharter();
+                }
+            }
+            // Move to approved
+            rec.status = 'approved';
+            rec.approvedAt = new Date().toISOString();
+            const approved = JSON.parse(localStorage.getItem('zavmo_approved_recommendations') || '[]');
+            approved.push(rec);
+            localStorage.setItem('zavmo_approved_recommendations', JSON.stringify(approved));
+            // Remove from pending
+            const filtered = pending.filter(r => r.recommendationId !== recId);
+            localStorage.setItem('zavmo_pending_recommendations', JSON.stringify(filtered));
+            displayRecommendationsPanel();
+            showToast('Recommendation approved and applied to ' + (change.target === 'prompt' ? characters[change.targetKey]?.name || change.targetKey : 'charter'), 'success');
+        }
+
+        function rejectRecommendation(recId) {
+            const pending = JSON.parse(localStorage.getItem('zavmo_pending_recommendations') || '[]');
+            const rec = pending.find(r => r.recommendationId === recId);
+            if (!rec) return;
+            rec.status = 'rejected';
+            rec.rejectedAt = new Date().toISOString();
+            const rejected = JSON.parse(localStorage.getItem('zavmo_rejected_recommendations') || '[]');
+            rejected.push(rec);
+            localStorage.setItem('zavmo_rejected_recommendations', JSON.stringify(rejected));
+            const filtered = pending.filter(r => r.recommendationId !== recId);
+            localStorage.setItem('zavmo_pending_recommendations', JSON.stringify(filtered));
+            displayRecommendationsPanel();
+            showToast('Recommendation rejected', 'info');
+        }
+
+        function renderRecCard(rec, showActions) {
+            const priorityClass = rec.priority || 'medium';
+            const targetLabel = rec.suggestedChange.target === 'prompt'
+                ? 'Character Prompt: ' + (characters[rec.suggestedChange.targetKey]?.name || rec.suggestedChange.targetKey)
+                : rec.suggestedChange.targetKey === 'agent13_charter' ? 'Agent 13 Charter' : 'Teaching Charter';
+            const statusBadge = rec.status === 'approved'
+                ? '<span class="rec-approved-badge approved">APPROVED ' + (rec.approvedAt ? new Date(rec.approvedAt).toLocaleDateString('en-GB') : '') + '</span>'
+                : rec.status === 'rejected'
+                ? '<span class="rec-approved-badge rejected">REJECTED ' + (rec.rejectedAt ? new Date(rec.rejectedAt).toLocaleDateString('en-GB') : '') + '</span>'
+                : '';
+            return `<div class="rec-card">
+                <div class="rec-card-header">
+                    <span class="rec-priority ${priorityClass}">${priorityClass}</span>
+                    <span class="rec-title">${rec.title}</span>
+                    ${statusBadge}
+                </div>
+                <div class="rec-desc">${rec.description}</div>
+                <div class="rec-meta">
+                    <span class="rec-meta-item"><strong>${rec.sessionsAffected || 1}</strong> session${(rec.sessionsAffected || 1) > 1 ? 's' : ''} affected</span>
+                    <span class="rec-meta-item">Created: <strong>${new Date(rec.createdAt).toLocaleDateString('en-GB')}</strong></span>
+                </div>
+                <div class="rec-change">
+                    <div class="rec-change-label">Suggested Change</div>
+                    <div class="rec-change-target">${targetLabel}</div>
+                    <div class="rec-change-text">${rec.suggestedChange.proposedValue}</div>
+                </div>
+                <div class="rec-impact">Expected impact: ${rec.expectedImpact}</div>
+                ${showActions ? `<div class="rec-actions">
+                    <button class="rec-btn approve" onclick="approveRecommendation('${rec.recommendationId}')">Approve</button>
+                    <button class="rec-btn reject" onclick="rejectRecommendation('${rec.recommendationId}')">Reject</button>
+                </div>` : ''}
+            </div>`;
+        }
+
+        let currentRecTab = 'pending';
+        function switchRecTab(tab) {
+            currentRecTab = tab;
+            document.querySelectorAll('.rec-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.rec-tab-btn').forEach(btn => {
+                if (btn.textContent.toLowerCase().startsWith(tab)) btn.classList.add('active');
+            });
+            displayRecommendationsPanel();
+        }
+
+        function displayRecommendationsPanel() {
+            const pending = JSON.parse(localStorage.getItem('zavmo_pending_recommendations') || '[]');
+            const approved = JSON.parse(localStorage.getItem('zavmo_approved_recommendations') || '[]');
+            const rejected = JSON.parse(localStorage.getItem('zavmo_rejected_recommendations') || '[]');
+            const history = JSON.parse(localStorage.getItem('zavmo_session_history') || '[]');
+            // Update stats
+            document.getElementById('rec-stat-sessions').textContent = history.length;
+            if (history.length > 0) {
+                const avgFlow = (history.reduce((sum, s) => sum + s.metrics.averageFlowScore, 0) / history.length).toFixed(2);
+                document.getElementById('rec-stat-avg-flow').textContent = avgFlow;
+                if (history.length >= 3) {
+                    const recent3 = history.slice(-3).map(s => s.metrics.averageFlowScore);
+                    const older3 = history.slice(-6, -3).map(s => s.metrics.averageFlowScore);
+                    if (older3.length > 0) {
+                        const recentAvg = recent3.reduce((a, b) => a + b, 0) / recent3.length;
+                        const olderAvg = older3.reduce((a, b) => a + b, 0) / older3.length;
+                        const diff = recentAvg - olderAvg;
+                        document.getElementById('rec-stat-trend').textContent = diff > 0.05 ? 'Improving' : diff < -0.05 ? 'Declining' : 'Stable';
+                        document.getElementById('rec-stat-trend').style.color = diff > 0.05 ? '#00d9c0' : diff < -0.05 ? '#ff6b6b' : '#f0ad4e';
+                    } else {
+                        document.getElementById('rec-stat-trend').textContent = 'Building...';
+                    }
+                } else {
+                    document.getElementById('rec-stat-trend').textContent = 'Need 3+ sessions';
+                }
+            }
+            // Update counts
+            const pendingEl = document.getElementById('rec-pending-count');
+            const approvedEl = document.getElementById('rec-approved-count');
+            const rejectedEl = document.getElementById('rec-rejected-count');
+            if (pendingEl) pendingEl.textContent = pending.length > 0 ? '(' + pending.length + ')' : '';
+            if (approvedEl) approvedEl.textContent = approved.length > 0 ? '(' + approved.length + ')' : '';
+            if (rejectedEl) rejectedEl.textContent = rejected.length > 0 ? '(' + rejected.length + ')' : '';
+            // Render content
+            const container = document.getElementById('rec-content');
+            let items = [];
+            if (currentRecTab === 'pending') items = pending;
+            else if (currentRecTab === 'approved') items = approved;
+            else items = rejected;
+            if (items.length === 0) {
+                const msgs = {
+                    pending: 'No pending recommendations. Run simulation sessions to generate data for Agent 13 to analyse.',
+                    approved: 'No approved recommendations yet.',
+                    rejected: 'No rejected recommendations.'
+                };
+                container.innerHTML = '<div class="rec-empty">' + msgs[currentRecTab] + '</div>';
+            } else {
+                container.innerHTML = items.map(rec => renderRecCard(rec, currentRecTab === 'pending')).join('');
+            }
         }
 
         function switchTab(tabName, clickedBtn) {
