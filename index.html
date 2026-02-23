@@ -2271,19 +2271,18 @@
                     <div class="logo-subtitle">Prompt Configuration Studio</div>
                 </div>
                 <nav class="nav-tabs">
-                    <button class="nav-tab active" data-tab="editor">Editor</button>
-                    <button class="nav-tab" data-tab="simulation">Simulation</button>
-                    <button class="nav-tab" data-tab="comparison">Comparison</button>
+                    <button class="nav-tab active" data-tab="characters">Characters</button>
                     <button class="nav-tab" data-tab="agent13" style="color: #00d9c0;">Agent 13</button>
+                    <button class="nav-tab" data-tab="sim-compare">Simulation & Comparison</button>
                 </nav>
             </div>
         </header>
 
         <!-- MAIN CONTENT -->
         <div class="main-content">
-            <!-- LEFT PANEL: PROMPT EDITOR -->
+            <!-- LEFT PANEL: CHARACTER PROMPTS -->
             <div class="left-panel panel">
-                <h2 class="section-header">Prompt Editor</h2>
+                <h2 class="section-header">Character Prompts</h2>
 
                 <!-- Character Selector -->
                 <div class="character-selector">
@@ -2301,7 +2300,6 @@
                         <option value="evidence-evaluator">The Evidence Evaluator</option>
                         <option value="qualification-certifier">The Qualification Certifier</option>
                         <option value="integrator">The Integrator</option>
-                        <option value="agent-13">Agent 13</option>
                     </select>
                 </div>
 
@@ -2365,8 +2363,9 @@
                 </div>
             </div>
 
-            <!-- RIGHT PANEL: TEST CONSOLE -->
+            <!-- RIGHT PANEL: UNIT CONFIGURATION (Characters page) -->
             <div class="right-panel panel">
+                <h2 class="section-header">Unit Configuration</h2>
                 <!-- QUALIFICATION SELECTOR PANEL -->
                 <div class="qualification-selector-panel" id="qual-panel">
                     <!-- Collapsible header -->
@@ -2448,13 +2447,14 @@
                     </div>
                 </div>
 
-                <div class="tab-container">
-                    <div class="tab-buttons">
-                        <button class="tab-button active" data-tab="simulation-tab">Simulation</button>
-                        <button class="tab-button" data-tab="comparison-tab">Comparison</button>
-                    </div>
+            </div>
+            <!-- END RIGHT PANEL (Characters page) -->
 
-                    <!-- SIMULATION TAB -->
+            <!-- SIM & COMPARE PAGE (hidden by default) -->
+            <div id="sim-compare-page" style="display: none; width: 100%; gap: 16px; height: 100%;">
+                <!-- SIMULATION SIDE -->
+                <div class="panel" id="simulation-panel" style="flex: 3; min-width: 0; overflow-y: auto;">
+                    <h2 class="section-header">Simulation</h2>
                     <div class="tab-content active" id="simulation-tab">
                         <!-- PRE-LESSON VIEW -->
                         <div class="pre-lesson-view" id="pre-lesson-view">
@@ -2638,14 +2638,25 @@
                         </div>
                     </div>
 
-                    <!-- COMPARISON TAB -->
-                    <div class="tab-content" id="comparison-tab">
+                </div>
+                <!-- END SIMULATION SIDE -->
+
+                <!-- COMPARISON SIDE -->
+                <div class="panel" id="comparison-panel" style="flex: 2; min-width: 0; overflow-y: auto;">
+                    <h2 class="section-header">Comparison</h2>
+                    <div class="tab-content active" id="comparison-tab">
                         <button class="button button-primary" id="compare-teachers-btn" style="width: 100%; margin-bottom: 24px;">Compare Teachers</button>
                         <div class="comparison-container" id="comparison-container"></div>
                     </div>
+                </div>
+                <!-- END COMPARISON SIDE -->
+            </div>
+            <!-- END SIM & COMPARE PAGE -->
 
-                    <!-- AGENT 13 TAB -->
-                    <div class="tab-content" id="agent13-tab" style="padding: 0;">
+            <!-- AGENT 13 PAGE (hidden by default) -->
+            <div id="agent13-page" style="display: none; width: 100%; overflow-y: auto;">
+                <div class="panel" style="width: 100%;">
+                    <div class="tab-content active" id="agent13-tab" style="padding: 0;">
                         <div style="max-width: 1200px; margin: 0 auto; padding: 24px;">
 
                             <!-- HEADER -->
@@ -2680,6 +2691,34 @@
                                         <button onclick="saveAgent13Charter()" style="background: #00d9c0; border: none; color: #1a1a2e; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;">Save Charter</button>
                                         <button onclick="resetAgent13Charter()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">Reset to Default</button>
                                         <span id="agent13-charter-save-status" style="display: none; color: #00d9c0; font-size: 12px; margin-left: 8px;">Saved</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AGENT 13 PROMPT EDITOR -->
+                            <div style="margin-bottom: 32px; background: rgba(0,217,192,0.03); border: 1px solid rgba(0,217,192,0.15); border-radius: 12px; padding: 24px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Agent 13 System Prompt</h3>
+                                        <span style="background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">EDITABLE</span>
+                                    </div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button onclick="toggleAgent13Prompt()" id="agent13-prompt-toggle" style="background: rgba(0,217,192,0.15); border: 1px solid rgba(0,217,192,0.3); color: #00d9c0; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px;">Edit Prompt</button>
+                                    </div>
+                                </div>
+                                <p style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6; margin: 0 0 16px 0;">The system prompt that defines Agent 13's technical behaviour. The charter above is automatically appended to this prompt in every API call.</p>
+                                <!-- Read-only view -->
+                                <div id="agent13-prompt-preview" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 16px; max-height: 250px; overflow-y: auto;">
+                                    <pre id="agent13-prompt-preview-text" style="color: rgba(255,255,255,0.7); font-size: 11px; line-height: 1.6; margin: 0; white-space: pre-wrap; font-family: 'SF Mono', 'Fira Code', monospace;"></pre>
+                                </div>
+                                <!-- Edit view (hidden by default) -->
+                                <div id="agent13-prompt-edit" style="display: none;">
+                                    <textarea id="agent13-prompt-textarea" style="width: 100%; min-height: 350px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0,217,192,0.3); border-radius: 8px; padding: 16px; color: rgba(255,255,255,0.9); font-size: 11px; line-height: 1.6; resize: vertical; font-family: 'SF Mono', 'Fira Code', monospace;" spellcheck="false"></textarea>
+                                    <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
+                                        <button onclick="saveAgent13Prompt()" style="background: #00d9c0; border: none; color: #1a1a2e; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;">Save Prompt</button>
+                                        <button onclick="resetAgent13Prompt()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">Reset to Default</button>
+                                        <button onclick="copyAgent13Prompt()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">Copy to Clipboard</button>
+                                        <span id="agent13-prompt-save-status" style="display: none; color: #00d9c0; font-size: 12px; margin-left: 8px;">Saved</span>
                                     </div>
                                 </div>
                             </div>
@@ -2942,6 +2981,8 @@
                     </div>
                 </div>
             </div>
+            <!-- END AGENT 13 PAGE -->
+
         </div>
     </div>
 
@@ -4107,6 +4148,7 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             });
             loadTeachingCharter();
             loadAgent13Charter();
+            loadAgent13PromptEditor();
 
             // Comparison
             document.getElementById('compare-teachers-btn').addEventListener('click', compareTeachers);
@@ -6191,6 +6233,70 @@ Agent 13 measures its own success by:
             return currentAgent13Charter;
         }
 
+        // ==========================================
+        // AGENT 13 PROMPT EDITOR (on Agent 13 page)
+        // ==========================================
+        function loadAgent13PromptEditor() {
+            const prompt = promptsSaved['agent-13'] || characters['agent-13'].prompt;
+            const preview = document.getElementById('agent13-prompt-preview-text');
+            const textarea = document.getElementById('agent13-prompt-textarea');
+            if (preview) preview.textContent = prompt;
+            if (textarea) textarea.value = prompt;
+        }
+
+        function toggleAgent13Prompt() {
+            const preview = document.getElementById('agent13-prompt-preview');
+            const edit = document.getElementById('agent13-prompt-edit');
+            const btn = document.getElementById('agent13-prompt-toggle');
+            if (edit.style.display === 'none') {
+                preview.style.display = 'none';
+                edit.style.display = 'block';
+                btn.textContent = 'View Prompt';
+                btn.style.background = 'rgba(240,173,78,0.15)';
+                btn.style.borderColor = 'rgba(240,173,78,0.3)';
+                btn.style.color = '#f0ad4e';
+            } else {
+                edit.style.display = 'none';
+                preview.style.display = 'block';
+                btn.textContent = 'Edit Prompt';
+                btn.style.background = 'rgba(0,217,192,0.15)';
+                btn.style.borderColor = 'rgba(0,217,192,0.3)';
+                btn.style.color = '#00d9c0';
+            }
+        }
+
+        function saveAgent13Prompt() {
+            const textarea = document.getElementById('agent13-prompt-textarea');
+            promptsSaved['agent-13'] = textarea.value;
+            localStorage.setItem('zavmo_prompt_agent-13', textarea.value);
+            const preview = document.getElementById('agent13-prompt-preview-text');
+            if (preview) preview.textContent = textarea.value;
+            const status = document.getElementById('agent13-prompt-save-status');
+            status.style.display = 'inline';
+            setTimeout(() => { status.style.display = 'none'; }, 3000);
+            showToast('Agent 13 prompt saved', 'success');
+        }
+
+        function resetAgent13Prompt() {
+            if (confirm('Reset Agent 13 prompt to its default? Any edits will be lost.')) {
+                const defaultPrompt = characters['agent-13'].prompt;
+                delete promptsSaved['agent-13'];
+                localStorage.removeItem('zavmo_prompt_agent-13');
+                const textarea = document.getElementById('agent13-prompt-textarea');
+                if (textarea) textarea.value = defaultPrompt;
+                const preview = document.getElementById('agent13-prompt-preview-text');
+                if (preview) preview.textContent = defaultPrompt;
+                showToast('Agent 13 prompt reset to default', 'info');
+            }
+        }
+
+        function copyAgent13Prompt() {
+            const textarea = document.getElementById('agent13-prompt-textarea');
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                showToast('Agent 13 prompt copied to clipboard', 'success');
+            });
+        }
+
         function switchTab(tabName, clickedBtn) {
             // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
@@ -6212,30 +6318,30 @@ Agent 13 measures its own success by:
             });
             if (clickedBtn) clickedBtn.classList.add('active');
 
-            // Switch views based on nav tab
+            // Get all page sections
             const leftPanel = document.querySelector('.left-panel');
             const rightPanel = document.querySelector('.right-panel');
+            const simComparePage = document.getElementById('sim-compare-page');
+            const agent13Page = document.getElementById('agent13-page');
 
-            if (tabName === 'editor') {
+            // Hide everything first
+            leftPanel.style.display = 'none';
+            rightPanel.style.display = 'none';
+            simComparePage.style.display = 'none';
+            agent13Page.style.display = 'none';
+
+            if (tabName === 'characters') {
+                // Characters page: prompt editor (left) + unit config (right)
                 leftPanel.style.display = 'flex';
                 rightPanel.style.display = 'flex';
                 leftPanel.style.width = '35%';
                 rightPanel.style.width = '65%';
-            } else if (tabName === 'simulation') {
-                leftPanel.style.display = 'none';
-                rightPanel.style.display = 'flex';
-                rightPanel.style.width = '100%';
-                switchTab('simulation-tab', document.querySelector('.tab-button[data-tab="simulation-tab"]'));
-            } else if (tabName === 'comparison') {
-                leftPanel.style.display = 'none';
-                rightPanel.style.display = 'flex';
-                rightPanel.style.width = '100%';
-                switchTab('comparison-tab', document.querySelector('.tab-button[data-tab="comparison-tab"]'));
             } else if (tabName === 'agent13') {
-                leftPanel.style.display = 'none';
-                rightPanel.style.display = 'flex';
-                rightPanel.style.width = '100%';
-                switchTab('agent13-tab', document.querySelector('.tab-button[data-tab="agent13-tab"]'));
+                // Agent 13 page: full width dashboard
+                agent13Page.style.display = 'block';
+            } else if (tabName === 'sim-compare') {
+                // Simulation & Comparison: side by side
+                simComparePage.style.display = 'flex';
             }
         }
 
