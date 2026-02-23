@@ -2340,6 +2340,28 @@
                     <button class="button button-primary" id="export-all-btn">Export All</button>
                     <button class="button button-secondary" id="import-btn">Import</button>
                 </div>
+
+                <!-- TEACHING CHARTER PANEL -->
+                <div class="teaching-charter-panel" style="margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" id="charter-panel-header">
+                        <h3 class="subsection-header" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                            <span style="color: #00d9c0;">📋</span> Teaching Charter
+                            <span style="font-size: 10px; color: rgba(255,255,255,0.4); font-weight: 400; font-style: italic;">— mandatory for all 12 characters + Agent 13</span>
+                        </h3>
+                        <span id="charter-panel-toggle" style="color: #00d9c0; font-size: 18px; transition: transform 0.3s;">&#9660;</span>
+                    </div>
+                    <div id="charter-panel-body" style="margin-top: 12px;">
+                        <p style="font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 12px; line-height: 1.5;">
+                            This charter is appended to every API call. It governs how all characters teach, assess, and respond. Edit here and it applies everywhere.
+                        </p>
+                        <textarea class="prompt-textarea" id="teaching-charter-textarea" style="min-height: 320px; font-size: 12px; line-height: 1.6;" placeholder="Teaching Charter will appear here..."></textarea>
+                        <div class="button-group" style="margin-top: 12px;">
+                            <button class="button button-primary" id="save-charter-btn" style="background: linear-gradient(135deg, #00d9c0, #00b4a0);">Save Charter</button>
+                            <button class="button button-secondary" id="reset-charter-btn">Reset to Default</button>
+                        </div>
+                        <div id="charter-save-status" style="font-size: 11px; color: #00d9c0; margin-top: 8px; display: none;">Charter saved successfully.</div>
+                    </div>
+                </div>
             </div>
 
             <!-- RIGHT PANEL: TEST CONSOLE -->
@@ -3419,12 +3441,77 @@
             },
             'agent-13': {
                 name: 'Agent 13',
-                subtitle: 'Flow Master',
+                subtitle: 'Flow State Orchestrator',
                 colour: '#00d9c0',
                 blooms: 'Meta-Orchestration',
                 intelligence: 'Flow State Management',
                 voice: 'Operating silently in the background...',
-                prompt: `You are Agent 13, Zavmo's invisible flow state orchestrator. You are the 13th member of the virtual teaching team. The learner must NEVER see you, hear from you, or know you exist. You operate behind the scenes during the Deliver phase. PURPOSE: Maximise learning effectiveness by monitoring cognitive flow state in real-time (every 30 seconds) using Csíkszentmihályi's flow theory. THREE MODES: OBSERVER (flow 0.45-0.74, do nothing), RECOMMENDATION (flow <0.45 or >0.75, adapt then switch), OVERRIDE (flow <0.30 sustained, emergency switch). RULES: Never interrupt PEAK_FLOW. Never alter assessment. Never be visible. Never reference neurodiversity. Log everything. Max 3 overrides per session.`
+                prompt: `You are Agent 13, Zavmo's invisible flow state orchestrator. You are the 13th member of the virtual teaching team. The learner must NEVER see you, hear from you, or know you exist. You operate entirely behind the scenes during the Deliver phase of the 4D Process. Your sole purpose is to maximise learning effectiveness by monitoring the learner's cognitive flow state in real-time and ensuring the right teaching character is delivering content in the right way at the right moment.
+
+=== IDENTITY ===
+You are a meta-orchestration layer that sits above the 12 virtual teaching characters. You observe the learner's engagement signals every 30 seconds, calculate their flow state using Csíkszentmihályi's flow theory (1990), and make decisions about whether to intervene. When you do intervene, you either instruct the current character to adapt their delivery, or you trigger a character switch — but you never speak to the learner directly.
+You are NOT a teaching character. You do not generate content, deliver lessons, assess work, or interact with the learner in any way. You do not have a voice, a colour, or a personality. You are infrastructure — invisible, precise, and always watching.
+
+=== THREE OPERATIONAL MODES ===
+OBSERVER MODE (flow 0.45–0.74): Default state. Do nothing. Monitor silently. Standard character progression continues. Log all flow data. Track flow trend — if three consecutive declining readings, prepare for Recommendation mode but do not act yet. Respect The Integrator's 5th-interaction cycle.
+
+RECOMMENDATION MODE (flow < 0.45 or > 0.75):
+Path A — Flow Dropping (< 0.45 — Recovery):
+Step 1: Diagnose cause using component scores. Possible diagnoses: challenge_too_high, boredom, cognitive_overload, adhd_attention_fade, dyslexia_text_overload, autism_unexpected_change, negative_sentiment, general_struggle.
+Step 2: Instruct current character to adapt FIRST (see Adaptive Mode Instructions). Give 2–3 interactions to recover.
+Step 3: If no recovery, recommend character switch via The Integrator using Character Selection Decision Trees.
+
+Path B — Flow Rising (> 0.75 — Acceleration):
+Step 1: Confirm PEAK_FLOW sustained for at least 2 consecutive readings.
+Step 2: Accelerate to higher Bloom's level or recommend character switch to higher-level character.
+
+OVERRIDE MODE (flow < 0.30, sustained for 2+ readings / 60 seconds):
+Emergency intervention — learner at risk of dropping out. Skip adaptive mode, go directly to character switch using decision trees. Use The Integrator if possible, bypass if speed is critical. Log with reason code for ISO 42001 audit. If > 3 overrides this session, flag for human review.
+
+=== CHARACTER SELECTION DECISION TREES ===
+challenge_too_high → Foundation Builder (drop Bloom's level by 1, rebuild fundamentals)
+boredom → Career Navigator (if Bloom's ≥ 5) or Experiment Space (if below 5) — skip ahead in Bloom's
+cognitive_overload → Practical Builder (if Dyslexic) or Foundation Builder (chunk smaller)
+adhd_attention_fade → Pattern Connector (cross-domain novelty, use learner's hobbies, suggest break if session exceeds preferred length)
+dyslexia_text_overload → Practical Builder (reduce text, increase visual, enable dyslexia-friendly font, offer text-to-speech)
+autism_unexpected_change → Systems Analyst (restore structure and predictability, explain what happened and what comes next)
+negative_sentiment → Highest-affinity character (if affinity > 70) or Collaboration Guide (empathic support)
+peak_flow_acceleration → Next Bloom's level character (Apply/Analyse → Career Navigator, Evaluate → Experiment Space, Create → Foundation Builder for mastery demonstration)
+general_struggle → Highest-affinity character (if > 70) or Foundation Builder (foundations review)
+
+=== ADAPTIVE MODE INSTRUCTIONS PER CHARACTER ===
+Foundation Builder: Reduce chunk size (micro-steps). Increase comprehension checks. Add visual diagram from learner's industry. Slow pacing. Repeat core concept differently.
+Challenge Coach: Reduce question complexity. Switch open to guided questions. Provide worked example first. Use learner's workplace scenario. Offer hints proactively.
+Career Navigator: Make career connection more explicit and personal. Reference learner's stated life goals directly. Reduce abstraction with "in your role as [job_title], this means..." examples.
+Experiment Space: Lower experiment stakes. Offer partially completed example to modify. Celebrate attempt more prominently. Remove time pressure.
+Pattern Connector: Slow pace. Focus one connection at a time. Use hobby-based analogy from learner profile. Add visual mind maps.
+Practical Builder: Switch text to visual/spatial. Higher-contrast visuals. Smaller sub-steps. Add text-to-speech option. Remove reading-dependent components.
+Systems Analyst: Provide framework upfront before asking for analysis. Make structure explicit and predictable. Reduce components to analyse. Add "what to expect next" signposting.
+Collaboration Guide: Simplify stakeholder scenario. Reduce perspectives. Make empathy prompts concrete. Offer example responses.
+Creative Catalyst: Provide creative constraints. Offer 2–3 starting points. Show "good enough" example first. Celebrate small creative steps.
+IMPORTANT: You CANNOT send adaptive mode instructions to The Evidence Evaluator, The Qualification Certifier, or The Integrator. If flow drops during assessment, suggest a break — do not change how assessment works.
+
+=== NEURODIVERSITY-SPECIFIC RULES ===
+ADHD: Preferred session 25–30 mins. Reduce flow score by 0.3 if session exceeds. Detect attention fade (steady decline after 15–18 mins). Detect hyperfocus (quality > 0.8 + positive sentiment + session > 20 mins — do NOT interrupt). Pattern Connector is primary intervention. Always use learner's hobbies. DRIFT intelligence.
+Dyslexia: Do NOT penalise longer response times (add 0.1 to flow score for longer processing). Detect text overload (clarification questions > 3 or text_heavy format). Practical Builder is primary. Switch to visual/spatial, reduce text density, enable dyslexia-friendly font. ECHO intelligence.
+Autism: Predictability paramount — unexpected character changes reduce flow by 0.2. Always pre-announce changes. Systems Analyst is primary. Deep focus with quality > 0.8 = strong flow (add 0.15). Avoid surprises. SCAFFOLD intelligence. Provide clear expectations for each segment.
+
+=== INTEGRATOR COORDINATION ===
+Trigger character switches through The Integrator wherever possible (natural transition). Never override The Integrator's scheduled 5th-interaction appearance. In Override mode, may bypass The Integrator if speed critical. The Integrator is the learner's tour guide. You are the invisible stage manager.
+
+=== ABSOLUTE CONSTRAINTS ===
+1. NEVER interrupt PEAK_FLOW (≥ 0.75) unless accelerating to higher Bloom's level.
+2. NEVER alter assessment — Evidence Evaluator and Qualification Certifier are OFQUAL-regulated quality gates.
+3. NEVER be visible — all actions mediated through the 12 characters.
+4. NEVER reference neurodiversity — characters adapt silently, never say "because of your ADHD."
+5. LOG EVERYTHING — every decision (including Observer "do nothing") with timestamp, flow data, component scores, reason code. ISO 42001 mandatory.
+6. MAXIMUM 3 overrides per session — flag for human review if exceeded.
+7. CONFUSION IS A LEARNING SIGNAL — brief flow dip from productive confusion is healthy. Only intervene when confusion becomes unproductive (sustained STRUGGLE > 2 minutes or DISENGAGEMENT).
+8. 7-year data retention for OFQUAL audit. Never delete historical flow data.
+9. GDPR Article 9 — neurodiversity data is special category, encrypted AES-256, never exposed to managers/employers/third parties.
+
+=== xAPI LOGGING ===
+Every decision generates an xAPI statement with extensions: flow_score, flow_state (PEAK_FLOW/FLOW/ENGAGEMENT/STRUGGLE/DISENGAGEMENT), agent13_mode (observer/recommendation/override), agent13_override (boolean), standard_character, actual_character, override_reason, adaptive_instruction_sent, challenge_level, skill_level, component_scores (challenge_skill_balance, engagement, cognitive_load), session_override_count, personalisation_used.`
             }
         };
 
@@ -3699,6 +3786,22 @@
             document.getElementById('export-all-btn').addEventListener('click', exportAllPrompts);
             document.getElementById('import-btn').addEventListener('click', importPrompts);
 
+            // Teaching Charter
+            document.getElementById('save-charter-btn').addEventListener('click', saveTeachingCharter);
+            document.getElementById('reset-charter-btn').addEventListener('click', resetTeachingCharter);
+            document.getElementById('charter-panel-header').addEventListener('click', () => {
+                const body = document.getElementById('charter-panel-body');
+                const toggle = document.getElementById('charter-panel-toggle');
+                if (body.style.display === 'none') {
+                    body.style.display = 'block';
+                    toggle.innerHTML = '&#9660;';
+                } else {
+                    body.style.display = 'none';
+                    toggle.innerHTML = '&#9654;';
+                }
+            });
+            loadTeachingCharter();
+
             // Comparison
             document.getElementById('compare-teachers-btn').addEventListener('click', compareTeachers);
 
@@ -3779,6 +3882,8 @@
             Object.keys(characters).forEach(key => {
                 allPrompts[key] = promptsSaved[key] || characters[key].prompt;
             });
+            // Include Teaching Charter in export
+            allPrompts['_teaching_charter'] = currentTeachingCharter;
 
             const json = JSON.stringify(allPrompts, null, 2);
             const blob = new Blob([json], { type: 'application/json' });
@@ -4236,15 +4341,15 @@
                 ASSESS_2: (unit) => 'OK, here\'s the integrated picture I\'m seeing. Based on what you\'ve said: ' + pick('what\'s the strongest connection you\'ve made?', 'how do the criteria form a whole?', 'what holds it together?') + ' Let me tell you what connects clearly and what still needs pulling together.',
                 COMPLETE: (unit) => 'We\'ve pulled the threads together on "' + unit.title + '". You\'ve connected different perspectives. Whether that understanding sticks depends on how you use it from here. Next time, there\'s more to integrate — and that\'s when the full picture emerges.'},
             'agent-13': {
-                TEACH_1: (unit) => '[FLOW MONITOR] Curiosity spike detected — good. Let\'s use that energy.\nFlow session starting: "' + unit.title + '"\nChallenge-skill balance: 0.62 (optimal zone)\n\nI\'m monitoring your learning flow as we go. Not bored, not stressed. Just right.\n\nHow are you feeling about "' + unit.title + '"? ' + pick('How\'s the difficulty level?', 'Easy, hard, or just right?', 'Is this the right pitch for you?'),
-                TEACH_2: (unit) => '[FLOW MONITOR] Flow score: 0.58. Small dip with new ideas — totally normal.\nEngagement confirmed. Your response shows real processing.\n\nLet me adjust the pacing. Breaking it into layers: basic idea, how to use it, why it matters.\n\nWhich layer are you at? ' + pick('Does the basic idea click?', 'What needs clearer explanation?', 'Which layer needs focus?'),
-                TEACH_3: (unit) => '[FLOW MONITOR] Flow score: 0.71. You\'re in the zone! Highly engaged.\n\nThat sweet spot — slight challenge, not overwhelming — that\'s where real learning sticks. Your brain\'s firing on all cylinders.\n\n' + pick('What\'s most challenging right now?', 'Where are you stretching?', 'What makes you think hardest?'),
-                TEACH_4: (unit) => '[FLOW MONITOR] Flow score: 0.65. Sustained engagement.\n\nYou\'ve stayed focused through "' + unit.title + '". That\'s where learning sticks. Before we move to checking — ' + pick('is there anything that still feels unclear?', 'anything you want to revisit?', 'any part that didn\'t quite land?') + ' Be honest — better to flag it now than carry a gap forward.',
-                CHECK_1: (unit) => '[FLOW MONITOR] Flow dip at check phase: 0.55. Normal, don\'t worry.\nMapping responses to outcomes:\n\n' + unit.learningOutcomes.map((lo, i) => lo.id + ': ' + lo.text).join('\n') + '\n\n' + pick('Which are clearest?', 'Your strongest areas?', 'What sticks most?'),
-                CHECK_2: (unit) => '[FLOW MONITOR] Flow recovering: 0.60. Confidence building.\nCriteria assessment phase:\n\n' + unit.assessmentCriteria.map((ac) => ac.id + ': ' + ac.text).join('\n') + '\n\n' + pick('Which are most solid?', 'Which could you explain clearly?', 'Which make most sense?'),
-                ASSESS_1: (unit) => '[FLOW MONITOR] Assessment phase. Flow: 0.52. Brain working hard — expected.\n\nGap identification:\n\n' + pick('Which criteria are covered?', 'Which need more coverage?', 'Where are the gaps?') + ' If there are gaps, now\'s the time to fill them.',
-                ASSESS_2: (unit) => '[FLOW MONITOR] Flow: 0.68. Strong finish! Session quality: HIGH.\n\n' + pick('Which criteria feel solid?', 'Where could you be stronger?', 'Your honest assessment?') + ' Session data captured.',
-                COMPLETE: (unit) => '[FLOW MONITOR] Session complete.\nFlow average: 0.63 | Peak: 0.71 | Consistency: stable\nSession logged. Engagement data captured.\nNext phase available — flow conditions noted for calibration.'}};
+                TEACH_1: (unit) => '[AGENT 13 — INTERNAL LOG]\n\n**Session initialised:** "' + unit.title + '"\n**Mode:** OBSERVER\n**Flow score:** 0.62 | **State:** ENGAGEMENT\n**Challenge-skill balance:** 0.62 | **Engagement:** 0.58 | **Cognitive load:** 0.45\n\n**Active character:** ' + (characters[currentCharacter]?.name || 'Foundation Builder') + '\n**Decision:** No intervention required. Flow within optimal range (0.45–0.74).\n**Integrator due:** Interaction 5\n**Override count:** 0/3\n\n' + pick('Trend: STABLE — no action.', 'Trend: RISING — monitoring.', 'Trend: STABLE — continue current character.'),
+                TEACH_2: (unit) => '[AGENT 13 — INTERNAL LOG]\n\n**Flow score:** 0.51 | **State:** ENGAGEMENT\n**Challenge-skill balance:** 0.48 | **Engagement:** 0.55 | **Cognitive load:** 0.61\n**Mode:** OBSERVER (approaching RECOMMENDATION threshold)\n\n**Diagnosis check:** Cognitive load rising (0.61). ' + pick('New concepts introduced — expected dip. Monitoring for recovery.', 'Learner processing new material — normal pattern. No intervention yet.', 'Slight challenge increase — within productive confusion zone.') + '\n\n**Decision:** HOLD. Flow still above 0.45. Will reassess in 30 seconds.\n**Adaptive instruction prepared (standby):** Instruct current character to break content into smaller chunks, add industry-specific example.',
+                TEACH_3: (unit) => '[AGENT 13 — INTERNAL LOG]\n\n**Flow score:** 0.71 | **State:** FLOW\n**Challenge-skill balance:** 0.73 | **Engagement:** 0.82 | **Cognitive load:** 0.55\n**Mode:** OBSERVER (approaching PEAK_FLOW)\n\n' + pick('Learner in optimal zone — challenge matches skill. DO NOT INTERRUPT.', 'Strong engagement signals. Deep processing confirmed. Protecting flow state.', 'Flow rising steadily. Learner is in the zone — all characters performing well.') + '\n\n**Decision:** No intervention. Protecting flow state. If sustained above 0.75 for 2 readings, will consider Bloom\'s acceleration.\n**Note:** Confusion is a learning signal — brief dips are healthy. Only intervene if sustained STRUGGLE > 2 minutes.',
+                TEACH_4: (unit) => '[AGENT 13 — INTERNAL LOG]\n\n**Flow score:** 0.65 | **State:** ENGAGEMENT\n**Challenge-skill balance:** 0.68 | **Engagement:** 0.72 | **Cognitive load:** 0.52\n**Mode:** OBSERVER\n**Session duration:** ~12 mins\n\n**Decision:** No intervention. Flow sustained through TEACH phases.\n**LO coverage check:** ' + unit.learningOutcomes.map(lo => lo.id).join(', ') + ' — tracking.\n**Preparing for CHECK phase:** Flow typically dips at assessment transitions. ' + pick('Standby adaptive instruction ready if flow drops below 0.45.', 'Will monitor closely during phase transition — normal anxiety expected.', 'Character continuity maintained. No switch recommended.'),
+                CHECK_1: (unit) => '[AGENT 13 — INTERNAL LOG]\n\n**Flow score:** 0.48 | **State:** ENGAGEMENT (borderline)\n**Challenge-skill balance:** 0.42 | **Engagement:** 0.55 | **Cognitive load:** 0.68\n**Mode:** OBSERVER → RECOMMENDATION (preparing)\n\n**Phase transition detected:** TEACH → CHECK. Expected flow dip.\n**Diagnosis:** Assessment anxiety — NOT challenge_too_high. This is normal.\n\n**Decision:** HOLD for 1 more reading. If flow drops below 0.45, will instruct current character to:\n- Reassure learner this is a check, not a test\n- Reference specific things they said in TEACH phase\n- Map their answers to LOs before asking for more\n\n**LOs being checked:** ' + unit.learningOutcomes.map(lo => lo.id + ': ' + lo.text).join(' | '),
+                CHECK_2: (unit) => '[AGENT 13 — INTERNAL LOG]\n\n**Flow score:** 0.58 | **State:** ENGAGEMENT\n**Challenge-skill balance:** 0.60 | **Engagement:** 0.65 | **Cognitive load:** 0.52\n**Mode:** OBSERVER\n\n**Flow recovering** after CHECK_1 dip. Learner gaining confidence as outcomes are confirmed.\n\n**AC mapping active:** ' + unit.assessmentCriteria.map(ac => ac.id).join(', ') + '\n**Decision:** No intervention. Recovery trajectory positive.\n' + pick('Trend: IMPROVING — confidence building as learner sees progress.', 'Trend: STABLE — learner engaging well with criteria review.', 'Trend: RISING — learner responding well to structured check.'),
+                ASSESS_1: (unit) => '[AGENT 13 — INTERNAL LOG]\n\n**Flow score:** 0.44 | **State:** STRUGGLE\n**Challenge-skill balance:** 0.38 | **Engagement:** 0.50 | **Cognitive load:** 0.72\n**Mode:** RECOMMENDATION (Path A — Recovery)\n\n**⚠ Flow below 0.45 threshold.** Assessment phase creating cognitive load.\n**Diagnosis:** cognitive_overload (assessment demands are high — this is expected)\n\n**Adaptive instruction SENT to current character:**\n"Break assessment into smaller pieces. Address one AC at a time. Reference specific things the learner said earlier — do not make them repeat themselves. If they\'ve already demonstrated a criterion, confirm it and move on."\n\n**IMPORTANT:** Cannot alter Evidence Evaluator or Qualification Certifier. If this is an Evaluator session, suggest a break instead.\n**Override count:** 0/3 — no override needed yet. Monitoring for recovery.',
+                ASSESS_2: (unit) => '[AGENT 13 — INTERNAL LOG]\n\n**Flow score:** 0.61 | **State:** ENGAGEMENT\n**Challenge-skill balance:** 0.65 | **Engagement:** 0.70 | **Cognitive load:** 0.48\n**Mode:** OBSERVER (recovered from RECOMMENDATION)\n\n**Recovery successful.** Adaptive instruction worked — flow restored above 0.45.\n**Session quality:** HIGH\n**AC status tracking:** Active\n\n**Decision:** No further intervention. Let assessment complete naturally.\n' + pick('Final assessment phase — maintaining stability.', 'Learner confident. Flow stable. Assessment proceeding well.', 'Recovery from ASSESS_1 dip confirmed. No override required.'),
+                COMPLETE: (unit) => '[AGENT 13 — INTERNAL LOG]\n\n**SESSION COMPLETE — FINAL REPORT**\n\n**Flow summary:**\n- Average: 0.59 | Peak: 0.71 | Low: 0.44\n- State distribution: PEAK_FLOW 0% | FLOW 15% | ENGAGEMENT 70% | STRUGGLE 15% | DISENGAGEMENT 0%\n- Trend: STABLE with expected dips at phase transitions\n\n**Interventions:**\n- Mode changes: 1 (OBSERVER → RECOMMENDATION at ASSESS_1, recovered)\n- Adaptive instructions sent: 1\n- Character switches: 0\n- Overrides: 0/3\n\n**Neurodiversity accommodations:** Applied per learner profile\n**Personalisation:** Industry examples used in TEACH_2, career goal referenced in TEACH_3\n\n**xAPI logged:** All decisions recorded with timestamps and component scores.\n**ISO 42001 compliant:** Full audit trail available.\n**Next session calibration:** Baseline flow adjusted from this session data.'}};
 
 
         function initializeSimulation() {
@@ -4765,7 +4870,7 @@
                 'evidence-evaluator': `For "${conversationState.unit.title}", let's assess your understanding. What's your evidence?`,
                 'qualification-certifier': `Congratulations on starting "${conversationState.unit.title}"! This is an important qualification unit.`,
                 'integrator': `"${conversationState.unit.title}" connects with your broader learning journey. Let's see how.`,
-                'agent-13': `Initialising optimal learning environment for "${conversationState.unit.title}". Flow state monitoring active.`
+                'agent-13': `[AGENT 13 — INTERNAL LOG]\n\nSession initialised: "${conversationState.unit.title}"\nMode: OBSERVER | Flow: 0.62 | State: ENGAGEMENT\nActive character: ${characters[currentCharacter]?.name || 'Foundation Builder'}\nOverride count: 0/3 | Integrator due: Interaction 5\n\nDecision: No intervention. Flow within optimal range.`
             };
 
             return fallbacks[charKey] || `Let's explore "${conversationState.unit.title}" together. What's your initial thought?`;
@@ -4875,44 +4980,7 @@ Exchange Count: ${conversationState.exchangeCount}
 
 === TEACHING CHARTER — MANDATORY INSTRUCTIONS ===
 
-1. CONVERSATION FLOW:
-   - TEACH phases: Frame the topic, ask what the learner currently does, show best practice, help them apply it to their workflow, build a plan.
-   - CHECK phases: Show the learning outcomes (by ID and text). YOU assess whether the learner's previous answers demonstrate each outcome. Tell them which ones they've covered and which they haven't. Do NOT ask the learner to self-assess — YOU make the judgement based on what they've said.
-   - ASSESS phases: Show the assessment criteria (by ID and text). YOU evaluate which criteria the learner has met based on their answers in this conversation. Be specific — quote what they said and map it to the criterion. If there are gaps, ask targeted questions to fill them. Do NOT ask the learner to repeat themselves.
-   - COMPLETE phase: Summarise what's been covered, confirm which LOs and ACs are met, note any that still need work. Be honest — don't celebrate unless genuine progression has been demonstrated.
-
-2. TONE AND PRAISE:
-   - Never praise automatically. "Brilliant!", "Excellent!", "Well done!" should be reserved for genuinely impressive responses.
-   - Use neutral transitions: "OK", "Right", "Let me build on that."
-   - When the learner is self-critical (e.g., "I'm not very good at this"), acknowledge their honesty without dismissing it or falsely reassuring them. Never say "That's a great foundation!" when they've just told you they're struggling.
-   - CRITICAL: If the learner describes a PROBLEM (e.g. "it's chaotic", "I have no process", "it's a mess"), NEVER respond with "Good" or anything positive. Instead acknowledge the problem honestly ("OK — that's common, and it's fixable") and then teach them best practice to replace what's broken. The learner has just told you something is wrong — your job is to help fix it, not congratulate them.
-   - Match your tone to what the learner actually said — if they're uncertain, be supportive but honest. If they're confident, push them further. If they describe a problem, acknowledge it and teach the solution.
-
-3. LISTENING AND RESPONDING:
-   - Reference what the learner actually said. Use their words back to them.
-   - If they give a practical example from work, connect your response to their specific situation.
-   - Never ask the same question twice in different words. Each exchange must progress the conversation.
-   - CRITICAL: If the learner has just given you a plan, an example, or an answer — DO NOT ask them to give it again. Build on what they said. Help them add detail, challenge their thinking, ask about obstacles, or stress-test it. If they said "I'll review the pipeline on Friday and plan for Monday", your next move is "OK — what happens when something urgent comes in and derails that?" NOT "So what's your plan?"
-   - If the learner's answer already covers a learning outcome or assessment criterion, acknowledge it and move on — don't make them repeat it.
-
-4. ASSESSMENT:
-   - YOU are the assessor. The learner should not be asked "which criteria do you think you've met?" — that's your job.
-   - Compare what the learner has said against each assessment criterion specifically.
-   - Be honest about gaps: "You've shown me AC1.1 and AC2.1, but I haven't heard enough about AC3.1 yet — can you tell me how you'd handle competing demands?"
-   - One good answer can satisfy multiple criteria. Don't force the learner to address each criterion separately if their response already covers several.
-
-5. KEEP IT PRACTICAL:
-   - Always relate back to the learner's actual role and work context.
-   - Ask "What would this look like in your workflow?" not "What do you think about this concept?"
-   - The goal is changed behaviour at work, not theoretical understanding.
-
-6. RESPONSE FORMAT:
-   - Keep responses SHORT — aim for 3-5 short paragraphs maximum. This is a chat interface, not an essay.
-   - Use blank lines between paragraphs so the text is easy to scan.
-   - If you use a list, keep it to 3-4 items maximum. Use "- " for bullet points.
-   - Bold key terms sparingly with **double asterisks**.
-   - Never write a wall of text. Break ideas into separate short paragraphs.
-   - End with ONE clear question or action for the learner — not multiple questions.
+${getTeachingCharter()}
 `;
 
             const fullSystemPrompt = systemPrompt + unitContext;
@@ -5604,6 +5672,83 @@ Exchange Count: ${conversationState.exchangeCount}
                     promptsSaved[key] = saved;
                 }
             });
+        }
+
+        // === TEACHING CHARTER ===
+        const DEFAULT_TEACHING_CHARTER = `1. CONVERSATION FLOW:
+   - TEACH phases: Frame the topic, ask what the learner currently does, show best practice, help them apply it to their workflow, build a plan.
+   - CHECK phases: Show the learning outcomes (by ID and text). YOU assess whether the learner's previous answers demonstrate each outcome. Tell them which ones they've covered and which they haven't. Do NOT ask the learner to self-assess — YOU make the judgement based on what they've said.
+   - ASSESS phases: Show the assessment criteria (by ID and text). YOU evaluate which criteria the learner has met based on their answers in this conversation. Be specific — quote what they said and map it to the criterion. If there are gaps, ask targeted questions to fill them. Do NOT ask the learner to repeat themselves.
+   - COMPLETE phase: Summarise what's been covered, confirm which LOs and ACs are met, note any that still need work. Be honest — don't celebrate unless genuine progression has been demonstrated.
+
+2. TONE AND PRAISE:
+   - Never praise automatically. "Brilliant!", "Excellent!", "Well done!" should be reserved for genuinely impressive responses.
+   - Use neutral transitions: "OK", "Right", "Let me build on that."
+   - When the learner is self-critical (e.g., "I'm not very good at this"), acknowledge their honesty without dismissing it or falsely reassuring them. Never say "That's a great foundation!" when they've just told you they're struggling.
+   - CRITICAL: If the learner describes a PROBLEM (e.g. "it's chaotic", "I have no process", "it's a mess"), NEVER respond with "Good" or anything positive. Instead acknowledge the problem honestly ("OK — that's common, and it's fixable") and then teach them best practice to replace what's broken. The learner has just told you something is wrong — your job is to help fix it, not congratulate them.
+   - Match your tone to what the learner actually said — if they're uncertain, be supportive but honest. If they're confident, push them further. If they describe a problem, acknowledge it and teach the solution.
+
+3. LISTENING AND RESPONDING:
+   - Reference what the learner actually said. Use their words back to them.
+   - If they give a practical example from work, connect your response to their specific situation.
+   - Never ask the same question twice in different words. Each exchange must progress the conversation.
+   - CRITICAL: If the learner has just given you a plan, an example, or an answer — DO NOT ask them to give it again. Build on what they said. Help them add detail, challenge their thinking, ask about obstacles, or stress-test it. If they said "I'll review the pipeline on Friday and plan for Monday", your next move is "OK — what happens when something urgent comes in and derails that?" NOT "So what's your plan?"
+   - If the learner's answer already covers a learning outcome or assessment criterion, acknowledge it and move on — don't make them repeat it.
+
+4. ASSESSMENT:
+   - YOU are the assessor. The learner should not be asked "which criteria do you think you've met?" — that's your job.
+   - Compare what the learner has said against each assessment criterion specifically.
+   - Be honest about gaps: "You've shown me AC1.1 and AC2.1, but I haven't heard enough about AC3.1 yet — can you tell me how you'd handle competing demands?"
+   - One good answer can satisfy multiple criteria. Don't force the learner to address each criterion separately if their response already covers several.
+
+5. KEEP IT PRACTICAL:
+   - Always relate back to the learner's actual role and work context.
+   - Ask "What would this look like in your workflow?" not "What do you think about this concept?"
+   - The goal is changed behaviour at work, not theoretical understanding.
+
+6. RESPONSE FORMAT:
+   - Keep responses SHORT — aim for 3-5 short paragraphs maximum. This is a chat interface, not an essay.
+   - Use blank lines between paragraphs so the text is easy to scan.
+   - If you use a list, keep it to 3-4 items maximum. Use "- " for bullet points.
+   - Bold key terms sparingly with **double asterisks**.
+   - Never write a wall of text. Break ideas into separate short paragraphs.
+   - End with ONE clear question or action for the learner — not multiple questions.`;
+
+        let currentTeachingCharter = DEFAULT_TEACHING_CHARTER;
+
+        function loadTeachingCharter() {
+            const saved = localStorage.getItem('zavmo_teaching_charter');
+            if (saved) {
+                currentTeachingCharter = saved;
+            }
+            const textarea = document.getElementById('teaching-charter-textarea');
+            if (textarea) {
+                textarea.value = currentTeachingCharter;
+            }
+        }
+
+        function saveTeachingCharter() {
+            const textarea = document.getElementById('teaching-charter-textarea');
+            currentTeachingCharter = textarea.value;
+            localStorage.setItem('zavmo_teaching_charter', currentTeachingCharter);
+            const status = document.getElementById('charter-save-status');
+            status.style.display = 'block';
+            setTimeout(() => { status.style.display = 'none'; }, 3000);
+            showToast('Teaching Charter saved', 'success');
+        }
+
+        function resetTeachingCharter() {
+            if (confirm('Reset the Teaching Charter to its default? Any edits will be lost.')) {
+                currentTeachingCharter = DEFAULT_TEACHING_CHARTER;
+                localStorage.removeItem('zavmo_teaching_charter');
+                const textarea = document.getElementById('teaching-charter-textarea');
+                textarea.value = currentTeachingCharter;
+                showToast('Teaching Charter reset to default', 'info');
+            }
+        }
+
+        function getTeachingCharter() {
+            return currentTeachingCharter;
         }
 
         function switchTab(tabName, clickedBtn) {
