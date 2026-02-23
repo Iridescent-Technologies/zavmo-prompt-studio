@@ -2319,177 +2319,191 @@
         <!-- MAIN CONTENT -->
         <div class="main-content">
             <!-- LEFT PANEL: CHARACTER PROMPTS -->
-            <div class="left-panel panel">
-                <h2 class="section-header">Character Prompts</h2>
+            <!-- CHARACTERS PAGE (full-width, mirrors Agent 13 layout) -->
+            <div id="characters-page" style="width: 100%; overflow-y: auto;">
+                <div class="panel" style="width: 100%;">
+                    <div style="max-width: 1200px; margin: 0 auto; padding: 24px;">
 
-                <!-- Character Selector -->
-                <div class="character-selector">
-                    <label for="character-select">Select Character</label>
-                    <select id="character-select">
-                        <option value="foundation-builder">The Foundation Builder</option>
-                        <option value="challenge-coach">The Challenge Coach</option>
-                        <option value="career-navigator">The Career Navigator</option>
-                        <option value="experiment-space">The Experiment Space</option>
-                        <option value="pattern-connector">The Pattern Connector (Maya Patel)</option>
-                        <option value="practical-builder">The Practical Builder (Alex Thompson)</option>
-                        <option value="systems-analyst">The Systems Analyst (Kenji Tanaka)</option>
-                        <option value="collaboration-guide">The Collaboration Guide (Sofia Rodriguez)</option>
-                        <option value="creative-catalyst">The Creative Catalyst (Aisha Williams)</option>
-                        <option value="evidence-evaluator">The Evidence Evaluator</option>
-                        <option value="qualification-certifier">The Qualification Certifier</option>
-                        <option value="integrator">The Integrator</option>
-                    </select>
-                </div>
-
-                <!-- Character Metadata -->
-                <div class="character-metadata">
-                    <div class="metadata-row">
-                        <span class="metadata-label">Bloom's Level</span>
-                        <span class="metadata-value" id="blooms-level">Remember, Understand</span>
-                    </div>
-                    <div class="metadata-row">
-                        <span class="metadata-label">Intelligence Type</span>
-                        <span class="metadata-value" id="intelligence-type">Foundation Building</span>
-                    </div>
-                    <div class="metadata-row">
-                        <span class="metadata-label">Voice Pattern</span>
-                        <span class="metadata-value" id="voice-pattern">Encouraging Mentor</span>
-                    </div>
-                    <div class="metadata-row">
-                        <span class="metadata-label">Character Colour</span>
-                        <div class="colour-swatch" id="colour-swatch" style="background: #00d9c0;"></div>
-                    </div>
-                </div>
-
-                <!-- Prompt Editor -->
-                <div class="prompt-editor">
-                    <h3 class="subsection-header">System Prompt</h3>
-                    <textarea class="prompt-textarea" id="prompt-textarea" placeholder="Character prompt will appear here..."></textarea>
-                </div>
-
-                <!-- Button Group -->
-                <div class="button-group">
-                    <button class="button button-primary" id="save-prompt-btn">Save Prompt</button>
-                    <button class="button button-secondary" id="copy-prompt-btn">Copy to Clipboard</button>
-                </div>
-
-                <div class="button-group">
-                    <button class="button button-primary" id="export-all-btn">Export All</button>
-                    <button class="button button-secondary" id="import-btn">Import</button>
-                </div>
-
-                <!-- TEACHING CHARTER PANEL -->
-                <div class="teaching-charter-panel" style="margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" id="charter-panel-header">
-                        <h3 class="subsection-header" style="margin: 0; display: flex; align-items: center; gap: 8px;">
-                            <span style="color: #00d9c0;">📋</span> Teaching Charter
-                            <span style="font-size: 10px; color: rgba(255,255,255,0.4); font-weight: 400; font-style: italic;">— mandatory for all 12 characters + Agent 13</span>
-                        </h3>
-                        <span id="charter-panel-toggle" style="color: #00d9c0; font-size: 18px; transition: transform 0.3s;">&#9660;</span>
-                    </div>
-                    <div id="charter-panel-body" style="margin-top: 12px;">
-                        <p style="font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 12px; line-height: 1.5;">
-                            This charter is appended to every API call. It governs how all characters teach, assess, and respond. Edit here and it applies everywhere.
-                        </p>
-                        <textarea class="prompt-textarea" id="teaching-charter-textarea" style="min-height: 320px; font-size: 12px; line-height: 1.6;" placeholder="Teaching Charter will appear here..."></textarea>
-                        <div class="button-group" style="margin-top: 12px;">
-                            <button class="button button-primary" id="save-charter-btn" style="background: linear-gradient(135deg, #00d9c0, #00b4a0);">Save Charter</button>
-                            <button class="button button-secondary" id="reset-charter-btn">Reset to Default</button>
+                        <!-- HEADER — Character Selector + Metadata -->
+                        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
+                            <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #00d9c0;" id="colour-swatch">12</div>
+                            <div style="flex: 1;">
+                                <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Teaching Characters</h2>
+                                <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">12 pedagogical characters · Bloom's taxonomy progression · Personalised learning paths</p>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <select id="character-select" style="background: rgba(0,217,192,0.1); border: 1px solid rgba(0,217,192,0.3); color: #ffffff; padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; min-width: 240px;">
+                                    <option value="foundation-builder">The Foundation Builder</option>
+                                    <option value="challenge-coach">The Challenge Coach</option>
+                                    <option value="career-navigator">The Career Navigator</option>
+                                    <option value="experiment-space">The Experiment Space</option>
+                                    <option value="pattern-connector">The Pattern Connector (Maya Patel)</option>
+                                    <option value="practical-builder">The Practical Builder (Alex Thompson)</option>
+                                    <option value="systems-analyst">The Systems Analyst (Kenji Tanaka)</option>
+                                    <option value="collaboration-guide">The Collaboration Guide (Sofia Rodriguez)</option>
+                                    <option value="creative-catalyst">The Creative Catalyst (Aisha Williams)</option>
+                                    <option value="evidence-evaluator">The Evidence Evaluator</option>
+                                    <option value="qualification-certifier">The Qualification Certifier</option>
+                                    <option value="integrator">The Integrator</option>
+                                </select>
+                            </div>
                         </div>
-                        <div id="charter-save-status" style="font-size: 11px; color: #00d9c0; margin-top: 8px; display: none;">Charter saved successfully.</div>
+
+                        <!-- CHARACTER METADATA -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 32px;">
+                            <div style="background: rgba(0,217,192,0.08); border: 1px solid rgba(0,217,192,0.2); border-radius: 12px; padding: 16px;">
+                                <div style="color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Bloom's Level</div>
+                                <div style="color: #ffffff; font-size: 14px; font-weight: 500;" id="blooms-level">Remember, Understand</div>
+                            </div>
+                            <div style="background: rgba(0,217,192,0.08); border: 1px solid rgba(0,217,192,0.2); border-radius: 12px; padding: 16px;">
+                                <div style="color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Intelligence Type</div>
+                                <div style="color: #ffffff; font-size: 14px; font-weight: 500;" id="intelligence-type">Foundation Building</div>
+                            </div>
+                            <div style="background: rgba(0,217,192,0.08); border: 1px solid rgba(0,217,192,0.2); border-radius: 12px; padding: 16px;">
+                                <div style="color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Voice Pattern</div>
+                                <div style="color: #ffffff; font-size: 14px; font-weight: 500;" id="voice-pattern">Encouraging Mentor</div>
+                            </div>
+                            <div style="background: rgba(0,217,192,0.08); border: 1px solid rgba(0,217,192,0.2); border-radius: 12px; padding: 16px;">
+                                <div style="color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Export / Import</div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button id="export-all-btn" style="background: rgba(0,217,192,0.15); border: 1px solid rgba(0,217,192,0.3); color: #00d9c0; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">Export All</button>
+                                    <button id="import-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">Import</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TEACHING CHARTER (first, like Agent 13 Charter) -->
+                        <div style="margin-bottom: 32px; background: rgba(0,217,192,0.05); border: 1px solid rgba(0,217,192,0.25); border-radius: 12px; padding: 24px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Teaching Charter</h3>
+                                    <span style="background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">MANDATORY</span>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button id="charter-panel-header" style="background: rgba(0,217,192,0.15); border: 1px solid rgba(0,217,192,0.3); color: #00d9c0; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px;">Edit Charter</button>
+                                </div>
+                            </div>
+                            <p style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6; margin: 0 0 16px 0;">This charter is appended to every API call for all 12 characters and Agent 13. It governs how all characters teach, assess, and respond. Edit here and it applies everywhere.</p>
+                            <!-- Read-only view -->
+                            <div id="charter-preview" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 16px; max-height: 300px; overflow-y: auto;">
+                                <pre id="charter-preview-text" style="color: rgba(255,255,255,0.8); font-size: 12px; line-height: 1.7; margin: 0; white-space: pre-wrap; font-family: inherit;"></pre>
+                            </div>
+                            <!-- Edit view (hidden by default) -->
+                            <div id="charter-panel-body" style="display: none; margin-top: 16px;">
+                                <textarea class="prompt-textarea" id="teaching-charter-textarea" style="width: 100%; min-height: 400px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0,217,192,0.3); border-radius: 8px; padding: 16px; color: rgba(255,255,255,0.9); font-size: 12px; line-height: 1.7; resize: vertical; font-family: inherit;" spellcheck="false" placeholder="Teaching Charter will appear here..."></textarea>
+                                <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
+                                    <button id="save-charter-btn" style="background: #00d9c0; border: none; color: #1a1a2e; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;">Save Charter</button>
+                                    <button id="reset-charter-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">Reset to Default</button>
+                                    <span id="charter-save-status" style="display: none; color: #00d9c0; font-size: 12px; margin-left: 8px;">Charter saved successfully.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CHARACTER SYSTEM PROMPT -->
+                        <div style="margin-bottom: 32px; background: rgba(0,217,192,0.03); border: 1px solid rgba(0,217,192,0.15); border-radius: 12px; padding: 24px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Character System Prompt</h3>
+                                    <span style="background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">EDITABLE</span>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button id="save-prompt-btn" style="background: #00d9c0; border: none; color: #1a1a2e; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;">Save Prompt</button>
+                                    <button id="copy-prompt-btn" style="background: rgba(0,217,192,0.15); border: 1px solid rgba(0,217,192,0.3); color: #00d9c0; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px;">Copy to Clipboard</button>
+                                </div>
+                            </div>
+                            <p style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6; margin: 0 0 16px 0;">The system prompt for the selected character. The Teaching Charter above is automatically appended to this prompt in every API call.</p>
+                            <textarea class="prompt-textarea" id="prompt-textarea" style="width: 100%; min-height: 400px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0,217,192,0.3); border-radius: 8px; padding: 16px; color: rgba(255,255,255,0.9); font-size: 12px; line-height: 1.7; resize: vertical; font-family: 'SF Mono', 'Fira Code', monospace;" spellcheck="false" placeholder="Character prompt will appear here..."></textarea>
+                        </div>
+
                     </div>
                 </div>
             </div>
-
-            <!-- RIGHT PANEL: UNIT CONFIGURATION (Characters page) -->
-            <div class="right-panel panel">
-                <h2 class="section-header">Unit Configuration</h2>
-                <!-- QUALIFICATION SELECTOR PANEL -->
-                <div class="qualification-selector-panel" id="qual-panel">
-                    <!-- Collapsible header -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" id="qual-panel-header">
-                        <span class="input-label" style="font-size: 13px; margin: 0;">Unit Configuration</span>
-                        <span id="qual-panel-toggle" style="color: #00d9c0; font-size: 18px; transition: transform 0.3s;">&#9660;</span>
-                    </div>
-
-                    <div id="qual-panel-body">
-                        <!-- Country Selector Row -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-                            <div class="qualification-dropdown-group">
-                                <label class="input-label" for="country-select">Country / Education System</label>
-                                <select id="country-select" class="input-field">
-                                    <option value="uk">United Kingdom (OFQUAL)</option>
-                                    <option value="au">Australia (AQF)</option>
-                                    <option value="de">Germany (DQR)</option>
-                                </select>
-                            </div>
-                            <div style="display: flex; flex-direction: column; gap: 8px;">
-                                <span class="input-label">Framework</span>
-                                <div class="input-field" id="framework-display" style="background: rgba(10,22,40,0.5); cursor: default;">OFQUAL — Office of Qualifications and Examinations Regulation</div>
-                            </div>
-                        </div>
-
-                        <div class="qualification-source-row">
-                            <div class="qualification-dropdown-group">
-                                <label class="input-label" for="qualification-select">Qualification</label>
-                                <select id="qualification-select" class="input-field">
-                                    <option value="">Select a qualification...</option>
-                                </select>
-                            </div>
-
-                            <div class="unit-dropdown-group">
-                                <label class="input-label" for="unit-select">Unit</label>
-                                <select id="unit-select" class="input-field">
-                                    <option value="">Select a unit...</option>
-                                </select>
-                            </div>
-
-                            <button class="api-connector-btn" id="fetch-api-btn">Fetch from API</button>
-                        </div>
-
-                        <div class="readonly-fields" id="qual-readonly-fields">
-                            <div class="readonly-field">
-                                <span class="readonly-label">Lesson Topic</span>
-                                <div class="readonly-value" id="lesson-topic-display">—</div>
-                                <button class="edit-btn" id="edit-lesson-topic-btn" title="Edit lesson topic">✎</button>
-                            </div>
-
-                            <div class="readonly-field">
-                                <span class="readonly-label">Credits</span>
-                                <div class="readonly-value" id="credits-display">—</div>
-                            </div>
-
-                            <div class="readonly-field full-width">
-                                <span class="readonly-label">Learning Objective</span>
-                                <div class="readonly-value" id="learning-objective-display">—</div>
-                                <button class="edit-btn" id="edit-objective-btn" title="Edit learning objective">✎</button>
-                            </div>
-
-                            <div class="readonly-field full-width">
-                                <span class="readonly-label">Learning Outcomes (LO)</span>
-                                <div class="readonly-value" id="learning-outcomes-display">—</div>
-                                <button class="edit-btn" id="edit-outcomes-btn" title="Edit learning outcomes">✎</button>
-                            </div>
-
-                            <div class="readonly-field full-width">
-                                <span class="readonly-label">Assessment Criteria (AC)</span>
-                                <div class="readonly-value" id="assessment-criteria-display">—</div>
-                                <button class="edit-btn" id="edit-criteria-btn" title="Edit assessment criteria">✎</button>
-                            </div>
-
-                            <div class="readonly-field">
-                                <span class="readonly-label">Bloom's Level Range</span>
-                                <div class="readonly-value" id="blooms-display">—</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <!-- END RIGHT PANEL (Characters page) -->
+            <!-- END CHARACTERS PAGE -->
 
             <!-- SIM & COMPARE PAGE (hidden by default) -->
-            <div id="sim-compare-page" style="display: none; width: 100%; gap: 0; height: 100%;">
+            <div id="sim-compare-page" style="display: none; width: 100%; gap: 0; height: 100%; flex-direction: column;">
+
+                <!-- UNIT CONFIGURATION BAR (at top of sim-compare page) -->
+                <div style="width: 100%; background: rgba(0,217,192,0.03); border-bottom: 1px solid rgba(0,217,192,0.15); padding: 16px 32px;">
+                    <div class="qualification-selector-panel" id="qual-panel">
+                        <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" id="qual-panel-header">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Unit Configuration</h3>
+                                <span style="background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">CONFIGURE BEFORE SIMULATING</span>
+                            </div>
+                            <span id="qual-panel-toggle" style="color: #00d9c0; font-size: 18px; transition: transform 0.3s;">&#9660;</span>
+                        </div>
+
+                        <div id="qual-panel-body" style="margin-top: 16px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                                <div class="qualification-dropdown-group">
+                                    <label class="input-label" for="country-select">Country / Education System</label>
+                                    <select id="country-select" class="input-field">
+                                        <option value="uk">United Kingdom (OFQUAL)</option>
+                                        <option value="au">Australia (AQF)</option>
+                                        <option value="de">Germany (DQR)</option>
+                                    </select>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <span class="input-label">Framework</span>
+                                    <div class="input-field" id="framework-display" style="background: rgba(10,22,40,0.5); cursor: default;">OFQUAL — Office of Qualifications and Examinations Regulation</div>
+                                </div>
+                            </div>
+
+                            <div class="qualification-source-row">
+                                <div class="qualification-dropdown-group">
+                                    <label class="input-label" for="qualification-select">Qualification</label>
+                                    <select id="qualification-select" class="input-field">
+                                        <option value="">Select a qualification...</option>
+                                    </select>
+                                </div>
+                                <div class="unit-dropdown-group">
+                                    <label class="input-label" for="unit-select">Unit</label>
+                                    <select id="unit-select" class="input-field">
+                                        <option value="">Select a unit...</option>
+                                    </select>
+                                </div>
+                                <button class="api-connector-btn" id="fetch-api-btn">Fetch from API</button>
+                            </div>
+
+                            <div class="readonly-fields" id="qual-readonly-fields">
+                                <div class="readonly-field">
+                                    <span class="readonly-label">Lesson Topic</span>
+                                    <div class="readonly-value" id="lesson-topic-display">—</div>
+                                    <button class="edit-btn" id="edit-lesson-topic-btn" title="Edit lesson topic">✎</button>
+                                </div>
+                                <div class="readonly-field">
+                                    <span class="readonly-label">Credits</span>
+                                    <div class="readonly-value" id="credits-display">—</div>
+                                </div>
+                                <div class="readonly-field full-width">
+                                    <span class="readonly-label">Learning Objective</span>
+                                    <div class="readonly-value" id="learning-objective-display">—</div>
+                                    <button class="edit-btn" id="edit-objective-btn" title="Edit learning objective">✎</button>
+                                </div>
+                                <div class="readonly-field full-width">
+                                    <span class="readonly-label">Learning Outcomes (LO)</span>
+                                    <div class="readonly-value" id="learning-outcomes-display">—</div>
+                                    <button class="edit-btn" id="edit-outcomes-btn" title="Edit learning outcomes">✎</button>
+                                </div>
+                                <div class="readonly-field full-width">
+                                    <span class="readonly-label">Assessment Criteria (AC)</span>
+                                    <div class="readonly-value" id="assessment-criteria-display">—</div>
+                                    <button class="edit-btn" id="edit-criteria-btn" title="Edit assessment criteria">✎</button>
+                                </div>
+                                <div class="readonly-field">
+                                    <span class="readonly-label">Bloom's Level Range</span>
+                                    <div class="readonly-value" id="blooms-display">—</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END UNIT CONFIGURATION BAR -->
+
+                <!-- SIMULATION + COMPARISON SIDE-BY-SIDE -->
+                <div style="display: flex; flex: 1; min-height: 0;">
+
                 <!-- SIMULATION SIDE -->
                 <div class="panel" id="simulation-panel" style="flex: 3; min-width: 0; overflow-y: auto; padding: 32px; background: #0a1628; border-right: 1px solid rgba(26, 58, 92, 0.5);">
                     <h2 class="section-header">Simulation</h2>
@@ -2547,7 +2561,7 @@
                             <!-- Pre-lesson card -->
                             <div class="pre-lesson-card">
                                 <h2 class="pre-lesson-title">Ready to Begin?</h2>
-                                <p class="pre-lesson-text">Configure a unit on the Characters page, then click Start Lesson to begin the simulation.</p>
+                                <p class="pre-lesson-text">Configure a unit using the panel above, then click Start Lesson to begin the simulation.</p>
                                 <button class="chat-btn" id="start-lesson-btn" style="width: 100%;">Start Lesson</button>
                             </div>
                         </div>
@@ -2688,6 +2702,9 @@
                     </div>
                 </div>
                 <!-- END COMPARISON SIDE -->
+
+                </div>
+                <!-- END SIMULATION + COMPARISON SIDE-BY-SIDE -->
             </div>
             <!-- END SIM & COMPARE PAGE -->
 
@@ -4210,14 +4227,20 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             document.getElementById('save-charter-btn').addEventListener('click', saveTeachingCharter);
             document.getElementById('reset-charter-btn').addEventListener('click', resetTeachingCharter);
             document.getElementById('charter-panel-header').addEventListener('click', () => {
-                const body = document.getElementById('charter-panel-body');
-                const toggle = document.getElementById('charter-panel-toggle');
-                if (body.style.display === 'none') {
-                    body.style.display = 'block';
-                    toggle.innerHTML = '&#9660;';
+                const preview = document.getElementById('charter-preview');
+                const editView = document.getElementById('charter-panel-body');
+                const btn = document.getElementById('charter-panel-header');
+                if (editView.style.display === 'none') {
+                    editView.style.display = 'block';
+                    preview.style.display = 'none';
+                    btn.textContent = 'View Charter';
                 } else {
-                    body.style.display = 'none';
-                    toggle.innerHTML = '&#9654;';
+                    editView.style.display = 'none';
+                    preview.style.display = 'block';
+                    btn.textContent = 'Edit Charter';
+                    // Refresh preview text
+                    const previewText = document.getElementById('charter-preview-text');
+                    if (previewText) previewText.textContent = currentTeachingCharter;
                 }
             });
             loadTeachingCharter();
@@ -6194,6 +6217,11 @@ ${getTeachingCharter()}
             if (textarea) {
                 textarea.value = currentTeachingCharter;
             }
+            // Populate preview text
+            const previewText = document.getElementById('charter-preview-text');
+            if (previewText) {
+                previewText.textContent = currentTeachingCharter;
+            }
         }
 
         function saveTeachingCharter() {
@@ -6203,6 +6231,9 @@ ${getTeachingCharter()}
             const status = document.getElementById('charter-save-status');
             status.style.display = 'block';
             setTimeout(() => { status.style.display = 'none'; }, 3000);
+            // Update preview text
+            const previewText = document.getElementById('charter-preview-text');
+            if (previewText) previewText.textContent = currentTeachingCharter;
             showToast('Teaching Charter saved', 'success');
         }
 
@@ -6820,28 +6851,23 @@ Agent 13 measures its own success by:
             if (clickedBtn) clickedBtn.classList.add('active');
 
             // Get all page sections
-            const leftPanel = document.querySelector('.left-panel');
-            const rightPanel = document.querySelector('.right-panel');
+            const charactersPage = document.getElementById('characters-page');
             const simComparePage = document.getElementById('sim-compare-page');
             const agent13Page = document.getElementById('agent13-page');
 
             // Hide everything first
-            leftPanel.style.display = 'none';
-            rightPanel.style.display = 'none';
+            charactersPage.style.display = 'none';
             simComparePage.style.display = 'none';
             agent13Page.style.display = 'none';
 
             if (tabName === 'characters') {
-                // Characters page: prompt editor (left) + unit config (right)
-                leftPanel.style.display = 'flex';
-                rightPanel.style.display = 'flex';
-                leftPanel.style.width = '35%';
-                rightPanel.style.width = '65%';
+                // Characters page: full-width dashboard (mirrors Agent 13)
+                charactersPage.style.display = 'block';
             } else if (tabName === 'agent13') {
                 // Agent 13 page: full width dashboard
                 agent13Page.style.display = 'block';
             } else if (tabName === 'sim-compare') {
-                // Simulation & Comparison: side by side
+                // Simulation & Comparison: unit config bar + side by side
                 simComparePage.style.display = 'flex';
             }
         }
