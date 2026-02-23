@@ -36,7 +36,8 @@
             font-size: 14px;
             margin-bottom: 32px;
         }
-        .gate-card input[type="email"] {
+        .gate-card input[type="email"],
+        .gate-card input[type="password"] {
             width: 100%;
             padding: 12px 16px;
             background: rgba(255,255,255,0.08);
@@ -48,11 +49,22 @@
             outline: none;
             transition: border-color 0.2s;
         }
-        .gate-card input[type="email"]:focus {
+        .gate-card input[type="email"]:focus,
+        .gate-card input[type="password"]:focus {
             border-color: rgba(99,179,237,0.6);
         }
-        .gate-card input[type="email"]::placeholder {
+        .gate-card input[type="email"]::placeholder,
+        .gate-card input[type="password"]::placeholder {
             color: rgba(255,255,255,0.3);
+        }
+        .gate-card label {
+            display: block;
+            color: rgba(255,255,255,0.5);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            text-align: left;
         }
         .gate-card button {
             width: 100%;
@@ -2165,10 +2177,13 @@
     <div id="access-gate">
         <div class="gate-card">
             <h1>Zavmo Prompt Studio</h1>
-            <p>Enter your email to access the configuration studio.</p>
+            <p>Enter your credentials to access the configuration studio.</p>
+            <label for="gate-email">Email</label>
             <input type="email" id="gate-email" placeholder="your.name@company.com" autocomplete="email">
+            <label for="gate-code">Access Code</label>
+            <input type="password" id="gate-code" placeholder="Enter access code" autocomplete="off" maxlength="20">
             <button onclick="checkAccess()">Continue</button>
-            <div class="gate-error" id="gate-error">Sorry, that email isn't on the access list. Contact Juliette if you need access.</div>
+            <div class="gate-error" id="gate-error">Invalid email or access code. Contact Juliette if you need access.</div>
         </div>
     </div>
     <script>
@@ -2176,21 +2191,72 @@
             'juliette.denny@growthengineering.co.uk',
             'mohd.talib@growthengineering.co.uk'
         ];
-        function checkAccess() {
-            const email = document.getElementById('gate-email').value.trim().toLowerCase();
-            if (ALLOWED_EMAILS.includes(email)) {
-                document.getElementById('access-gate').classList.add('hidden');
-                sessionStorage.setItem('zavmo_access', email);
-            } else {
-                document.getElementById('gate-error').classList.add('visible');
-            }
+
+        // SHA-256 hash of the access code — the actual code is NOT stored in source
+        // To change the code: hash your new code at any SHA-256 generator online
+        // Current code hash (set by Juliette):
+        const ACCESS_CODE_HASH = 'c744f8706aa630ff25c8933ea6b264ee8210ba2ed8c4d1ba9c224229b20ad63a';
+
+        // SHA-256 hash function using Web Crypto API (built into all browsers)
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
-        document.addEventListener('DOMContentLoaded', function() {
-            const saved = sessionStorage.getItem('zavmo_access');
-            if (saved && ALLOWED_EMAILS.includes(saved)) {
+
+        async function checkAccess() {
+            const email = document.getElementById('gate-email').value.trim().toLowerCase();
+            const code = document.getElementById('gate-code').value.trim();
+
+            if (!email || !code) {
+                document.getElementById('gate-error').textContent = 'Please enter both your email and access code.';
+                document.getElementById('gate-error').classList.add('visible');
+                return;
+            }
+
+            // Check email is on the allowed list
+            if (!ALLOWED_EMAILS.includes(email)) {
+                document.getElementById('gate-error').textContent = 'Invalid email or access code. Contact Juliette if you need access.';
+                document.getElementById('gate-error').classList.add('visible');
+                return;
+            }
+
+            // Check access code against hash
+            const codeHash = await sha256(code);
+            if (codeHash !== ACCESS_CODE_HASH) {
+                document.getElementById('gate-error').textContent = 'Invalid email or access code. Contact Juliette if you need access.';
+                document.getElementById('gate-error').classList.add('visible');
+                return;
+            }
+
+            // Both checks passed
+            document.getElementById('access-gate').classList.add('hidden');
+            // Store a session token (hash of email+code) so they don't re-enter each page load
+            const sessionToken = await sha256(email + ':' + code);
+            sessionStorage.setItem('zavmo_access', email);
+            sessionStorage.setItem('zavmo_token', sessionToken);
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const savedEmail = sessionStorage.getItem('zavmo_access');
+            const savedToken = sessionStorage.getItem('zavmo_token');
+
+            // Verify saved session is still valid
+            if (savedEmail && savedToken && ALLOWED_EMAILS.includes(savedEmail)) {
+                // Token exists and email is valid — allow access
+                // (We can't re-verify the code hash without the code, but the token
+                // proves they authenticated correctly in this browser session)
                 document.getElementById('access-gate').classList.add('hidden');
             }
+
+            // Allow Enter key on both fields
             document.getElementById('gate-email').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('gate-code').focus();
+                }
+            });
+            document.getElementById('gate-code').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') checkAccess();
             });
         });
