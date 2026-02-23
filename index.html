@@ -3580,10 +3580,10 @@
         // Variation helpers to prevent repetitive responses
         function pick(...options) { return options[Math.floor(Math.random() * options.length)]; }
         function varyOpening(phase) {
-            if (phase.startsWith('TEACH_1')) return pick('Let\'s dive in!', 'Right, let\'s get started!', 'Here we go!', 'Let\'s explore this together.', 'Ready? Let\'s begin.');
-            if (phase.startsWith('TEACH_2')) return pick('Great thinking!', 'Lovely response!', 'Thanks for sharing that.', 'Good start!', 'I appreciate your perspective.');
-            if (phase.startsWith('TEACH_3')) return pick('You\'re making real progress!', 'Excellent work so far!', 'You\'re doing brilliantly!', 'Your understanding is growing!', 'Impressive thinking!');
-            if (phase.startsWith('TEACH_4')) return pick('Nearly there!', 'Let\'s pull it all together.', 'Time to connect the dots.', 'Wonderful progress!', 'Let me tie everything together.');
+            if (phase.startsWith('TEACH_1')) return pick('Right, let\'s get into it.', 'OK, let\'s start.', 'Here we go.', 'Let\'s look at this together.', 'Let\'s begin.');
+            if (phase.startsWith('TEACH_2')) return pick('OK, I hear you.', 'Right, thanks for that.', 'OK, noted.', 'Right, let me build on that.', 'OK, that gives me something to work with.');
+            if (phase.startsWith('TEACH_3')) return pick('Right, we\'re getting somewhere.', 'OK, let\'s keep going.', 'Good — let\'s push on.', 'OK, moving on.', 'Right, next part.');
+            if (phase.startsWith('TEACH_4')) return pick('Nearly there.', 'Let\'s pull it together.', 'Time to connect the dots.', 'OK, last stretch.', 'Let me tie this together.');
             return '';
         }
         function varyTransition() { return pick('Let me explain why.', 'Here\'s the key insight.', 'Here\'s what matters most.', 'Let me break this down.', 'Consider this.'); }
@@ -3651,8 +3651,10 @@
 
         function detectTone(message) {
             const lower = message.toLowerCase();
-            // Check uncertain FIRST — catch self-critical and struggling language
-            // "i am not", "i'm not", "im not", "not the greatest", "not very good", "not great at", "too much", "not enough"
+            // Check negative/self-critical FIRST — learner admitting to a problem or gap
+            if (lower.match(/chaotic|chaos|mess|messy|disaster|awful|dreadful|all over the place|no structure|no process|no system|falling apart|not working|broken|fails|failing|disorganised|disorganized|inconsistent|random|ad hoc|ad-hoc|haphazard|wing it|winging it|make it up|no plan|no clue|out of control|overwhelm|fire.?fighting|reactive|last minute|last-minute|dropping.?balls?|slip.?through/))
+                return 'negative';
+            // Check uncertain — self-doubt and struggling language
             if (lower.match(/not sure|confused|don'?t understand|dont understand|difficult|hard to|struggle|tricky|unclear|lost|misunderstand|i'?m not|i am not|dont get|don'?t get|bit confusing|confusing|no idea|stuck|not the great|not very good|not good at|not great at|too much|not enough|weak|poor at|bad at|rubbish|terrible|hopeless|need to improve|need to get better|could be better|not brilliant/))
                 return 'uncertain';
             // Check questioning before positive (e.g. "is that correct" should be questioning)
@@ -3701,6 +3703,21 @@
 
             // Tone-based acknowledgements per character archetype
             const toneAcks = {
+                'negative': {
+                    'foundation-builder': pick("OK — that's honest, and it tells me exactly where to focus. Let's sort it out. ", "Right — you've identified a real gap. That's the first step to fixing it. ", "Thanks for being straight about that — now we know what to work on. "),
+                    'challenge-coach': pick("OK — at least you know it's not working. That's more self-awareness than most people have. Let's fix it. ", "Right — admitting the problem is half the battle. Now let's build something better. ", "OK — that's honest. Let me show you what good looks like. "),
+                    'career-navigator': pick("OK — that's more common than you'd think, and it's fixable. Let me show you. ", "Right — a lot of professionals hit this point. The good news is there's a clear path forward. ", "Thanks for being honest — let's turn that into a proper approach. "),
+                    'experiment-space': pick("OK — that's useful data. Now we know what to change. ", "Right — no judgement. Let's experiment with a different approach. ", "OK — we've established the baseline. Let's try something new. "),
+                    'pattern-connector': pick("OK — that pattern isn't unusual. Let me show you what the alternative looks like. ", "Right — I can see where it's breaking down. There's a pattern to fixing this. ", "OK — there's a reason it ends up like that. Let me show you. "),
+                    'practical-builder': pick("OK — that's fixable. Let me give you something practical to replace it with. ", "Right — let's not dwell on what's broken. Let me show you how to build it properly. ", "OK — we'll replace that with something that actually works. "),
+                    'systems-analyst': pick("OK — the current system isn't working. Let's look at why and redesign it. ", "Right — that tells me the process has gaps. Let me help you map out something better. ", "OK — we've diagnosed the problem. Now let's fix the system. "),
+                    'collaboration-guide': pick("OK — that's an honest assessment, and it takes courage to say it. Let's work on it together. ", "Right — other people in your position feel the same way. Let me help. ", "OK — recognising it is the hardest part. Now let's build something better. "),
+                    'creative-catalyst': pick("OK — sometimes things need to break before you rebuild them better. Let's redesign this. ", "Right — a blank slate isn't a bad starting point. ", "OK — let's rethink the whole approach. "),
+                    'evidence-evaluator': pick("OK — that's an honest starting point. Let me help you build a proper framework. ", "Right — no evidence of a working process means we start from scratch. That's fine. ", "OK — we need to replace that with something structured. "),
+                    'qualification-certifier': pick("OK — that's a common starting point. The qualification process will give you structure. ", "Right — this is exactly what this unit is designed to address. ", "OK — we're going to fix that. "),
+                    'integrator': pick("OK — that's where you are now. Let's look at where you need to be. ", "Right — understanding the gap is the first step to closing it. ", "OK — let me help you connect the dots. "),
+                    'agent-13': pick("[FLOW MONITOR] Self-awareness spike detected — high engagement. Adjusting to supportive mode. ", "[FLOW MONITOR] Honest self-assessment — optimal learning readiness. ", "[FLOW MONITOR] Problem identified by learner — teaching intervention appropriate. ")
+                },
                 'uncertain': {
                     'foundation-builder': pick("I can tell you're finding this a bit tricky — that's completely OK. Let's work through it together. ", "It's fine to feel unsure — that honesty helps me help you better. ", "That's a really honest answer — not knowing yet is the first step to understanding. "),
                     'challenge-coach': pick("Good — recognising what you don't know is actually a strength. Let me help. ", "Being unsure means you're thinking properly, not just guessing. ", "That honesty tells me you're taking this seriously. "),
@@ -3845,7 +3862,7 @@
             'foundation-builder': {
                 TEACH_1: (unit) => pick('Right, let\'s get into this.', 'Welcome!', 'Let\'s get started.') + ' Here\'s something interesting about "' + unit.title + '": most people think they know this well, but when you dig into it, there\'s almost always a gap between what they think they do and what actually works. I want to find out where you stand.\n\n' + pick('What do you currently do when it comes to this?', 'How do you handle this at the moment?', 'What\'s your current approach to this?') + ' Just tell me honestly — there\'s no wrong answer, I just need to know your starting point.',
                 TEACH_2: (unit) => 'Thanks for being honest about where you\'re at — that self-awareness is exactly what I need to help you properly. Let me show you what best practice looks like.\n\nThe most effective people tend to do three things: they\'re consistent with it (not in bursts), they have a clear process they follow, and they regularly check whether it\'s actually working. Those three habits make the biggest difference.\n\n' + pick('Which of those three do you think you\'re strongest on?', 'How does that compare to what you\'re doing now?', 'Which one resonates most with your experience?'),
-                TEACH_3: (unit) => 'Good, so let\'s get practical. Thinking about your specific role and day-to-day work — how could you start applying this?\n\nWhat would it actually look like in your workflow? ' + pick('What\'s one thing you could do differently this week?', 'Where would you start?', 'What\'s the first change you\'d make?'),
+                TEACH_3: (unit) => 'Right, let\'s get practical. Thinking about your specific role and day-to-day work — how could you start applying this?\n\nWhat would it actually look like in your workflow? ' + pick('What\'s one thing you could do differently this week?', 'Where would you start?', 'What\'s the first change you\'d make?'),
                 TEACH_4: (unit) => 'Let\'s make sure you\'ve got a solid plan. You\'ve told me what you currently do, you\'ve seen what best practice looks like, and you\'ve thought about how to apply it.\n\nSo what\'s your actual plan? ' + pick('What will you do differently from tomorrow?', 'What\'s the one specific change you\'re committing to?', 'What\'s your first step?') + ' And what might get in the way? And here\'s what\'s exciting: once this foundation is solid, there\'s a whole next level we can build on...',
                 CHECK_1: (unit) => 'Right. Here are the learning outcomes for this unit:\n\n' + unit.learningOutcomes.map((lo, i) => lo.id + ': ' + lo.text).join('\n') + '\n\nBased on everything you\'ve told me so far — ' + pick('which of these do you think you\'ve already covered?', 'which ones have you demonstrated?', 'where are you strongest?'),
                 CHECK_2: (unit) => 'Now, here are the specific assessment criteria — these are what you\'re actually being measured against:\n\n' + unit.assessmentCriteria.map((ac) => ac.id + ': ' + ac.text).join('\n') + '\n\nLooking at what you\'ve already said — ' + pick('which of these have you met?', 'which ones does your answer cover?', 'where do you think you stand against each one?'),
@@ -3855,7 +3872,7 @@
             'challenge-coach': {
                 TEACH_1: (unit) => pick('Right, let\'s dig into this.', 'Let\'s push your thinking.', 'Time to think critically.') + ' I bet you think you\'ve got "' + unit.title + '" figured out. Let me challenge that. What I\'m interested in isn\'t your answer — it\'s your reasoning. Where does your thinking come from?\n\nWhat\'s your current view on this? ' + pick('Why do you think that\'s true?', 'What makes you say that?', 'What evidence would you give?') + ' But WHY do you do it that way? What\'s the reasoning behind it?',
                 TEACH_2: (unit) => 'OK, I hear you. Now let me push on that. Here\'s the thing: have you considered what argues against that view?\n\nThe strongest thinking comes from understanding the best arguments on BOTH sides. So what\'s the strongest case someone could make against your approach?\n\n' + pick('What\'s their best argument?', 'What would challenge your thinking most seriously?', 'What\'s the case they\'d make?') + ' Really think it through.',
-                TEACH_3: (unit) => 'Good, you\'re thinking deeper. Now here\'s where context matters: your thinking about "' + unit.title + '" works in one situation. What if circumstances changed?\n\n' + pick('What assumptions are you making?', 'Where could you be wrong?', 'What aren\'t you seeing?') + ' What would have to shift for your approach to fail?',
+                TEACH_3: (unit) => 'OK, let\'s go deeper. Your thinking about "' + unit.title + '" works in one situation. What if circumstances changed?\n\n' + pick('What assumptions are you making?', 'Where could you be wrong?', 'What aren\'t you seeing?') + ' What would have to shift for your approach to fail?',
                 TEACH_4: (unit) => 'So can you defend this from every angle? Not just explain it — defend it against strong objections.\n\nWhat\'s the tightest, most defensible version of your argument on "' + unit.title + '"? ' + pick('Build your strongest case.', 'What\'s the most rigorous version?', 'Give me your best thinking.') + ' But WHY is that better? And there\'s an even deeper question behind all this that we haven\'t touched yet...',
                 CHECK_1: (unit) => 'Right, let me show you what you\'re being measured against. Here are the learning outcomes:\n\n' + unit.learningOutcomes.map((lo, i) => lo.id + ': ' + lo.text).join('\n') + '\n\nBased on everything you\'ve said — ' + pick('which of these can you honestly say you\'ve covered?', 'which ones have you demonstrated?', 'which are you confident about?'),
                 CHECK_2: (unit) => 'And here\'s the detailed breakdown:\n\n' + unit.assessmentCriteria.map((ac) => ac.id + ': ' + ac.text).join('\n') + '\n\nLooking at your answers — ' + pick('which criteria can you honestly say you\'ve nailed?', 'which ones does your evidence cover?', 'where do you genuinely stand?'),
@@ -3865,7 +3882,7 @@
             'career-navigator': {
                 TEACH_1: (unit) => 'Here\'s what most people don\'t realise about how "' + unit.title + '" shows up on a CV: employers don\'t just want to hear that you can do it — they want to hear a story about when you actually did it. That\'s the difference between getting the interview and getting the job.\n\nThis is the kind of skill employers listen for. When you put this on your CV, it stands out. In interviews, this is exactly what they want to hear. Why? It\'s a measurable, real skill.\n\n' + pick('Where does this fit your career plan?', 'How does this help you next?', 'What role would value this?') + ' How would you describe this on your CV?',
                 TEACH_2: (unit) => 'Thanks for that context — it helps me understand your starting point. Now here\'s what hiring managers actually want: proof. Real evidence.\n\nThey\'ll ask: "Tell me about a time you did this." You need a story. A real example. With specifics. With results.\n\n' + pick('Where have you done something related?', 'Can you name a real example?', 'What\'s your interview story?') + ' What happened? What was the measurable result?',
-                TEACH_3: (unit) => 'Good material. Now let\'s sharpen it with STAR: Situation, Task, Action, Result.\n\nSituation — the context. Task — what you needed to do. Action — what exactly YOU did (not your team). Result — what happened. Numbers. Outcomes. Feedback.\n\n' + pick('Build your STAR story.', 'Work through each part.', 'Give me the full version.') + ' On your CV, how would you pitch this?',
+                TEACH_3: (unit) => 'Right — let\'s sharpen it with STAR: Situation, Task, Action, Result.\n\nSituation — the context. Task — what you needed to do. Action — what exactly YOU did (not your team). Result — what happened. Numbers. Outcomes. Feedback.\n\n' + pick('Build your STAR story.', 'Work through each part.', 'Give me the full version.') + ' On your CV, how would you pitch this?',
                 TEACH_4: (unit) => 'Solid interview material now. So on your CV for "' + unit.title + '", you\'ve got a real, provable story. You\'re not claiming — you\'re showing.\n\nThat\'s your edge. That\'s what makes you stand out. And here\'s the thing — this is just the beginning of what you can leverage for your career...\n\n' + pick('How will you use this in your next interview?', 'When will you tell this story?', 'How does this change your job search?'),
                 CHECK_1: (unit) => 'Career checkpoint. These are what an employer would check for:\n\n' + unit.learningOutcomes.map((lo, i) => lo.id + ': ' + lo.text).join('\n') + '\n\nBased on what you\'ve told me — ' + pick('which of these could you prove in an interview?', 'which ones have you genuinely demonstrated?', 'which are strongest in your story?'),
                 CHECK_2: (unit) => 'And here\'s the detail level you\'ll need to prove:\n\n' + unit.assessmentCriteria.map((ac) => ac.id + ': ' + ac.text).join('\n') + '\n\nLooking at your answers — ' + pick('which criteria have you got evidence for?', 'which would you confidently tell in an interview?', 'which ones are you market-ready on?'),
@@ -3904,7 +3921,7 @@
                 COMPLETE: (unit) => 'Right, that covers "' + unit.title + '". You\'ve walked through the steps. The real test is doing it for real, without prompts. Next time, we\'ll build on these skills — and that\'s when it becomes second nature.'},
             'systems-analyst': {
                 TEACH_1: (unit) => 'Right, let\'s map this as a system.\n\nThere\'s a hidden connection in this system that most people miss. Every system works the same way: something goes IN. Something happens to it. Something comes OUT. Input → Process → Output. That\'s the shape of everything.\n\nSo with "' + unit.title + '": what goes in at the start? What\'s the raw material or starting point?\n\nInput → Process → Output: What\'s the input?',
-                TEACH_2: (unit) => 'Good data. That tells me something about how this system works for you. Now: if that input changes, what else changes?\n\nThat\'s the key: everything\'s connected. Change one thing, something else shifts. It\'s like dominoes — push one, others fall.\n\nSo: what depends on what? If you change the input, what in the process shifts? What\'s linked?\n\nInput → Process → Output: What depends on what?',
+                TEACH_2: (unit) => 'OK — that tells me something about how this system works for you. Now: if that input changes, what else changes?\n\nThat\'s the key: everything\'s connected. Change one thing, something else shifts. It\'s like dominoes — push one, others fall.\n\nSo: what depends on what? If you change the input, what in the process shifts? What\'s linked?\n\nInput → Process → Output: What depends on what?',
                 TEACH_3: (unit) => 'OK. Now here\'s where it gets powerful: feedback loops.\n\nGood results lead to improvements in the system lead to better results. That\'s a positive loop. Or things go wrong, get corrected, get better. That\'s stabilisation.\n\nSo on "' + unit.title + '": what loops can you see? Where does the output feed back and improve (or worsen) the input?\n\nInput → Process → Output ↻ Feedback loops: What loops can you spot?',
                 TEACH_4: (unit) => 'Right. So the complete system for "' + unit.title + '": you\'ve got the inputs, the processes, the outputs. You\'ve got the connections between them. You\'ve got feedback loops that stabilise or amplify.\n\nYou understand how it all really works. The complete picture. The whole machinery. And once you see this system clearly, there are interventions and optimisations you can make...\n\nInput → Process → Output ↻: Draw it or describe it.',
                 CHECK_1: (unit) => 'Let me map your answers to the system. Here are the learning outcomes:\n\n' + unit.learningOutcomes.map((lo, i) => lo.id + ': ' + lo.text).join('\n') + '\n\nBased on what you\'ve said — ' + pick('which of these have you mapped?', 'which show you understand the system?', 'where are the inputs and outputs?'),
@@ -4604,7 +4621,8 @@ Exchange Count: ${conversationState.exchangeCount}
    - Never praise automatically. "Brilliant!", "Excellent!", "Well done!" should be reserved for genuinely impressive responses.
    - Use neutral transitions: "OK", "Right", "Let me build on that."
    - When the learner is self-critical (e.g., "I'm not very good at this"), acknowledge their honesty without dismissing it or falsely reassuring them. Never say "That's a great foundation!" when they've just told you they're struggling.
-   - Match your tone to what the learner actually said — if they're uncertain, be supportive but honest. If they're confident, push them further.
+   - CRITICAL: If the learner describes a PROBLEM (e.g. "it's chaotic", "I have no process", "it's a mess"), NEVER respond with "Good" or anything positive. Instead acknowledge the problem honestly ("OK — that's common, and it's fixable") and then teach them best practice to replace what's broken. The learner has just told you something is wrong — your job is to help fix it, not congratulate them.
+   - Match your tone to what the learner actually said — if they're uncertain, be supportive but honest. If they're confident, push them further. If they describe a problem, acknowledge it and teach the solution.
 
 3. LISTENING AND RESPONDING:
    - Reference what the learner actually said. Use their words back to them.
@@ -4852,11 +4870,27 @@ Exchange Count: ${conversationState.exchangeCount}
 
             // Get active LOs/ACs for the statement
             const activeLOs = Object.entries(progressState.loStatuses)
-                .filter(([k, v]) => v === 'in-progress')
-                .map(([k]) => k)
-                .slice(0, 1);
+                .filter(([k, v]) => v === 'in-progress' || v === 'met')
+                .map(([k]) => k);
+            const loText = activeLOs.length > 0 ? activeLOs[0] : (Object.keys(progressState.loStatuses)[0] || 'Unknown');
 
-            const loText = activeLOs.length > 0 ? activeLOs[0] : 'Unknown';
+            // Calculate actual score from progress state
+            const loValues = Object.values(progressState.loStatuses);
+            const acValues = Object.values(progressState.acStatuses);
+            const total = loValues.length + acValues.length;
+            const metCount = loValues.filter(s => s === 'met').length + acValues.filter(s => s === 'met').length;
+            const inProgressCount = loValues.filter(s => s === 'in-progress').length + acValues.filter(s => s === 'in-progress').length;
+            const score = total > 0 ? Math.round(((metCount + inProgressCount * 0.4) / total) * 100) : 0;
+
+            // Get actual Bloom's level from selected character
+            const charKey = currentCharacter || 'foundation-builder';
+            const bloomsLevel = characters[charKey]?.blooms || '2';
+            const bloomsLabels = { '1': 'Remember', '2': 'Understand', '3': 'Apply', '4': 'Analyse', '5': 'Evaluate', '6': 'Create' };
+            const bloomsLabel = bloomsLabels[bloomsLevel] || 'Understand';
+
+            // Status based on actual progress
+            const statusText = score >= 80 ? 'On Track' : score >= 40 ? 'In Progress' : metCount > 0 ? 'Getting Started' : 'Not Started';
+            const statusColour = score >= 80 ? '#00d9c0' : score >= 40 ? '#f0ad4e' : '#6b7c93';
 
             feedItem.innerHTML = `
                 <div class="xapi-feed-item-header">
@@ -4868,10 +4902,10 @@ Exchange Count: ${conversationState.exchangeCount}
                     <div><strong>Actor:</strong> <span style="color: #ffffff;">Learner</span></div>
                     <div><strong>Character:</strong> <span style="color: #00d9c0;">${character?.name.toLowerCase().replace(/\s/g, '') || 'teacher'}</span></div>
                 </div>
-                <div class="xapi-feed-item-detail">Bloom: <strong>Level 2</strong> — Understand</div>
+                <div class="xapi-feed-item-detail">Bloom: <strong>Level ${bloomsLevel}</strong> — ${bloomsLabel}</div>
                 <div class="xapi-feed-item-divider"></div>
-                <div style="font-size: 10px; color: #6b7c93;">Needs Review</div>
-                <div class="xapi-feed-item-detail">Score: <strong>0%</strong></div>
+                <div style="font-size: 10px; color: ${statusColour};">${statusText}</div>
+                <div class="xapi-feed-item-detail">Score: <strong>${score}%</strong></div>
             `;
 
             xapiFeed.appendChild(feedItem);
@@ -5110,23 +5144,23 @@ Exchange Count: ${conversationState.exchangeCount}
                 },
                 'creative-catalyst': {
                     opening: `"${unit.title}" is fascinating! But let's approach it differently — what if we ignored the conventional way? What unconventional angle could we take?`,
-                    check: `Brilliant creative thinking! Now, what if we combined this approach with something completely different? Can you imagine a creative fusion?`,
-                    assess: `You're thinking innovatively! Let me ask: design something entirely new that still honours the learning outcomes of this unit. What's your creative breakthrough?`
+                    check: `OK — what if we combined this approach with something completely different? Can you imagine a creative fusion?`,
+                    assess: `Right — design something entirely new that still honours the learning outcomes of this unit. What's your creative breakthrough?`
                 },
                 'career-navigator': {
                     opening: `"${unit.title}" is essential to your career growth. Where do you see yourself using this skill? Let's connect this learning to your professional goals.`,
                     check: `How confident are you that you can apply this in your role? What support would help you translate this learning into practice?`,
-                    assess: `Excellent progress! Now, how will you measure your growth in this area? What's your next career milestone?`
+                    assess: `Right — how will you measure your growth in this area? What's your next career milestone?`
                 },
                 'practical-builder': {
                     opening: `Let me show you how to practically apply "${unit.title}". We'll focus on doing, not just theory. Let's work through an example together.`,
                     check: `Can you now do this step-by-step? Walk me through the process without my help — show me how you'd approach it.`,
-                    assess: `Perfect! You've demonstrated practical mastery. Now, when would you use this in your actual work? Describe a real scenario.`
+                    assess: `OK — when would you use this in your actual work? Describe a real scenario.`
                 },
                 'systems-analyst': {
                     opening: `Let's examine "${unit.title}" systematically. I've structured this into key components. Which component would you like to explore first?`,
                     check: `Now let's analyse how these components interact. Can you identify the patterns and relationships between them?`,
-                    assess: `Excellent systematic thinking! Can you explain how this system works as a whole? How would you describe it to a colleague?`
+                    assess: `Right — can you explain how this system works as a whole? How would you describe it to a colleague?`
                 },
                 'collaboration-guide': {
                     opening: `"${unit.title}" affects many perspectives. How might different team members experience this skill differently? Let's explore multiple viewpoints.`,
@@ -5135,13 +5169,13 @@ Exchange Count: ${conversationState.exchangeCount}
                 },
                 'pattern-connector': {
                     opening: `"${unit.title}"! I see connections across so many fields — project management, psychology, even neuroscience! Which connection intrigues you most?`,
-                    check: `Brilliant! Now, how do those connections inform your understanding? What patterns are emerging for you?`,
-                    assess: `Excellent pattern recognition! Can you map out the concept network — how does this connect to everything else you've learned?`
+                    check: `OK — how do those connections inform your understanding? What patterns are emerging for you?`,
+                    assess: `Right — can you map out the concept network — how does this connect to everything else you've learned?`
                 },
                 'experiment-space': {
                     opening: `Let's explore "${unit.title}" in a safe, experimental way. There's no pressure here — what would you like to try first?`,
                     check: `Interesting attempt! What did you learn from trying that? What would you do differently based on what happened?`,
-                    assess: `Brilliant experimentation! Now, design your own experiment around this concept. What would you test? What's the learning question?`
+                    assess: `OK — design your own experiment around this concept. What would you test? What's the learning question?`
                 },
                 'evidence-evaluator': {
                     opening: `For "${unit.title}", I'll be evaluating your evidence against OFQUAL Assessment Criteria. What evidence can you present for the first criterion?`,
