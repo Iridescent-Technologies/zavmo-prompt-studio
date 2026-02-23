@@ -2274,6 +2274,7 @@
                     <button class="nav-tab active" data-tab="editor">Editor</button>
                     <button class="nav-tab" data-tab="simulation">Simulation</button>
                     <button class="nav-tab" data-tab="comparison">Comparison</button>
+                    <button class="nav-tab" data-tab="agent13" style="color: #00d9c0;">Agent 13</button>
                 </nav>
             </div>
         </header>
@@ -2641,6 +2642,283 @@
                     <div class="tab-content" id="comparison-tab">
                         <button class="button button-primary" id="compare-teachers-btn" style="width: 100%; margin-bottom: 24px;">Compare Teachers</button>
                         <div class="comparison-container" id="comparison-container"></div>
+                    </div>
+
+                    <!-- AGENT 13 TAB -->
+                    <div class="tab-content" id="agent13-tab" style="padding: 0;">
+                        <div style="max-width: 1200px; margin: 0 auto; padding: 24px;">
+
+                            <!-- HEADER -->
+                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
+                                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #00d9c0;">13</div>
+                                <div>
+                                    <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Agent 13 — Flow State Orchestrator</h2>
+                                    <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">Invisible meta-orchestration layer · Csíkszentmihályi's flow theory · Continuous improvement engine</p>
+                                </div>
+                            </div>
+
+                            <!-- THREE OPERATIONAL MODES -->
+                            <div style="margin-bottom: 32px;">
+                                <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Three Operational Modes</h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                                    <!-- OBSERVER -->
+                                    <div style="background: rgba(0,217,192,0.08); border: 1px solid rgba(0,217,192,0.2); border-radius: 12px; padding: 20px;">
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #00d9c0;"></div>
+                                            <span style="color: #00d9c0; font-weight: 600; font-size: 14px;">OBSERVER</span>
+                                        </div>
+                                        <div style="color: rgba(255,255,255,0.7); font-size: 12px; margin-bottom: 8px;">Flow: <strong style="color: #ffffff;">0.45 – 0.74</strong></div>
+                                        <p style="color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.6; margin: 0;">Default state. Do nothing. Monitor silently. Standard character progression continues. Log all flow data. Track trend — 3 consecutive declining readings → prepare for Recommendation.</p>
+                                    </div>
+                                    <!-- RECOMMENDATION -->
+                                    <div style="background: rgba(240,173,78,0.08); border: 1px solid rgba(240,173,78,0.2); border-radius: 12px; padding: 20px;">
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #f0ad4e;"></div>
+                                            <span style="color: #f0ad4e; font-weight: 600; font-size: 14px;">RECOMMENDATION</span>
+                                        </div>
+                                        <div style="color: rgba(255,255,255,0.7); font-size: 12px; margin-bottom: 8px;">Flow: <strong style="color: #ffffff;">&lt; 0.45 or &gt; 0.75</strong></div>
+                                        <p style="color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.6; margin: 0;"><strong style="color: #f0ad4e;">Path A (Recovery):</strong> Diagnose → Adapt current character → If no recovery in 2–3 turns → Switch via Integrator.<br><strong style="color: #f0ad4e;">Path B (Acceleration):</strong> Confirm sustained PEAK_FLOW (2 readings) → Accelerate Bloom's level.</p>
+                                    </div>
+                                    <!-- OVERRIDE -->
+                                    <div style="background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.2); border-radius: 12px; padding: 20px;">
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff6b6b;"></div>
+                                            <span style="color: #ff6b6b; font-weight: 600; font-size: 14px;">OVERRIDE</span>
+                                        </div>
+                                        <div style="color: rgba(255,255,255,0.7); font-size: 12px; margin-bottom: 8px;">Flow: <strong style="color: #ffffff;">&lt; 0.30 sustained (60s+)</strong></div>
+                                        <p style="color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.6; margin: 0;">Emergency. Skip adaptive mode → direct character switch. Use Integrator if possible. Log with reason code (ISO 42001). Max 3 per session → flag for human review if exceeded.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FLOW STATE VISUALISER -->
+                            <div style="margin-bottom: 32px;">
+                                <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Flow State Thresholds</h3>
+                                <div style="background: rgba(10,22,40,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px;">
+                                    <!-- Flow bar -->
+                                    <div style="position: relative; height: 48px; border-radius: 8px; overflow: hidden; margin-bottom: 16px;">
+                                        <div style="position: absolute; left: 0; width: 30%; height: 100%; background: linear-gradient(90deg, rgba(255,107,107,0.4), rgba(255,107,107,0.2)); display: flex; align-items: center; justify-content: center;">
+                                            <span style="color: #ff6b6b; font-size: 11px; font-weight: 600;">DISENGAGEMENT</span>
+                                        </div>
+                                        <div style="position: absolute; left: 30%; width: 15%; height: 100%; background: rgba(240,173,78,0.2); display: flex; align-items: center; justify-content: center;">
+                                            <span style="color: #f0ad4e; font-size: 11px; font-weight: 600;">STRUGGLE</span>
+                                        </div>
+                                        <div style="position: absolute; left: 45%; width: 30%; height: 100%; background: rgba(0,217,192,0.2); display: flex; align-items: center; justify-content: center;">
+                                            <span style="color: #00d9c0; font-size: 11px; font-weight: 600;">ENGAGEMENT / FLOW</span>
+                                        </div>
+                                        <div style="position: absolute; left: 75%; width: 25%; height: 100%; background: linear-gradient(90deg, rgba(102,126,234,0.2), rgba(102,126,234,0.4)); display: flex; align-items: center; justify-content: center;">
+                                            <span style="color: #667eea; font-size: 11px; font-weight: 600;">PEAK FLOW</span>
+                                        </div>
+                                    </div>
+                                    <!-- Labels -->
+                                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.4);">
+                                        <span>0.0</span>
+                                        <span style="position: relative; left: -5%;">0.30 (Override)</span>
+                                        <span>0.45 (Recommend)</span>
+                                        <span style="position: relative; right: -2%;">0.75 (Peak)</span>
+                                        <span>1.0</span>
+                                    </div>
+                                    <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 12px; font-style: italic;">Research: Confusion is the strongest predictor of learning gains (D'Mello & Graesser, 2012). Brief dips are healthy — only intervene when sustained > 2 minutes.</p>
+                                </div>
+                            </div>
+
+                            <!-- CHARACTER SELECTION DECISION TREES -->
+                            <div style="margin-bottom: 32px;">
+                                <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Character Selection Decision Trees</h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                                    <div style="background: rgba(255,107,107,0.06); border: 1px solid rgba(255,107,107,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #ff6b6b; font-weight: 600; font-size: 12px; margin-bottom: 6px;">challenge_too_high</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Foundation Builder</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Drop Bloom's by 1. Rebuild fundamentals and confidence.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(255,107,107,0.2); color: #ff6b6b; font-size: 9px; padding: 2px 6px; border-radius: 3px;">HIGH PRIORITY</span></div>
+                                    </div>
+                                    <div style="background: rgba(240,173,78,0.06); border: 1px solid rgba(240,173,78,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #f0ad4e; font-weight: 600; font-size: 12px; margin-bottom: 6px;">boredom</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Career Navigator / Experiment Space</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Bloom's ≥ 5: Experiment Space. Below 5: Career Navigator. Skip ahead.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(240,173,78,0.2); color: #f0ad4e; font-size: 9px; padding: 2px 6px; border-radius: 3px;">MEDIUM</span></div>
+                                    </div>
+                                    <div style="background: rgba(255,107,107,0.06); border: 1px solid rgba(255,107,107,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #ff6b6b; font-weight: 600; font-size: 12px; margin-bottom: 6px;">cognitive_overload</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Practical Builder / Foundation Builder</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Dyslexic: Practical Builder (visual/spatial). Others: Foundation Builder (smaller chunks).</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(255,107,107,0.2); color: #ff6b6b; font-size: 9px; padding: 2px 6px; border-radius: 3px;">HIGH PRIORITY</span></div>
+                                    </div>
+                                    <div style="background: rgba(156,39,176,0.06); border: 1px solid rgba(156,39,176,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #9C27B0; font-weight: 600; font-size: 12px; margin-bottom: 6px;">adhd_attention_fade</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Pattern Connector (Maya Patel)</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Cross-domain novelty. Use learner's hobbies. Suggest break if session exceeds preferred length.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(255,107,107,0.2); color: #ff6b6b; font-size: 9px; padding: 2px 6px; border-radius: 3px;">HIGH PRIORITY</span></div>
+                                    </div>
+                                    <div style="background: rgba(245,124,0,0.06); border: 1px solid rgba(245,124,0,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #F57C00; font-weight: 600; font-size: 12px; margin-bottom: 6px;">dyslexia_text_overload</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Practical Builder (Alex Thompson)</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Reduce text, increase visual. Enable dyslexia-friendly font. Offer text-to-speech.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(255,107,107,0.2); color: #ff6b6b; font-size: 9px; padding: 2px 6px; border-radius: 3px;">HIGH PRIORITY</span></div>
+                                    </div>
+                                    <div style="background: rgba(63,81,181,0.06); border: 1px solid rgba(63,81,181,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #3F51B5; font-weight: 600; font-size: 12px; margin-bottom: 6px;">autism_unexpected_change</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Systems Analyst (Kenji Tanaka)</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Restore structure and predictability. Explain what happened. Set clear expectations. Avoid surprises.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(240,173,78,0.2); color: #f0ad4e; font-size: 9px; padding: 2px 6px; border-radius: 3px;">MEDIUM</span></div>
+                                    </div>
+                                    <div style="background: rgba(0,137,123,0.06); border: 1px solid rgba(0,137,123,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #00897B; font-weight: 600; font-size: 12px; margin-bottom: 6px;">negative_sentiment</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Highest-affinity / Collaboration Guide</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Check affinity scores. If any character > 70, switch to them. Otherwise: Collaboration Guide for empathic support.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(255,107,107,0.2); color: #ff6b6b; font-size: 9px; padding: 2px 6px; border-radius: 3px;">HIGH PRIORITY</span></div>
+                                    </div>
+                                    <div style="background: rgba(102,126,234,0.06); border: 1px solid rgba(102,126,234,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #667eea; font-weight: 600; font-size: 12px; margin-bottom: 6px;">peak_flow_acceleration</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Next Bloom's level character</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Apply/Analyse → Career Navigator. Evaluate → Experiment Space. Create → Foundation Builder (mastery demo).</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(102,126,234,0.2); color: #667eea; font-size: 9px; padding: 2px 6px; border-radius: 3px;">LOW</span></div>
+                                    </div>
+                                    <div style="background: rgba(107,124,147,0.06); border: 1px solid rgba(107,124,147,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #6b7c93; font-weight: 600; font-size: 12px; margin-bottom: 6px;">general_struggle</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Highest-affinity / Foundation Builder</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Check affinity scores. If any > 70, switch to them. Otherwise: Foundation Builder for foundations review.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(240,173,78,0.2); color: #f0ad4e; font-size: 9px; padding: 2px 6px; border-radius: 3px;">MEDIUM</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- NEURODIVERSITY RULES -->
+                            <div style="margin-bottom: 32px;">
+                                <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Neurodiversity-Specific Rules</h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                                    <!-- ADHD -->
+                                    <div style="background: rgba(156,39,176,0.08); border: 1px solid rgba(156,39,176,0.2); border-radius: 12px; padding: 20px;">
+                                        <div style="color: #9C27B0; font-weight: 600; font-size: 14px; margin-bottom: 4px;">ADHD — DRIFT Intelligence</div>
+                                        <div style="color: rgba(255,255,255,0.5); font-size: 11px; margin-bottom: 12px;">Primary: Pattern Connector (Maya Patel)</div>
+                                        <ul style="color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.8; padding-left: 16px; margin: 0;">
+                                            <li>Preferred session: 25–30 mins</li>
+                                            <li>Reduce flow by 0.3 if session exceeds limit</li>
+                                            <li>Attention fade: steady decline after 15–18 mins</li>
+                                            <li>Hyperfocus (quality > 0.8 + positive + > 20 mins): do NOT interrupt</li>
+                                            <li>Always use learner's hobbies for analogies</li>
+                                            <li>Celebrate attempts, tolerate messiness</li>
+                                        </ul>
+                                    </div>
+                                    <!-- Dyslexia -->
+                                    <div style="background: rgba(245,124,0,0.08); border: 1px solid rgba(245,124,0,0.2); border-radius: 12px; padding: 20px;">
+                                        <div style="color: #F57C00; font-weight: 600; font-size: 14px; margin-bottom: 4px;">Dyslexia — ECHO Intelligence</div>
+                                        <div style="color: rgba(255,255,255,0.5); font-size: 11px; margin-bottom: 12px;">Primary: Practical Builder (Alex Thompson)</div>
+                                        <ul style="color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.8; padding-left: 16px; margin: 0;">
+                                            <li>Do NOT penalise longer response times</li>
+                                            <li>Add 0.1 to flow for longer processing (normal)</li>
+                                            <li>Text overload: clarification questions > 3</li>
+                                            <li>Switch to visual/spatial delivery</li>
+                                            <li>Reduce text density, increase visual content</li>
+                                            <li>Enable dyslexia-friendly font, text-to-speech</li>
+                                        </ul>
+                                    </div>
+                                    <!-- Autism -->
+                                    <div style="background: rgba(63,81,181,0.08); border: 1px solid rgba(63,81,181,0.2); border-radius: 12px; padding: 20px;">
+                                        <div style="color: #3F51B5; font-weight: 600; font-size: 14px; margin-bottom: 4px;">Autism — SCAFFOLD Intelligence</div>
+                                        <div style="color: rgba(255,255,255,0.5); font-size: 11px; margin-bottom: 12px;">Primary: Systems Analyst (Kenji Tanaka)</div>
+                                        <ul style="color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.8; padding-left: 16px; margin: 0;">
+                                            <li>Predictability paramount</li>
+                                            <li>Unexpected character change: reduce flow by 0.2</li>
+                                            <li>Always pre-announce changes via Integrator</li>
+                                            <li>Deep focus + quality > 0.8 = strong flow (+0.15)</li>
+                                            <li>Provide clear expectations per segment</li>
+                                            <li>Avoid surprises at all times</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ABSOLUTE CONSTRAINTS -->
+                            <div style="margin-bottom: 32px;">
+                                <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Absolute Constraints</h3>
+                                <div style="background: rgba(10,22,40,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px;">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #ff6b6b; font-size: 14px;">⛔</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">Never interrupt PEAK_FLOW</strong> — unless accelerating to higher Bloom's level</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #ff6b6b; font-size: 14px;">⛔</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">Never alter assessment</strong> — Evaluator + Certifier are OFQUAL-regulated quality gates</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #ff6b6b; font-size: 14px;">⛔</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">Never be visible</strong> — all actions mediated through the 12 characters</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #ff6b6b; font-size: 14px;">⛔</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">Never reference neurodiversity</strong> — characters adapt silently</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #00d9c0; font-size: 14px;">✓</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">Log everything</strong> — every decision, including "do nothing" (ISO 42001)</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #f0ad4e; font-size: 14px;">⚠</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">Max 3 overrides per session</strong> — flag for human review if exceeded</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #00d9c0; font-size: 14px;">✓</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">7-year data retention</strong> — OFQUAL audit requirement</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #667eea; font-size: 14px;">🔒</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">GDPR Article 9</strong> — neurodiversity = special category data, AES-256 encrypted</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- INTEGRATOR COORDINATION + xAPI -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+                                <!-- Integrator -->
+                                <div>
+                                    <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Integrator Coordination</h3>
+                                    <div style="background: rgba(38,198,218,0.08); border: 1px solid rgba(38,198,218,0.2); border-radius: 12px; padding: 20px;">
+                                        <p style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.7; margin: 0 0 12px 0;">The Integrator is the learner's <strong style="color: #26C6DA;">tour guide</strong>. Agent 13 is the invisible <strong style="color: #00d9c0;">stage manager</strong> deciding which room the tour guide takes them to next.</p>
+                                        <ul style="color: rgba(255,255,255,0.5); font-size: 11px; line-height: 1.8; padding-left: 16px; margin: 0;">
+                                            <li>Trigger switches through Integrator wherever possible</li>
+                                            <li>Never override the 5th-interaction scheduled appearance</li>
+                                            <li>In Override mode: may bypass if speed is critical</li>
+                                            <li>Do not intervene during end-of-module synthesis</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- xAPI -->
+                                <div>
+                                    <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">xAPI Logging (Every Decision)</h3>
+                                    <div style="background: rgba(10,22,40,0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; font-family: 'SF Mono', 'Fira Code', monospace;">
+                                        <pre style="color: rgba(255,255,255,0.6); font-size: 10px; line-height: 1.6; margin: 0; overflow-x: auto; white-space: pre-wrap;">{
+  "flow_score": 0.62,
+  "flow_state": "ENGAGEMENT",
+  "agent13_mode": "observer",
+  "agent13_override": false,
+  "standard_character": "Challenge Coach",
+  "actual_character": "Challenge Coach",
+  "override_reason": null,
+  "adaptive_instruction_sent": null,
+  "component_scores": {
+    "challenge_skill_balance": 0.65,
+    "engagement": 0.72,
+    "cognitive_load": 0.48
+  },
+  "session_override_count": 0,
+  "personalisation_used": "industry_example"
+}</pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- RESEARCH FOUNDATION -->
+                            <div style="padding: 16px 20px; background: rgba(255,255,255,0.03); border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+                                <p style="color: rgba(255,255,255,0.35); font-size: 10px; line-height: 1.6; margin: 0;">
+                                    <strong style="color: rgba(255,255,255,0.5);">Research:</strong>
+                                    Csíkszentmihályi (1990) Flow Theory · Anderson & Krathwohl (2001) Bloom's Taxonomy · Sweller (1988) Cognitive Load · Vygotsky (1978) ZPD · Dweck (2006) Growth Mindset · D'Mello & Graesser (2012) Affective States · Kirkpatrick & Kirkpatrick (2016) Four Levels · ISO 42001 AI Management · OFQUAL General Conditions of Recognition
+                                </p>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -5779,6 +6057,8 @@ ${getTeachingCharter()}
             if (tabName === 'editor') {
                 leftPanel.style.display = 'flex';
                 rightPanel.style.display = 'flex';
+                leftPanel.style.width = '35%';
+                rightPanel.style.width = '65%';
             } else if (tabName === 'simulation') {
                 leftPanel.style.display = 'none';
                 rightPanel.style.display = 'flex';
@@ -5789,12 +6069,11 @@ ${getTeachingCharter()}
                 rightPanel.style.display = 'flex';
                 rightPanel.style.width = '100%';
                 switchTab('comparison-tab', document.querySelector('.tab-button[data-tab="comparison-tab"]'));
-            }
-
-            // Reset widths when going back to editor
-            if (tabName === 'editor') {
-                leftPanel.style.width = '35%';
-                rightPanel.style.width = '65%';
+            } else if (tabName === 'agent13') {
+                leftPanel.style.display = 'none';
+                rightPanel.style.display = 'flex';
+                rightPanel.style.width = '100%';
+                switchTab('agent13-tab', document.querySelector('.tab-button[data-tab="agent13-tab"]'));
             }
         }
 
