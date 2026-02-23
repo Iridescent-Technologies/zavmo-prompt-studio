@@ -3362,6 +3362,196 @@
             }
         };
 
+        // CHARACTER xAPI DATA MAP — from Zavmo's Complete xAPI Statement Mapping specification
+        // Maps each character to their spec-defined xAPI verbs, Bloom's range, Kirkpatrick levels,
+        // neurodiversity info, WONDERS intelligence, and growth mindset indicators
+        const characterXAPIData = {
+            'foundation-builder': {
+                specName: 'builder',
+                verbs: ['experienced', 'understood'],
+                bloomsRange: ['Remember', 'Understand'],
+                kirkpatrick: [1, 2],
+                kirkpatrickLabels: ['Reaction', 'Learning'],
+                phase4D: 'Deliver',
+                growthMindset: ['embraced_challenge'],
+                neurodiversity: null,
+                wondersIntelligence: null
+            },
+            'challenge-coach': {
+                specName: 'coach',
+                verbs: ['applied', 'analysed'],
+                bloomsRange: ['Apply', 'Analyse'],
+                kirkpatrick: [2, 3],
+                kirkpatrickLabels: ['Learning', 'Behaviour'],
+                phase4D: 'Deliver',
+                growthMindset: ['persisted_after_failure', 'sought_feedback'],
+                neurodiversity: null,
+                wondersIntelligence: null
+            },
+            'career-navigator': {
+                specName: 'navigator',
+                verbs: ['evaluated', 'planned'],
+                bloomsRange: ['Evaluate'],
+                kirkpatrick: [4],
+                kirkpatrickLabels: ['Results'],
+                phase4D: 'Deliver',
+                growthMindset: ['set_challenging_career_goal'],
+                neurodiversity: null,
+                wondersIntelligence: null
+            },
+            'experiment-space': {
+                specName: 'explorer',
+                verbs: ['created', 'experimented'],
+                bloomsRange: ['Apply', 'Create'],
+                kirkpatrick: [2, 3],
+                kirkpatrickLabels: ['Learning', 'Behaviour'],
+                phase4D: 'Deliver',
+                growthMindset: ['viewed_failure_as_learning', 'embraced_experimentation'],
+                neurodiversity: null,
+                wondersIntelligence: null
+            },
+            'pattern-connector': {
+                specName: 'connector',
+                verbs: ['connected', 'recognised'],
+                bloomsRange: ['Analyse', 'Evaluate'],
+                kirkpatrick: [2],
+                kirkpatrickLabels: ['Learning'],
+                phase4D: 'Deliver',
+                growthMindset: ['welcomed_multiple_viewpoints', 'embraced_cognitive_complexity'],
+                neurodiversity: 'ADHD',
+                wondersIntelligence: 'DRIFT'
+            },
+            'practical-builder': {
+                specName: 'practitioner',
+                verbs: ['demonstrated', 'built'],
+                bloomsRange: ['Apply'],
+                kirkpatrick: [3],
+                kirkpatrickLabels: ['Behaviour'],
+                phase4D: 'Deliver',
+                growthMindset: ['learned_through_iteration'],
+                neurodiversity: 'Dyslexia',
+                wondersIntelligence: 'ECHO'
+            },
+            'systems-analyst': {
+                specName: 'analyst',
+                verbs: ['analysed', 'systematised'],
+                bloomsRange: ['Analyse'],
+                kirkpatrick: [2],
+                kirkpatrickLabels: ['Learning'],
+                phase4D: 'Deliver',
+                growthMindset: ['sought_deeper_understanding', 'refined_through_analysis'],
+                neurodiversity: 'Autism',
+                wondersIntelligence: 'SCAFFOLD'
+            },
+            'collaboration-guide': {
+                specName: 'collaborator',
+                verbs: ['collaborated', 'facilitated'],
+                bloomsRange: ['Understand', 'Analyse'],
+                kirkpatrick: [3],
+                kirkpatrickLabels: ['Behaviour'],
+                phase4D: 'Deliver',
+                growthMindset: ['valued_diverse_perspectives', 'embraced_feedback_from_peers'],
+                neurodiversity: null,
+                wondersIntelligence: 'WEAVE'
+            },
+            'creative-catalyst': {
+                specName: 'catalyst',
+                verbs: ['innovated', 'transformed'],
+                bloomsRange: ['Create'],
+                kirkpatrick: [2, 3],
+                kirkpatrickLabels: ['Learning', 'Behaviour'],
+                phase4D: 'Deliver',
+                growthMindset: ['viewed_constraints_as_opportunities', 'celebrated_glitch_moment'],
+                neurodiversity: null,
+                wondersIntelligence: 'RESONATE'
+            },
+            'evidence-evaluator': {
+                specName: 'evaluator',
+                verbs: ['assessed', 'evaluated'],
+                bloomsRange: ['Evaluate'],
+                kirkpatrick: [2],
+                kirkpatrickLabels: ['Learning'],
+                phase4D: 'Demonstrate',
+                growthMindset: ['embraced_constructive_feedback', 'requested_detailed_feedback'],
+                neurodiversity: null,
+                wondersIntelligence: null
+            },
+            'qualification-certifier': {
+                specName: 'certifier',
+                verbs: ['certified', 'completed'],
+                bloomsRange: ['N/A'],
+                kirkpatrick: [4],
+                kirkpatrickLabels: ['Results'],
+                phase4D: 'Demonstrate',
+                growthMindset: ['set_next_learning_goal', 'expressed_future_learning_ambition'],
+                neurodiversity: null,
+                wondersIntelligence: null
+            },
+            'integrator': {
+                specName: 'integrator',
+                verbs: ['synthesised', 'integrated'],
+                bloomsRange: ['Meta-Synthesis'],
+                kirkpatrick: [4],
+                kirkpatrickLabels: ['Results'],
+                phase4D: 'Both',
+                growthMindset: ['demonstrated_meta_cognitive_awareness', 'reflected_on_learning_journey'],
+                neurodiversity: null,
+                wondersIntelligence: 'WEAVE_meta'
+            },
+            'agent-13': {
+                specName: 'agent-13',
+                verbs: ['monitored', 'orchestrated'],
+                bloomsRange: ['Meta-Orchestration'],
+                kirkpatrick: [2, 3],
+                kirkpatrickLabels: ['Learning', 'Behaviour'],
+                phase4D: 'Deliver',
+                growthMindset: [],
+                neurodiversity: null,
+                wondersIntelligence: null
+            }
+        };
+
+        // GROWTH MINDSET DETECTION — based on Carol Dweck's research
+        // Detects growth vs fixed mindset language in learner responses
+        function detectGrowthMindset(message) {
+            const lower = message.toLowerCase();
+            const indicators = [];
+
+            // Growth mindset phrases
+            const growthPatterns = {
+                'embraced_challenge': /this is (difficult|hard|tough) but i (can|will|want to) learn|i('m| am) ready to try something (hard|challenging|new)|challenge.? help.? me grow|let me (try|have a go|give it a shot)/i,
+                'persisted_after_failure': /i('ll| will) try a different (approach|way|method)|that didn('t| did not) work.? but i (learned|learnt)|i('m| am) not giving up|let me try again|i('ll| will) keep (going|trying)|didn('t| did not) work first time/i,
+                'learned_from_mistakes': /this mistake taught me|i understand what went wrong|next time i('ll| will) do (this|it) differently|i (learned|learnt) from (that|this)|now i (know|see) (what|where)/i,
+                'sought_feedback': /how can i improve|what should i do differently|i want to learn from this|can you give me feedback|what am i missing|where did i go wrong|what would you suggest/i,
+                'valued_diverse_perspectives': /i hadn('t| had not) thought of it that way|your perspective helps|that('s| is) an interesting (approach|point|way)|i (hadn't|never) considered (that|this)|good point/i,
+                'embraced_complexity': /the complexity makes this interesting|there('s| is) more to this than i (thought|realised)|it('s| is) more nuanced|i can see how .+ connect/i,
+                'learned_through_doing': /practice helps me understand|i learn.? by doing|hands.?on .+ help|let me try it|when i actually (do|did) it/i,
+                'set_challenging_goal': /i('m| am) ready to develop|i want to push myself|i('ll| will) aim (for|higher)|my goal is|i('m| am) going to work (on|towards)/i,
+                'reflected_on_learning': /i can see my (learning|progress)|looking back.? i|i('ve| have) (come|grown|developed)|i now (understand|see|realise)/i
+            };
+
+            for (const [indicator, pattern] of Object.entries(growthPatterns)) {
+                if (lower.match(pattern)) {
+                    indicators.push({ type: 'growth', indicator });
+                }
+            }
+
+            // Fixed mindset phrases — flag for intervention
+            const fixedPatterns = {
+                'avoided_challenge': /this is too hard for me|i('m| am) not good at this|i can('t| not) do this|i('m| am) (rubbish|useless|hopeless) at/i,
+                'gave_up_easily': /i (quit|give up)|this is impossible|i('m| am) done trying|there('s| is) no point|i can('t| not) be bothered/i,
+                'blamed_external': /it('s| is) not my fault|the (instructions|task|question) (was|were) (bad|unclear|confusing)|i didn('t| did not) have enough time|nobody (told|showed) me/i
+            };
+
+            for (const [indicator, pattern] of Object.entries(fixedPatterns)) {
+                if (lower.match(pattern)) {
+                    indicators.push({ type: 'fixed', indicator });
+                }
+            }
+
+            return indicators;
+        }
+
         // STATE MANAGEMENT
         let currentCharacter = 'foundation-builder';
         let promptsSaved = {};
@@ -4530,6 +4720,9 @@
                 }
             });
 
+            // Detect growth/fixed mindset language (Dweck)
+            const mindsetIndicators = detectGrowthMindset(message);
+
             // Add learner message
             addMessageToChat('You (Learner)', message, '#ffffff', 'LEARN');
             conversationState.learnerResponses.push(message);
@@ -4538,6 +4731,11 @@
             // Add QC feedback to xAPI sidebar
             if (qcIndicators.length > 0) {
                 addQCFeedback(qcIndicators);
+            }
+
+            // Add growth mindset xAPI feed item if detected
+            if (mindsetIndicators.length > 0) {
+                addGrowthMindsetFeedback(mindsetIndicators, message);
             }
 
             // Advance phase
@@ -4858,13 +5056,17 @@ Exchange Count: ${conversationState.exchangeCount}
 
             const character = Object.values(characters).find(c => c.name === name);
             const isLearner = name.includes('You');
+            const charKey = currentCharacter || 'foundation-builder';
+            const xapiData = characterXAPIData[charKey] || characterXAPIData['foundation-builder'];
 
-            const badgeText = {
-                'TEACH': 'STARTED',
-                'CHECK': 'CHECKING',
-                'ASSESS': 'ASSESSED',
-                'COMPLETE': 'COMPLETED'
-            }[phaseType] || 'STARTED';
+            // CHARACTER-SPECIFIC xAPI VERB — from spec, not generic phase labels
+            const verbMap = {
+                'TEACH': xapiData.verbs[0],     // Primary verb (experienced, applied, created, etc.)
+                'CHECK': xapiData.verbs[1] || xapiData.verbs[0],  // Secondary verb (understood, analysed, etc.)
+                'ASSESS': 'assessed',
+                'COMPLETE': 'completed'
+            };
+            const xapiVerb = verbMap[phaseType] || xapiData.verbs[0];
 
             const now = new Date();
             const timeString = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -4883,27 +5085,67 @@ Exchange Count: ${conversationState.exchangeCount}
             const inProgressCount = loValues.filter(s => s === 'in-progress').length + acValues.filter(s => s === 'in-progress').length;
             const score = total > 0 ? Math.round(((metCount + inProgressCount * 0.4) / total) * 100) : 0;
 
-            // Get actual Bloom's level from selected character
-            const charKey = currentCharacter || 'foundation-builder';
-            const bloomsLevel = characters[charKey]?.blooms || '2';
-            const bloomsLabels = { '1': 'Remember', '2': 'Understand', '3': 'Apply', '4': 'Analyse', '5': 'Evaluate', '6': 'Create' };
-            const bloomsLabel = bloomsLabels[bloomsLevel] || 'Understand';
+            // BLOOM'S RANGE — show full range from spec (e.g. "Apply → Analyse" not just one level)
+            const bloomsRange = xapiData.bloomsRange.join(' → ');
+
+            // KIRKPATRICK LEVEL — from spec
+            const kirkpatrickDisplay = xapiData.kirkpatrick.map((level, i) =>
+                `L${level} (${xapiData.kirkpatrickLabels[i]})`
+            ).join(', ');
 
             // Status based on actual progress
             const statusText = score >= 80 ? 'On Track' : score >= 40 ? 'In Progress' : metCount > 0 ? 'Getting Started' : 'Not Started';
             const statusColour = score >= 80 ? '#00d9c0' : score >= 40 ? '#f0ad4e' : '#6b7c93';
 
+            // AC THREE-STATE TRACKING — MET / PARTIALLY_MET / NOT_MET
+            const acEntries = Object.entries(progressState.acStatuses);
+            const acMetCount = acEntries.filter(([k, v]) => v === 'met').length;
+            const acPartialCount = acEntries.filter(([k, v]) => v === 'in-progress').length;
+            const acNotMetCount = acEntries.filter(([k, v]) => v === 'not-started').length;
+            const acStatusHTML = acEntries.length > 0 ? `<div style="font-size: 9px; margin-top: 3px; color: #8b9cb6;">AC: <span style="color: #00d9c0;">${acMetCount} MET</span>${acPartialCount > 0 ? ` · <span style="color: #f0ad4e;">${acPartialCount} PARTIAL</span>` : ''}${acNotMetCount > 0 ? ` · <span style="color: #6b7c93;">${acNotMetCount} NOT MET</span>` : ''}</div>` : '';
+
+            // NEURODIVERSITY & WONDERS INTELLIGENCE — if applicable
+            let neurodivHTML = '';
+            if (xapiData.neurodiversity || xapiData.wondersIntelligence) {
+                const parts = [];
+                if (xapiData.wondersIntelligence) parts.push(`<span style="color: #00d9c0;">${xapiData.wondersIntelligence}</span>`);
+                if (xapiData.neurodiversity) parts.push(`<span style="color: #9C27B0;">${xapiData.neurodiversity}</span>`);
+                neurodivHTML = `<div style="font-size: 9px; margin-top: 2px; color: #8b9cb6;">Intelligence: ${parts.join(' · ')}</div>`;
+            }
+
+            // GROWTH MINDSET — detect from learner's last message if this is a learner response
+            let mindsetHTML = '';
+            if (isLearner && content) {
+                const mindsetIndicators = detectGrowthMindset(content);
+                if (mindsetIndicators.length > 0) {
+                    const badges = mindsetIndicators.map(m => {
+                        const colour = m.type === 'growth' ? '#00d9c0' : '#ff6b6b';
+                        const label = m.indicator.replace(/_/g, ' ');
+                        return `<span style="display: inline-block; padding: 1px 5px; background: ${m.type === 'growth' ? 'rgba(0,217,192,0.15)' : 'rgba(255,107,107,0.15)'}; border-radius: 3px; font-size: 8px; color: ${colour}; margin: 1px 1px;">${m.type === 'growth' ? '↑' : '↓'} ${label}</span>`;
+                    }).join('');
+                    mindsetHTML = `<div style="margin-top: 3px;">${badges}</div>`;
+                }
+            }
+
+            // 4D PHASE
+            const phase4DColour = xapiData.phase4D === 'Deliver' ? '#5B9BD5' : xapiData.phase4D === 'Demonstrate' ? '#FFD700' : '#26C6DA';
+
             feedItem.innerHTML = `
                 <div class="xapi-feed-item-header">
-                    <span class="xapi-feed-item-badge">${badgeText}</span>
+                    <span class="xapi-feed-item-badge" style="text-transform: lowercase; font-style: italic;">${xapiVerb}</span>
                     <span class="xapi-feed-item-time">${timeString}</span>
                 </div>
                 <div class="xapi-feed-item-title">${loText}</div>
                 <div class="xapi-feed-item-meta">
                     <div><strong>Actor:</strong> <span style="color: #ffffff;">Learner</span></div>
-                    <div><strong>Character:</strong> <span style="color: #00d9c0;">${character?.name.toLowerCase().replace(/\s/g, '') || 'teacher'}</span></div>
+                    <div><strong>Character:</strong> <span style="color: ${characters[charKey]?.colour || '#00d9c0'};">${xapiData.specName}</span></div>
                 </div>
-                <div class="xapi-feed-item-detail">Bloom: <strong>Level ${bloomsLevel}</strong> — ${bloomsLabel}</div>
+                <div class="xapi-feed-item-detail">Bloom's: <strong>${bloomsRange}</strong></div>
+                <div class="xapi-feed-item-detail">Kirkpatrick: <strong>${kirkpatrickDisplay}</strong></div>
+                <div style="font-size: 9px; color: ${phase4DColour}; margin-top: 2px;">Phase: ${xapiData.phase4D}</div>
+                ${neurodivHTML}
+                ${acStatusHTML}
+                ${mindsetHTML}
                 <div class="xapi-feed-item-divider"></div>
                 <div style="font-size: 10px; color: ${statusColour};">${statusText}</div>
                 <div class="xapi-feed-item-detail">Score: <strong>${score}%</strong></div>
@@ -4952,6 +5194,62 @@ Exchange Count: ${conversationState.exchangeCount}
                 <div style="margin-top: 4px; font-size: 9px; color: #8b9cb6; font-style: italic;">
                     ${detected < 3 ? 'Tip: Try to explain WHY, give examples, and connect to your experience' : detected < 5 ? 'Good depth! Try challenging assumptions or reflecting on your learning' : 'Excellent conversational quality!'}
                 </div>
+            `;
+
+            xapiFeed.appendChild(feedItem);
+            xapiFeed.scrollTop = xapiFeed.scrollHeight;
+
+            // Update statement count
+            const count = xapiFeed.children.length;
+            document.getElementById('lesson-statement-count').textContent = count + ' ' + (count === 1 ? 'statement' : 'statements');
+        }
+
+        // GROWTH MINDSET xAPI FEED — Dweck-based tracking
+        function addGrowthMindsetFeedback(indicators, learnerMessage) {
+            const xapiFeed = document.getElementById('xapi-feed');
+            if (!xapiFeed) return;
+
+            const feedItem = document.createElement('div');
+            feedItem.className = 'xapi-feed-item';
+
+            const hasGrowth = indicators.some(i => i.type === 'growth');
+            const hasFixed = indicators.some(i => i.type === 'fixed');
+            const borderColour = hasFixed ? '#ff6b6b' : '#00d9c0';
+            feedItem.style.borderLeft = `3px solid ${borderColour}`;
+
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+            const badges = indicators.map(m => {
+                const colour = m.type === 'growth' ? '#00d9c0' : '#ff6b6b';
+                const bg = m.type === 'growth' ? 'rgba(0,217,192,0.15)' : 'rgba(255,107,107,0.15)';
+                const label = m.indicator.replace(/_/g, ' ');
+                const arrow = m.type === 'growth' ? '↑' : '↓';
+                return `<span style="display: inline-block; padding: 2px 6px; background: ${bg}; border-radius: 4px; font-size: 9px; color: ${colour}; margin: 1px 2px;">${arrow} ${label}</span>`;
+            }).join('');
+
+            // Extract a short quote from the learner's message (max 60 chars)
+            const shortQuote = learnerMessage.length > 60 ? learnerMessage.substring(0, 57) + '...' : learnerMessage;
+
+            const charKey = currentCharacter || 'foundation-builder';
+            const xapiData = characterXAPIData[charKey] || characterXAPIData['foundation-builder'];
+
+            // Dweck feedback type
+            const dweckType = hasFixed ? 'fixed_mindset_detected' : 'growth_mindset_demonstrated';
+
+            feedItem.innerHTML = `
+                <div class="xapi-feed-item-header">
+                    <span class="xapi-feed-item-badge" style="background: ${hasFixed ? 'rgba(255,107,107,0.2)' : 'rgba(0,217,192,0.2)'}; color: ${borderColour};">DWECK</span>
+                    <span class="xapi-feed-item-time">${timeString}</span>
+                </div>
+                <div class="xapi-feed-item-title" style="color: ${borderColour};">${hasFixed ? 'Fixed Mindset Alert' : 'Growth Mindset'}</div>
+                <div style="margin: 4px 0;">${badges}</div>
+                <div style="font-size: 9px; color: #8b9cb6; font-style: italic; margin-top: 3px;">"${shortQuote}"</div>
+                <div class="xapi-feed-item-meta" style="margin-top: 4px;">
+                    <div><strong>Dweck Type:</strong> <span style="color: #ffffff;">${dweckType.replace(/_/g, ' ')}</span></div>
+                    <div><strong>Character:</strong> <span style="color: ${characters[charKey]?.colour || '#00d9c0'};">${xapiData.specName}</span></div>
+                </div>
+                ${hasFixed ? '<div style="margin-top: 4px; font-size: 9px; color: #ff6b6b; font-style: italic;">⚠ Intervention recommended — use process praise, reframe challenge</div>' : '<div style="margin-top: 4px; font-size: 9px; color: #00d9c0; font-style: italic;">✓ Reinforce — celebrate effort and strategy</div>'}
             `;
 
             xapiFeed.appendChild(feedItem);
@@ -5029,14 +5327,17 @@ Exchange Count: ${conversationState.exchangeCount}
         }
 
         function updateXAPIPreview(character, topic) {
+            const charKey = currentCharacter || 'foundation-builder';
+            const xapiData = characterXAPIData[charKey] || characterXAPIData['foundation-builder'];
+
             const xapiStatement = {
                 actor: {
                     mbox: 'mailto:learner@example.com',
                     name: 'Learner'
                 },
                 verb: {
-                    id: 'http://activitystrea.ms/schema/1.0/experience',
-                    display: { 'en-US': 'experienced' }
+                    id: `http://zavmo.ai/verbs/${xapiData.verbs[0]}`,
+                    display: { 'en-US': xapiData.verbs[0] }
                 },
                 object: {
                     id: `https://zavmo.com/lesson/${topic.toLowerCase().replace(/\s+/g, '-')}`,
@@ -5048,6 +5349,14 @@ Exchange Count: ${conversationState.exchangeCount}
                 context: {
                     instructor: {
                         name: character.name
+                    },
+                    extensions: {
+                        'http://zavmo.ai/extensions/virtual_team_member': xapiData.specName,
+                        'http://zavmo.ai/extensions/4d_phase': xapiData.phase4D.toLowerCase(),
+                        'http://zavmo.ai/extensions/bloom_level': xapiData.bloomsRange[0]?.toLowerCase() || 'understand',
+                        'http://zavmo.ai/extensions/kirkpatrick_level': xapiData.kirkpatrick[0],
+                        ...(xapiData.neurodiversity ? { 'http://zavmo.ai/extensions/neurodiversity': xapiData.neurodiversity } : {}),
+                        ...(xapiData.wondersIntelligence ? { 'http://zavmo.ai/extensions/wonders_intelligence': xapiData.wondersIntelligence } : {})
                     }
                 },
                 timestamp: new Date().toISOString()
@@ -5447,14 +5756,17 @@ Exchange Count: ${conversationState.exchangeCount}
             if (!selectedUnit) return;
 
             const character = characters[currentCharacter];
+            const charKey = currentCharacter || 'foundation-builder';
+            const xapiData = characterXAPIData[charKey] || characterXAPIData['foundation-builder'];
+
             const xapiStatement = {
                 actor: {
                     mbox: 'mailto:learner@example.com',
                     name: 'Learner'
                 },
                 verb: {
-                    id: 'http://activitystrea.ms/schema/1.0/experience',
-                    display: { 'en-US': 'experienced' }
+                    id: `http://zavmo.ai/verbs/${xapiData.verbs[0]}`,
+                    display: { 'en-US': xapiData.verbs[0] }
                 },
                 object: {
                     id: `https://zavmo.com/unit/${unit.id}`,
@@ -5465,6 +5777,7 @@ Exchange Count: ${conversationState.exchangeCount}
                             'https://zavmo.com/xapi/ofqual-unit-id': unit.id,
                             'https://zavmo.com/xapi/credits': unit.credits,
                             'https://zavmo.com/xapi/blooms-level': unit.bloomRange,
+                            'https://zavmo.com/xapi/bloom-range': xapiData.bloomsRange.join(', '),
                             'https://zavmo.com/xapi/learning-outcomes': unit.learningOutcomes.map(lo => lo.id),
                             'https://zavmo.com/xapi/assessment-criteria': unit.assessmentCriteria.map(ac => ac.id)
                         }
@@ -5475,7 +5788,14 @@ Exchange Count: ${conversationState.exchangeCount}
                         name: character.name
                     },
                     extensions: {
-                        'https://zavmo.com/xapi/ofqual-level': unit.bloomRange
+                        'http://zavmo.ai/extensions/virtual_team_member': xapiData.specName,
+                        'http://zavmo.ai/extensions/4d_phase': xapiData.phase4D.toLowerCase(),
+                        'http://zavmo.ai/extensions/bloom_level': xapiData.bloomsRange[0]?.toLowerCase() || 'understand',
+                        'http://zavmo.ai/extensions/kirkpatrick_level': xapiData.kirkpatrick[0],
+                        'http://zavmo.ai/extensions/learning_outcome_id': unit.learningOutcomes[0]?.id || 'LO1',
+                        'http://zavmo.ai/extensions/assessment_criteria_addressed': unit.assessmentCriteria.map(ac => ac.id),
+                        ...(xapiData.neurodiversity ? { 'http://zavmo.ai/extensions/neurodiversity': xapiData.neurodiversity } : {}),
+                        ...(xapiData.wondersIntelligence ? { 'http://zavmo.ai/extensions/wonders_intelligence': xapiData.wondersIntelligence } : {})
                     }
                 },
                 timestamp: new Date().toISOString()
