@@ -963,6 +963,128 @@ test('Flow state calculation exists', () => {
 
 
 // ============================================================
+// 21. LEARNING SPECIFICATIONS PAGE
+// ============================================================
+console.log('\n\x1b[1m21. Learning Specifications page\x1b[0m');
+
+test('Learning Specs nav tab exists', () => {
+  assertIncludes(html, 'data-tab="learning-specs"');
+  assertIncludes(html, 'Learning Specs');
+});
+
+test('Learning Specs page container exists', () => {
+  assertIncludes(html, 'id="learning-specs-page"');
+});
+
+test('Learning Specs stats cards exist', () => {
+  assertIncludes(html, 'id="ls-stats-grid"');
+  assertIncludes(html, 'id="ls-stat-ofqual"');
+  assertIncludes(html, 'id="ls-stat-nos"');
+  assertIncludes(html, 'id="ls-stat-jd"');
+  assertIncludes(html, 'id="ls-stat-frameworks"');
+});
+
+test('Learning Specs search bar exists', () => {
+  assertIncludes(html, 'id="ls-search-input"');
+  assertIncludes(html, 'id="ls-search-btn"');
+});
+
+test('Learning Specs filter dropdowns exist', () => {
+  assertIncludes(html, 'id="ls-filter-level"');
+  assertIncludes(html, 'id="ls-filter-sector"');
+  assertIncludes(html, 'id="ls-filter-type"');
+  assertIncludes(html, 'id="ls-clear-filters"');
+});
+
+test('Learning Specs result tabs exist', () => {
+  assertIncludes(html, 'id="ls-result-tabs"');
+  assertIncludes(html, 'data-ls-tab="all"');
+  assertIncludes(html, 'data-ls-tab="ofqual"');
+  assertIncludes(html, 'data-ls-tab="nos"');
+  assertIncludes(html, 'data-ls-tab="jd"');
+});
+
+test('Learning Specs results container exists', () => {
+  assertIncludes(html, 'id="ls-results-container"');
+  assertIncludes(html, 'id="ls-results-header"');
+});
+
+test('Learning Specs detail modal exists', () => {
+  assertIncludes(html, 'id="ls-detail-modal"');
+  assertIncludes(html, 'id="ls-modal-title"');
+  assertIncludes(html, 'id="ls-modal-body"');
+  assertIncludes(html, 'id="ls-modal-close"');
+});
+
+test('switchNavTab handles learning-specs tab', () => {
+  assertIncludes(allScripts, "tabName === 'learning-specs'");
+  assertIncludes(allScripts, 'learning-specs-page');
+});
+
+test('Core LS functions exist', () => {
+  assertIncludes(allScripts, 'function initLearningSpecsPage');
+  assertIncludes(allScripts, 'function searchLearningSpecs');
+  assertIncludes(allScripts, 'function parseUnifiedResponse');
+  assertIncludes(allScripts, 'function displayLSResults');
+  assertIncludes(allScripts, 'function renderLSAccordionItem');
+  assertIncludes(allScripts, 'function renderLSItemDetails');
+});
+
+test('LS normalisation functions exist', () => {
+  assertIncludes(allScripts, 'function normaliseOFQUAL');
+  assertIncludes(allScripts, 'function normaliseNOS');
+  assertIncludes(allScripts, 'function normaliseJD');
+  assertIncludes(allScripts, 'function ensureArray');
+});
+
+test('LS stats and filter functions exist', () => {
+  assertIncludes(allScripts, 'function loadLearningSpecsStats');
+  assertIncludes(allScripts, 'function populateSectorFilter');
+  assertIncludes(allScripts, 'function switchLSResultTab');
+  assertIncludes(allScripts, 'function clearLSFilters');
+  assertIncludes(allScripts, 'function onLSFilterChange');
+});
+
+test('LS modal functions exist', () => {
+  assertIncludes(allScripts, 'function openLSDetailModal');
+  assertIncludes(allScripts, 'function closeLSDetailModal');
+  assertIncludes(allScripts, 'function createModalSection');
+  assertIncludes(allScripts, 'function createModalListSection');
+});
+
+test('LS uses unified search API endpoint', () => {
+  assertIncludes(allScripts, '/api/search/unified/');
+  assertIncludes(allScripts, 'LS_API_BASE');
+  assertIncludes(allScripts, 'LS_SEARCH_ENDPOINT');
+});
+
+test('LS uses escapeHTML for XSS prevention', () => {
+  assertIncludes(allScripts, 'function escapeHTML');
+  assertIncludes(allScripts, 'escapeHTML(');
+});
+
+test('LS search has debounce pattern', () => {
+  assertIncludes(allScripts, 'lsSearchTimeout');
+  assertIncludes(allScripts, 'clearTimeout(lsSearchTimeout)');
+});
+
+test('LS CSS classes defined', () => {
+  assertIncludes(html, '.ls-stat-card');
+  assertIncludes(html, '.ls-accordion-item');
+  assertIncludes(html, '.ls-search-input');
+  assertIncludes(html, '.ls-modal-backdrop');
+  assertIncludes(html, '.ls-badge');
+});
+
+test('LS null safety on DOM queries', () => {
+  // Verify key functions use null checks before accessing elements
+  assertIncludes(allScripts, 'if (searchInput)');
+  assertIncludes(allScripts, 'if (container)');
+  assertIncludes(allScripts, 'if (modal)');
+});
+
+
+// ============================================================
 // RESULTS
 // ============================================================
 console.log('\n' + '='.repeat(60));

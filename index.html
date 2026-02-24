@@ -2208,6 +2208,469 @@
                 padding: 24px;
             }
         }
+
+        /* === LEARNING SPECIFICATIONS PAGE === */
+        .ls-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .ls-stat-card {
+            background: rgba(13, 30, 54, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(26, 58, 92, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .ls-stat-card:hover {
+            border-color: rgba(0, 217, 192, 0.3);
+            box-shadow: 0 8px 24px rgba(0, 217, 192, 0.08);
+        }
+
+        .ls-stat-label {
+            color: #6b7c93;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .ls-stat-value {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .ls-stat-detail {
+            color: #00d9c0;
+            font-size: 12px;
+        }
+
+        .ls-search-bar {
+            background: rgba(0, 217, 192, 0.03);
+            border: 1px solid rgba(0, 217, 192, 0.15);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .ls-search-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .ls-search-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(10, 22, 40, 0.5);
+            border: 1px solid rgba(26, 58, 92, 0.5);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .ls-search-input:focus {
+            border-color: #00d9c0;
+            box-shadow: 0 0 20px rgba(0, 217, 192, 0.15);
+        }
+
+        .ls-search-input::placeholder {
+            color: #6b7c93;
+        }
+
+        .ls-search-btn {
+            padding: 12px 24px;
+            background: #00d9c0;
+            color: #0a1628;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.3s ease;
+        }
+
+        .ls-search-btn:hover {
+            background: #00ffeb;
+            box-shadow: 0 0 20px rgba(0, 217, 192, 0.4);
+        }
+
+        .ls-filter-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .ls-filter-select {
+            padding: 8px 12px;
+            background: rgba(10, 22, 40, 0.5);
+            border: 1px solid rgba(26, 58, 92, 0.5);
+            border-radius: 6px;
+            color: #b8c5d6;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .ls-filter-select:focus {
+            border-color: #00d9c0;
+        }
+
+        .ls-clear-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid rgba(26, 58, 92, 0.5);
+            border-radius: 6px;
+            color: #b8c5d6;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ls-clear-btn:hover {
+            border-color: #00d9c0;
+            color: #00d9c0;
+        }
+
+        .ls-result-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+            background: rgba(10, 22, 40, 0.3);
+            border-radius: 8px;
+            padding: 4px;
+            width: fit-content;
+        }
+
+        .ls-tab-btn {
+            padding: 8px 20px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            color: #6b7c93;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ls-tab-btn:hover {
+            color: #b8c5d6;
+        }
+
+        .ls-tab-btn.active {
+            background: rgba(0, 217, 192, 0.15);
+            color: #00d9c0;
+        }
+
+        .ls-results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            color: #6b7c93;
+            font-size: 13px;
+        }
+
+        .ls-accordion-item {
+            border: 1px solid rgba(26, 58, 92, 0.3);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .ls-accordion-item:hover {
+            border-color: rgba(0, 217, 192, 0.2);
+        }
+
+        .ls-accordion-header {
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(13, 30, 54, 0.4);
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .ls-accordion-header:hover {
+            background: rgba(0, 217, 192, 0.05);
+        }
+
+        .ls-accordion-title {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .ls-accordion-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .ls-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .ls-badge-level {
+            background: rgba(0, 217, 192, 0.15);
+            color: #00d9c0;
+        }
+
+        .ls-badge-credits {
+            background: rgba(255, 255, 255, 0.08);
+            color: #b8c5d6;
+        }
+
+        .ls-badge-sector {
+            background: rgba(100, 130, 180, 0.15);
+            color: #8ea8d0;
+        }
+
+        .ls-badge-type {
+            background: rgba(180, 130, 255, 0.12);
+            color: #b89cef;
+        }
+
+        .ls-accordion-arrow {
+            color: #00d9c0;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 12px;
+        }
+
+        .ls-accordion-arrow.open {
+            transform: rotate(90deg);
+        }
+
+        .ls-accordion-body {
+            display: none;
+            padding: 0 20px 20px 20px;
+            background: rgba(10, 22, 40, 0.3);
+        }
+
+        .ls-accordion-body.open {
+            display: block;
+        }
+
+        .ls-lo-list, .ls-ac-list {
+            margin: 12px 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .ls-lo-item, .ls-ac-item {
+            padding: 8px 12px;
+            margin-bottom: 4px;
+            background: rgba(13, 30, 54, 0.4);
+            border-radius: 6px;
+            font-size: 13px;
+            color: #b8c5d6;
+            line-height: 1.6;
+        }
+
+        .ls-lo-item strong, .ls-ac-item strong {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .ls-section-label {
+            color: #6b7c93;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px 0;
+            font-weight: 500;
+        }
+
+        .ls-detail-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid rgba(0, 217, 192, 0.3);
+            border-radius: 6px;
+            color: #00d9c0;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .ls-detail-btn:hover {
+            background: rgba(0, 217, 192, 0.1);
+            border-color: #00d9c0;
+        }
+
+        /* Detail Modal */
+        .ls-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 5000;
+            display: none;
+            overflow-y: auto;
+            padding: 40px 20px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .ls-modal-backdrop.open {
+            display: flex;
+        }
+
+        .ls-modal-content {
+            background: rgba(13, 30, 54, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(26, 58, 92, 0.5);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .ls-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(0, 217, 192, 0.2);
+        }
+
+        .ls-modal-close {
+            background: transparent;
+            border: none;
+            color: #6b7c93;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: color 0.3s ease;
+        }
+
+        .ls-modal-close:hover {
+            color: #00d9c0;
+        }
+
+        .ls-modal-section {
+            margin-bottom: 24px;
+        }
+
+        .ls-modal-section-title {
+            color: #00d9c0;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        /* Loading & Empty States */
+        .ls-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 48px 32px;
+            color: #6b7c93;
+            font-size: 14px;
+        }
+
+        .ls-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0, 217, 192, 0.2);
+            border-top-color: #00d9c0;
+            border-radius: 50%;
+            animation: lsSpin 0.8s linear infinite;
+        }
+
+        @keyframes lsSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .ls-empty-state {
+            text-align: center;
+            padding: 64px 32px;
+            color: #6b7c93;
+        }
+
+        .ls-empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.4;
+        }
+
+        .ls-empty-title {
+            color: #b8c5d6;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .ls-empty-text {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 900px) {
+            .ls-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .ls-stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ls-search-row {
+                flex-direction: column;
+            }
+
+            .ls-filter-row {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2313,6 +2776,7 @@
                     <button class="nav-tab active" data-tab="characters">Characters</button>
                     <button class="nav-tab" data-tab="agent13" style="color: #00d9c0;">Agent 13</button>
                     <button class="nav-tab" data-tab="sim-compare">Simulation & Comparison</button>
+                    <button class="nav-tab" data-tab="learning-specs">Learning Specs</button>
                 </nav>
             </div>
         </header>
@@ -2717,6 +3181,122 @@
                 <!-- END SIMULATION + COMPARISON SIDE-BY-SIDE -->
             </div>
             <!-- END SIM & COMPARE PAGE -->
+
+            <!-- LEARNING SPECIFICATIONS PAGE (hidden by default) -->
+            <div id="learning-specs-page" style="display: none; width: 100%; overflow-y: auto;">
+                <div class="panel" style="width: 100%;">
+                    <div style="max-width: 1400px; margin: 0 auto; padding: 24px;">
+
+                        <!-- HEADER -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d9c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                                </div>
+                                <div>
+                                    <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Learning Specifications</h2>
+                                    <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">Browse qualifications, units, learning outcomes and assessment criteria from the Neo4j database</p>
+                                </div>
+                            </div>
+                            <button class="ls-search-btn" id="ls-refresh-btn" style="padding: 10px 20px; font-size: 13px;">Refresh Data</button>
+                        </div>
+
+                        <!-- STATS CARDS -->
+                        <div class="ls-stats-grid" id="ls-stats-grid">
+                            <div class="ls-stat-card">
+                                <div class="ls-stat-label">OFQUAL Qualifications</div>
+                                <div class="ls-stat-value" id="ls-stat-ofqual">--</div>
+                                <div class="ls-stat-detail" id="ls-stat-ofqual-detail">Loading...</div>
+                            </div>
+                            <div class="ls-stat-card">
+                                <div class="ls-stat-label">NOS Standards</div>
+                                <div class="ls-stat-value" id="ls-stat-nos">--</div>
+                                <div class="ls-stat-detail" id="ls-stat-nos-detail">Loading...</div>
+                            </div>
+                            <div class="ls-stat-card">
+                                <div class="ls-stat-label">Job Descriptions</div>
+                                <div class="ls-stat-value" id="ls-stat-jd">--</div>
+                                <div class="ls-stat-detail" id="ls-stat-jd-detail">Loading...</div>
+                            </div>
+                            <div class="ls-stat-card">
+                                <div class="ls-stat-label">Frameworks</div>
+                                <div class="ls-stat-value" id="ls-stat-frameworks">--</div>
+                                <div class="ls-stat-detail" id="ls-stat-frameworks-detail">Loading...</div>
+                            </div>
+                        </div>
+
+                        <!-- SEARCH & FILTER BAR -->
+                        <div class="ls-search-bar">
+                            <div class="ls-search-row">
+                                <input type="text" class="ls-search-input" id="ls-search-input" placeholder="Search qualifications, units, learning outcomes...">
+                                <button class="ls-search-btn" id="ls-search-btn">Search</button>
+                            </div>
+                            <div class="ls-filter-row">
+                                <select class="ls-filter-select" id="ls-filter-level">
+                                    <option value="">All Levels</option>
+                                    <option value="1">Level 1 (Foundation)</option>
+                                    <option value="2">Level 2 (Intermediate)</option>
+                                    <option value="3">Level 3 (Advanced)</option>
+                                    <option value="4">Level 4 (Higher)</option>
+                                    <option value="5">Level 5 (Foundation Degree)</option>
+                                    <option value="6">Level 6 (Degree)</option>
+                                    <option value="7">Level 7 (Masters)</option>
+                                    <option value="8">Level 8 (Doctorate)</option>
+                                </select>
+                                <select class="ls-filter-select" id="ls-filter-sector">
+                                    <option value="">All Sectors</option>
+                                </select>
+                                <select class="ls-filter-select" id="ls-filter-type">
+                                    <option value="">All Types</option>
+                                    <option value="ofqual">OFQUAL Only</option>
+                                    <option value="nos">NOS Only</option>
+                                    <option value="jd">Job Descriptions Only</option>
+                                </select>
+                                <button class="ls-clear-btn" id="ls-clear-filters">Clear Filters</button>
+                            </div>
+                        </div>
+
+                        <!-- RESULT TABS -->
+                        <div class="ls-result-tabs" id="ls-result-tabs">
+                            <button class="ls-tab-btn active" data-ls-tab="all">All Results</button>
+                            <button class="ls-tab-btn" data-ls-tab="ofqual">OFQUAL</button>
+                            <button class="ls-tab-btn" data-ls-tab="nos">NOS</button>
+                            <button class="ls-tab-btn" data-ls-tab="jd">Job Descriptions</button>
+                        </div>
+
+                        <!-- RESULTS AREA -->
+                        <div class="ls-results-header" id="ls-results-header" style="display: none;">
+                            <span id="ls-results-count">0 results</span>
+                            <span id="ls-results-query"></span>
+                        </div>
+                        <div id="ls-results-container">
+                            <div class="ls-empty-state" id="ls-empty-state">
+                                <div class="ls-empty-icon">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                </div>
+                                <div class="ls-empty-title">Search the learning database</div>
+                                <div class="ls-empty-text">Enter a keyword to explore OFQUAL qualifications, NOS standards, and job descriptions stored in Neo4j</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END LEARNING SPECIFICATIONS PAGE -->
+
+            <!-- DETAIL MODAL -->
+            <div class="ls-modal-backdrop" id="ls-detail-modal">
+                <div class="ls-modal-content">
+                    <div class="ls-modal-header">
+                        <div>
+                            <h3 style="color: #ffffff; font-size: 18px; margin: 0 0 4px 0;" id="ls-modal-title">Specification Details</h3>
+                            <p style="color: #6b7c93; font-size: 13px; margin: 0;" id="ls-modal-subtitle"></p>
+                        </div>
+                        <button class="ls-modal-close" id="ls-modal-close">&times;</button>
+                    </div>
+                    <div id="ls-modal-body"></div>
+                </div>
+            </div>
 
             <!-- AGENT 13 PAGE (hidden by default) -->
             <div id="agent13-page" style="display: none; width: 100%; overflow-y: auto;">
@@ -8428,21 +9008,27 @@ Agent 13 measures its own success by:
             const charactersPage = document.getElementById('characters-page');
             const simComparePage = document.getElementById('sim-compare-page');
             const agent13Page = document.getElementById('agent13-page');
+            const learningSpecsPage = document.getElementById('learning-specs-page');
 
             // Hide everything first
-            charactersPage.style.display = 'none';
-            simComparePage.style.display = 'none';
-            agent13Page.style.display = 'none';
+            if (charactersPage) charactersPage.style.display = 'none';
+            if (simComparePage) simComparePage.style.display = 'none';
+            if (agent13Page) agent13Page.style.display = 'none';
+            if (learningSpecsPage) learningSpecsPage.style.display = 'none';
 
             if (tabName === 'characters') {
                 // Characters page: full-width dashboard (mirrors Agent 13)
-                charactersPage.style.display = 'block';
+                if (charactersPage) charactersPage.style.display = 'block';
             } else if (tabName === 'agent13') {
                 // Agent 13 page: full width dashboard
-                agent13Page.style.display = 'block';
+                if (agent13Page) agent13Page.style.display = 'block';
             } else if (tabName === 'sim-compare') {
                 // Simulation & Comparison: unit config bar + side by side
-                simComparePage.style.display = 'flex';
+                if (simComparePage) simComparePage.style.display = 'flex';
+            } else if (tabName === 'learning-specs') {
+                // Learning Specifications: data explorer for Neo4j content
+                if (learningSpecsPage) learningSpecsPage.style.display = 'block';
+                initLearningSpecsPage();
             }
         }
 
@@ -9323,6 +9909,960 @@ Agent 13 measures its own success by:
                 saveZavmoApiSettings(settings);
             }
         });
+
+        // ══════════════════════════════════════════════════════════════════
+        // LEARNING SPECIFICATIONS PAGE
+        // ══════════════════════════════════════════════════════════════════
+
+        const LS_API_BASE = 'https://uat.zavmo.co.uk:8000';
+        const LS_SEARCH_ENDPOINT = '/api/search/unified/';
+
+        // In-memory cache for search results and stats
+        const lsDataCache = {
+            results: null,
+            activeTab: 'all',
+            lastQuery: '',
+            statsLoaded: false,
+            initialised: false,
+            sectors: new Set()
+        };
+
+        let lsSearchTimeout = null;
+
+        /**
+         * Initialise the Learning Specifications page.
+         * Called once when the tab is first shown.
+         */
+        function initLearningSpecsPage() {
+            if (lsDataCache.initialised) return;
+            lsDataCache.initialised = true;
+
+            // Wire up search input (debounced)
+            const searchInput = document.getElementById('ls-search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', onLSSearchInput);
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (lsSearchTimeout) clearTimeout(lsSearchTimeout);
+                        executeLSSearch();
+                    }
+                });
+            }
+
+            // Wire up search button
+            const searchBtn = document.getElementById('ls-search-btn');
+            if (searchBtn) {
+                searchBtn.addEventListener('click', executeLSSearch);
+            }
+
+            // Wire up filter dropdowns
+            const filterLevel = document.getElementById('ls-filter-level');
+            const filterSector = document.getElementById('ls-filter-sector');
+            const filterType = document.getElementById('ls-filter-type');
+            if (filterLevel) filterLevel.addEventListener('change', onLSFilterChange);
+            if (filterSector) filterSector.addEventListener('change', onLSFilterChange);
+            if (filterType) filterType.addEventListener('change', onLSFilterChange);
+
+            // Wire up clear filters
+            const clearBtn = document.getElementById('ls-clear-filters');
+            if (clearBtn) clearBtn.addEventListener('click', clearLSFilters);
+
+            // Wire up result tabs
+            const tabContainer = document.getElementById('ls-result-tabs');
+            if (tabContainer) {
+                tabContainer.querySelectorAll('.ls-tab-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        switchLSResultTab(this.getAttribute('data-ls-tab'));
+                    });
+                });
+            }
+
+            // Wire up refresh button
+            const refreshBtn = document.getElementById('ls-refresh-btn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    lsDataCache.statsLoaded = false;
+                    loadLearningSpecsStats();
+                });
+            }
+
+            // Wire up modal close
+            const modalClose = document.getElementById('ls-modal-close');
+            if (modalClose) modalClose.addEventListener('click', closeLSDetailModal);
+            const modalBackdrop = document.getElementById('ls-detail-modal');
+            if (modalBackdrop) {
+                modalBackdrop.addEventListener('click', function(e) {
+                    if (e.target === modalBackdrop) closeLSDetailModal();
+                });
+            }
+
+            // Load initial stats
+            loadLearningSpecsStats();
+        }
+
+        /**
+         * Debounced handler for search input.
+         */
+        function onLSSearchInput() {
+            if (lsSearchTimeout) clearTimeout(lsSearchTimeout);
+            lsSearchTimeout = setTimeout(executeLSSearch, 400);
+        }
+
+        /**
+         * Handler for filter dropdown changes.
+         */
+        function onLSFilterChange() {
+            executeLSSearch();
+        }
+
+        /**
+         * Reset all filters and search input.
+         */
+        function clearLSFilters() {
+            const searchInput = document.getElementById('ls-search-input');
+            const filterLevel = document.getElementById('ls-filter-level');
+            const filterSector = document.getElementById('ls-filter-sector');
+            const filterType = document.getElementById('ls-filter-type');
+
+            if (searchInput) searchInput.value = '';
+            if (filterLevel) filterLevel.value = '';
+            if (filterSector) filterSector.value = '';
+            if (filterType) filterType.value = '';
+
+            // Clear results and show empty state
+            const container = document.getElementById('ls-results-container');
+            const header = document.getElementById('ls-results-header');
+            const emptyState = document.getElementById('ls-empty-state');
+            if (container) container.innerHTML = '';
+            if (header) header.style.display = 'none';
+            if (emptyState) {
+                container.appendChild(emptyState);
+                emptyState.style.display = '';
+            }
+
+            lsDataCache.results = null;
+            lsDataCache.lastQuery = '';
+        }
+
+        /**
+         * Execute a search against the unified search API.
+         */
+        async function executeLSSearch() {
+            const searchInput = document.getElementById('ls-search-input');
+            const query = searchInput ? searchInput.value.trim() : '';
+
+            if (!query) return;
+
+            const filterLevel = document.getElementById('ls-filter-level');
+            const filterType = document.getElementById('ls-filter-type');
+
+            const level = filterLevel ? filterLevel.value : '';
+            const typeFilter = filterType ? filterType.value : '';
+
+            try {
+                showLSLoading();
+                const data = await searchLearningSpecs(query, { level: level, type: typeFilter });
+                lsDataCache.results = data;
+                lsDataCache.lastQuery = query;
+
+                // Collect sectors for filter population
+                if (data && data.ofqual) {
+                    data.ofqual.forEach(item => {
+                        if (item.sector_subject_area) {
+                            lsDataCache.sectors.add(item.sector_subject_area);
+                        }
+                    });
+                    populateSectorFilter();
+                }
+
+                displayLSResults(data, lsDataCache.activeTab);
+            } catch (err) {
+                showToast('Search failed: ' + (err.message || 'Unknown error'), 'error');
+                showLSEmpty('Search failed. Please check your connection and try again.');
+            }
+        }
+
+        /**
+         * Fetch from the unified search API.
+         * @param {string} query - Search query text
+         * @param {Object} filters - Optional filters { level, type }
+         * @returns {Object} Parsed API response
+         */
+        async function searchLearningSpecs(query, filters = {}) {
+            const params = new URLSearchParams();
+            params.set('q', query);
+            params.set('limit', '50');
+
+            if (filters.level) {
+                params.set('level', filters.level);
+            }
+            if (filters.type) {
+                params.set('type', filters.type);
+            }
+
+            const url = `${LS_API_BASE}${LS_SEARCH_ENDPOINT}?${params.toString()}`;
+
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (!response.ok) {
+                throw new Error(`API returned ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            return parseUnifiedResponse(data);
+        }
+
+        /**
+         * Normalise the unified search API response.
+         * Handles string vs array for learning_outcomes, assessment_criteria, etc.
+         * @param {Object} data - Raw API response
+         * @returns {Object} Normalised response
+         */
+        function parseUnifiedResponse(data) {
+            if (!data) return { ofqual: [], nos: [], job_descriptions: [], query: '', inferred_level: null };
+
+            const normalised = {
+                ofqual: Array.isArray(data.ofqual) ? data.ofqual.map(normaliseOFQUAL) : [],
+                nos: Array.isArray(data.nos) ? data.nos.map(normaliseNOS) : [],
+                job_descriptions: Array.isArray(data.job_descriptions) ? data.job_descriptions.map(normaliseJD) : [],
+                query: data.query || '',
+                inferred_level: data.inferred_level || null
+            };
+
+            return normalised;
+        }
+
+        /**
+         * Normalise a single OFQUAL item.
+         */
+        function normaliseOFQUAL(item) {
+            return {
+                id: item.id || '',
+                type: 'ofqual',
+                title: item.title || 'Untitled',
+                level: item.level || '',
+                credits: item.credits || 0,
+                description: item.description || '',
+                learning_outcomes: ensureArray(item.learning_outcomes),
+                assessment_criteria: ensureArray(item.assessment_criteria),
+                nos_id: item.nos_id || '',
+                nos_title: item.nos_title || '',
+                unit_id: item.unit_id || '',
+                ofqual_id: item.ofqual_id || '',
+                qualification_type: item.qualification_type || '',
+                sector_subject_area: item.sector_subject_area || '',
+                glh: item.glh || 0,
+                score: item.score || 0,
+                overview: item.overview || ''
+            };
+        }
+
+        /**
+         * Normalise a single NOS item.
+         */
+        function normaliseNOS(item) {
+            return {
+                id: item.id || '',
+                type: 'nos',
+                title: item.title || 'Untitled',
+                description: item.description || '',
+                score: item.score || 0,
+                overview: item.overview || '',
+                industry: item.industry || '',
+                qualification_level: item.qualification_level || '',
+                knowledge_understanding: ensureArray(item.knowledge_understanding),
+                performance_criteria: ensureArray(item.performance_criteria),
+                relevant_roles: ensureArray(item.relevant_roles)
+            };
+        }
+
+        /**
+         * Normalise a single Job Description item.
+         */
+        function normaliseJD(item) {
+            return {
+                job_id: item.job_id || item.id || '',
+                type: 'jobDescription',
+                title: item.title || item.job_title || 'Untitled',
+                job_title: item.job_title || item.title || '',
+                description: item.description || '',
+                score: item.score || 0,
+                industry: item.industry || '',
+                experience_band: item.experience_band || '',
+                ofqual_level_alignment: item.ofqual_level_alignment || ''
+            };
+        }
+
+        /**
+         * Ensure a value is an array. If it's a string, split by newlines.
+         */
+        function ensureArray(val) {
+            if (Array.isArray(val)) return val;
+            if (typeof val === 'string' && val.trim()) {
+                return val.split('\n').map(s => s.trim()).filter(Boolean);
+            }
+            return [];
+        }
+
+        /**
+         * Load stats by running broad queries in the background.
+         */
+        async function loadLearningSpecsStats() {
+            if (lsDataCache.statsLoaded) return;
+
+            const statOfqual = document.getElementById('ls-stat-ofqual');
+            const statNos = document.getElementById('ls-stat-nos');
+            const statJd = document.getElementById('ls-stat-jd');
+            const statFrameworks = document.getElementById('ls-stat-frameworks');
+            const detailOfqual = document.getElementById('ls-stat-ofqual-detail');
+            const detailNos = document.getElementById('ls-stat-nos-detail');
+            const detailJd = document.getElementById('ls-stat-jd-detail');
+            const detailFrameworks = document.getElementById('ls-stat-frameworks-detail');
+
+            // Set loading state
+            [statOfqual, statNos, statJd, statFrameworks].forEach(el => {
+                if (el) el.textContent = '...';
+            });
+
+            try {
+                // Run three broad queries in parallel
+                const [ofqualResp, nosResp, jdResp] = await Promise.allSettled([
+                    searchLearningSpecs('qualification', { type: 'ofqual' }),
+                    searchLearningSpecs('standard', { type: 'nos' }),
+                    searchLearningSpecs('role', { type: 'jd' })
+                ]);
+
+                const ofqualCount = ofqualResp.status === 'fulfilled' ? ofqualResp.value.ofqual.length : 0;
+                const nosCount = nosResp.status === 'fulfilled' ? nosResp.value.nos.length : 0;
+                const jdCount = jdResp.status === 'fulfilled' ? jdResp.value.job_descriptions.length : 0;
+
+                if (statOfqual) statOfqual.textContent = ofqualCount;
+                if (detailOfqual) detailOfqual.textContent = ofqualCount > 0 ? `${ofqualCount}+ in sample` : 'No data yet';
+
+                if (statNos) statNos.textContent = nosCount;
+                if (detailNos) detailNos.textContent = nosCount > 0 ? `${nosCount}+ in sample` : 'No data yet';
+
+                if (statJd) statJd.textContent = jdCount;
+                if (detailJd) detailJd.textContent = jdCount > 0 ? `${jdCount}+ in sample` : 'No data yet';
+
+                // Collect sectors from OFQUAL results
+                if (ofqualResp.status === 'fulfilled') {
+                    const sectors = new Set();
+                    ofqualResp.value.ofqual.forEach(item => {
+                        if (item.sector_subject_area) sectors.add(item.sector_subject_area);
+                    });
+                    sectors.forEach(s => lsDataCache.sectors.add(s));
+                    populateSectorFilter();
+                }
+
+                if (statFrameworks) statFrameworks.textContent = 'OFQUAL';
+                if (detailFrameworks) detailFrameworks.textContent = 'United Kingdom';
+
+                lsDataCache.statsLoaded = true;
+
+            } catch (err) {
+                if (statOfqual) statOfqual.textContent = '--';
+                if (statNos) statNos.textContent = '--';
+                if (statJd) statJd.textContent = '--';
+                if (statFrameworks) statFrameworks.textContent = '--';
+                if (detailOfqual) detailOfqual.textContent = 'Connection failed';
+                console.warn('Failed to load LS stats:', err);
+            }
+        }
+
+        /**
+         * Populate the sector filter dropdown from collected sectors.
+         */
+        function populateSectorFilter() {
+            const filterSector = document.getElementById('ls-filter-sector');
+            if (!filterSector) return;
+
+            const currentVal = filterSector.value;
+            const sortedSectors = Array.from(lsDataCache.sectors).sort();
+
+            filterSector.innerHTML = '<option value="">All Sectors</option>';
+            sortedSectors.forEach(sector => {
+                const opt = document.createElement('option');
+                opt.value = sector;
+                opt.textContent = sector;
+                filterSector.appendChild(opt);
+            });
+
+            if (currentVal) filterSector.value = currentVal;
+        }
+
+        /**
+         * Switch between OFQUAL / NOS / JD result tabs.
+         */
+        function switchLSResultTab(tab) {
+            lsDataCache.activeTab = tab;
+
+            // Update tab button states
+            const tabContainer = document.getElementById('ls-result-tabs');
+            if (tabContainer) {
+                tabContainer.querySelectorAll('.ls-tab-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-ls-tab') === tab);
+                });
+            }
+
+            // Re-render from cache if we have results
+            if (lsDataCache.results) {
+                displayLSResults(lsDataCache.results, tab);
+            }
+        }
+
+        /**
+         * Display search results in the accordion list.
+         */
+        function displayLSResults(data, activeTab) {
+            const container = document.getElementById('ls-results-container');
+            const header = document.getElementById('ls-results-header');
+            const countEl = document.getElementById('ls-results-count');
+            const queryEl = document.getElementById('ls-results-query');
+
+            if (!container) return;
+            container.innerHTML = '';
+
+            // Gather items based on active tab
+            let items = [];
+            if (activeTab === 'all' || activeTab === 'ofqual') {
+                data.ofqual.forEach(item => items.push({ data: item, type: 'ofqual' }));
+            }
+            if (activeTab === 'all' || activeTab === 'nos') {
+                data.nos.forEach(item => items.push({ data: item, type: 'nos' }));
+            }
+            if (activeTab === 'all' || activeTab === 'jd') {
+                data.job_descriptions.forEach(item => items.push({ data: item, type: 'jd' }));
+            }
+
+            // Apply sector filter client-side
+            const filterSector = document.getElementById('ls-filter-sector');
+            const sectorVal = filterSector ? filterSector.value : '';
+            if (sectorVal) {
+                items = items.filter(item => {
+                    if (item.type === 'ofqual') return item.data.sector_subject_area === sectorVal;
+                    if (item.type === 'nos') return item.data.industry === sectorVal;
+                    if (item.type === 'jd') return item.data.industry === sectorVal;
+                    return true;
+                });
+            }
+
+            // Sort by score descending
+            items.sort((a, b) => (b.data.score || 0) - (a.data.score || 0));
+
+            // Update header
+            if (header) header.style.display = items.length > 0 ? 'flex' : 'none';
+            if (countEl) countEl.textContent = `${items.length} result${items.length !== 1 ? 's' : ''}`;
+            if (queryEl) queryEl.textContent = data.query ? `for "${data.query}"` : '';
+
+            if (items.length === 0) {
+                showLSEmpty('No results found. Try a different search term or adjust your filters.');
+                return;
+            }
+
+            // Render each item
+            items.forEach(item => {
+                const accordion = renderLSAccordionItem(item.data, item.type);
+                container.appendChild(accordion);
+            });
+        }
+
+        /**
+         * Render a single accordion item.
+         */
+        function renderLSAccordionItem(item, type) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'ls-accordion-item';
+
+            // Header
+            const header = document.createElement('div');
+            header.className = 'ls-accordion-header';
+
+            const leftDiv = document.createElement('div');
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'ls-accordion-title';
+            titleDiv.textContent = item.title || 'Untitled';
+            leftDiv.appendChild(titleDiv);
+
+            // Metadata badges
+            const metaDiv = document.createElement('div');
+            metaDiv.className = 'ls-accordion-meta';
+
+            // Type badge
+            const typeBadge = document.createElement('span');
+            typeBadge.className = 'ls-badge ls-badge-type';
+            typeBadge.textContent = type === 'ofqual' ? 'OFQUAL' : type === 'nos' ? 'NOS' : 'JD';
+            metaDiv.appendChild(typeBadge);
+
+            if (type === 'ofqual') {
+                if (item.level) {
+                    const levelBadge = document.createElement('span');
+                    levelBadge.className = 'ls-badge ls-badge-level';
+                    levelBadge.textContent = `Level ${item.level}`;
+                    metaDiv.appendChild(levelBadge);
+                }
+                if (item.credits) {
+                    const creditsBadge = document.createElement('span');
+                    creditsBadge.className = 'ls-badge ls-badge-credits';
+                    creditsBadge.textContent = `${item.credits} credits`;
+                    metaDiv.appendChild(creditsBadge);
+                }
+                if (item.sector_subject_area) {
+                    const sectorBadge = document.createElement('span');
+                    sectorBadge.className = 'ls-badge ls-badge-sector';
+                    sectorBadge.textContent = item.sector_subject_area;
+                    metaDiv.appendChild(sectorBadge);
+                }
+            } else if (type === 'nos') {
+                if (item.industry) {
+                    const indBadge = document.createElement('span');
+                    indBadge.className = 'ls-badge ls-badge-sector';
+                    indBadge.textContent = item.industry;
+                    metaDiv.appendChild(indBadge);
+                }
+                if (item.qualification_level) {
+                    const lvlBadge = document.createElement('span');
+                    lvlBadge.className = 'ls-badge ls-badge-level';
+                    lvlBadge.textContent = item.qualification_level;
+                    metaDiv.appendChild(lvlBadge);
+                }
+            } else if (type === 'jd') {
+                if (item.industry) {
+                    const indBadge = document.createElement('span');
+                    indBadge.className = 'ls-badge ls-badge-sector';
+                    indBadge.textContent = item.industry;
+                    metaDiv.appendChild(indBadge);
+                }
+                if (item.experience_band) {
+                    const expBadge = document.createElement('span');
+                    expBadge.className = 'ls-badge ls-badge-credits';
+                    expBadge.textContent = item.experience_band;
+                    metaDiv.appendChild(expBadge);
+                }
+                if (item.ofqual_level_alignment) {
+                    const alignBadge = document.createElement('span');
+                    alignBadge.className = 'ls-badge ls-badge-level';
+                    alignBadge.textContent = `Level ${item.ofqual_level_alignment}`;
+                    metaDiv.appendChild(alignBadge);
+                }
+            }
+
+            leftDiv.appendChild(metaDiv);
+
+            const arrow = document.createElement('span');
+            arrow.className = 'ls-accordion-arrow';
+            arrow.innerHTML = '&#9654;';
+
+            header.appendChild(leftDiv);
+            header.appendChild(arrow);
+
+            // Body
+            const body = document.createElement('div');
+            body.className = 'ls-accordion-body';
+            body.appendChild(renderLSItemDetails(item, type));
+
+            // Toggle handler
+            header.addEventListener('click', function() {
+                const isOpen = body.classList.contains('open');
+                body.classList.toggle('open');
+                arrow.classList.toggle('open');
+            });
+
+            wrapper.appendChild(header);
+            wrapper.appendChild(body);
+            return wrapper;
+        }
+
+        /**
+         * Render the expanded details for an accordion item.
+         */
+        function renderLSItemDetails(item, type) {
+            const fragment = document.createDocumentFragment();
+
+            if (type === 'ofqual') {
+                // Description
+                if (item.description) {
+                    const descP = document.createElement('p');
+                    descP.style.cssText = 'color: #b8c5d6; font-size: 13px; line-height: 1.6; margin: 12px 0;';
+                    descP.textContent = item.description;
+                    fragment.appendChild(descP);
+                }
+
+                // Learning Outcomes
+                if (item.learning_outcomes.length > 0) {
+                    const loLabel = document.createElement('div');
+                    loLabel.className = 'ls-section-label';
+                    loLabel.textContent = `Learning Outcomes (${item.learning_outcomes.length})`;
+                    fragment.appendChild(loLabel);
+
+                    const loList = document.createElement('ul');
+                    loList.className = 'ls-lo-list';
+                    item.learning_outcomes.forEach((lo, i) => {
+                        const li = document.createElement('li');
+                        li.className = 'ls-lo-item';
+                        li.innerHTML = `<strong>LO${i + 1}:</strong> ${escapeHTML(lo)}`;
+                        loList.appendChild(li);
+                    });
+                    fragment.appendChild(loList);
+                }
+
+                // Assessment Criteria
+                if (item.assessment_criteria.length > 0) {
+                    const acLabel = document.createElement('div');
+                    acLabel.className = 'ls-section-label';
+                    acLabel.textContent = `Assessment Criteria (${item.assessment_criteria.length})`;
+                    fragment.appendChild(acLabel);
+
+                    const acList = document.createElement('ul');
+                    acList.className = 'ls-ac-list';
+                    item.assessment_criteria.forEach((ac, i) => {
+                        const li = document.createElement('li');
+                        li.className = 'ls-ac-item';
+                        li.innerHTML = `<strong>AC${i + 1}:</strong> ${escapeHTML(ac)}`;
+                        acList.appendChild(li);
+                    });
+                    fragment.appendChild(acList);
+                }
+
+                // Metadata row
+                const metaInfo = [];
+                if (item.ofqual_id) metaInfo.push(`OFQUAL ID: ${item.ofqual_id}`);
+                if (item.unit_id) metaInfo.push(`Unit: ${item.unit_id}`);
+                if (item.nos_id) metaInfo.push(`NOS: ${item.nos_id}`);
+                if (item.glh) metaInfo.push(`GLH: ${item.glh}`);
+                if (item.qualification_type) metaInfo.push(`Type: ${item.qualification_type}`);
+
+                if (metaInfo.length > 0) {
+                    const metaP = document.createElement('p');
+                    metaP.style.cssText = 'color: #6b7c93; font-size: 12px; margin-top: 12px;';
+                    metaP.textContent = metaInfo.join(' · ');
+                    fragment.appendChild(metaP);
+                }
+
+            } else if (type === 'nos') {
+                if (item.description) {
+                    const descP = document.createElement('p');
+                    descP.style.cssText = 'color: #b8c5d6; font-size: 13px; line-height: 1.6; margin: 12px 0;';
+                    descP.textContent = item.description;
+                    fragment.appendChild(descP);
+                }
+
+                if (item.knowledge_understanding.length > 0) {
+                    const kuLabel = document.createElement('div');
+                    kuLabel.className = 'ls-section-label';
+                    kuLabel.textContent = `Knowledge & Understanding (${item.knowledge_understanding.length})`;
+                    fragment.appendChild(kuLabel);
+
+                    const kuList = document.createElement('ul');
+                    kuList.className = 'ls-lo-list';
+                    item.knowledge_understanding.forEach((ku, i) => {
+                        const li = document.createElement('li');
+                        li.className = 'ls-lo-item';
+                        li.innerHTML = `<strong>K${i + 1}:</strong> ${escapeHTML(ku)}`;
+                        kuList.appendChild(li);
+                    });
+                    fragment.appendChild(kuList);
+                }
+
+                if (item.performance_criteria.length > 0) {
+                    const pcLabel = document.createElement('div');
+                    pcLabel.className = 'ls-section-label';
+                    pcLabel.textContent = `Performance Criteria (${item.performance_criteria.length})`;
+                    fragment.appendChild(pcLabel);
+
+                    const pcList = document.createElement('ul');
+                    pcList.className = 'ls-ac-list';
+                    item.performance_criteria.forEach((pc, i) => {
+                        const li = document.createElement('li');
+                        li.className = 'ls-ac-item';
+                        li.innerHTML = `<strong>PC${i + 1}:</strong> ${escapeHTML(pc)}`;
+                        pcList.appendChild(li);
+                    });
+                    fragment.appendChild(pcList);
+                }
+
+                if (item.relevant_roles.length > 0) {
+                    const rolesP = document.createElement('p');
+                    rolesP.style.cssText = 'color: #6b7c93; font-size: 12px; margin-top: 12px;';
+                    rolesP.textContent = 'Relevant roles: ' + item.relevant_roles.join(', ');
+                    fragment.appendChild(rolesP);
+                }
+
+            } else if (type === 'jd') {
+                if (item.description) {
+                    const descP = document.createElement('p');
+                    descP.style.cssText = 'color: #b8c5d6; font-size: 13px; line-height: 1.6; margin: 12px 0;';
+                    descP.textContent = item.description;
+                    fragment.appendChild(descP);
+                }
+
+                const metaInfo = [];
+                if (item.job_title) metaInfo.push(`Role: ${item.job_title}`);
+                if (item.industry) metaInfo.push(`Industry: ${item.industry}`);
+                if (item.experience_band) metaInfo.push(`Experience: ${item.experience_band}`);
+                if (item.ofqual_level_alignment) metaInfo.push(`OFQUAL alignment: Level ${item.ofqual_level_alignment}`);
+
+                if (metaInfo.length > 0) {
+                    const metaP = document.createElement('p');
+                    metaP.style.cssText = 'color: #6b7c93; font-size: 12px; margin-top: 8px;';
+                    metaP.textContent = metaInfo.join(' · ');
+                    fragment.appendChild(metaP);
+                }
+            }
+
+            // View Full Details button
+            const detailBtn = document.createElement('button');
+            detailBtn.className = 'ls-detail-btn';
+            detailBtn.textContent = 'View Full Details';
+            detailBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openLSDetailModal(item, type);
+            });
+            fragment.appendChild(detailBtn);
+
+            return fragment;
+        }
+
+        /**
+         * Escape HTML to prevent XSS.
+         */
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        /**
+         * Open the detail modal for a specification.
+         */
+        function openLSDetailModal(item, type) {
+            const modal = document.getElementById('ls-detail-modal');
+            const titleEl = document.getElementById('ls-modal-title');
+            const subtitleEl = document.getElementById('ls-modal-subtitle');
+            const bodyEl = document.getElementById('ls-modal-body');
+
+            if (!modal || !bodyEl) return;
+
+            if (titleEl) titleEl.textContent = item.title || 'Specification Details';
+
+            // Build subtitle based on type
+            const subtitleParts = [];
+            if (type === 'ofqual') {
+                subtitleParts.push('OFQUAL Qualification');
+                if (item.level) subtitleParts.push(`Level ${item.level}`);
+                if (item.credits) subtitleParts.push(`${item.credits} credits`);
+                if (item.qualification_type) subtitleParts.push(item.qualification_type);
+            } else if (type === 'nos') {
+                subtitleParts.push('National Occupational Standard');
+                if (item.industry) subtitleParts.push(item.industry);
+            } else if (type === 'jd') {
+                subtitleParts.push('Job Description');
+                if (item.industry) subtitleParts.push(item.industry);
+                if (item.experience_band) subtitleParts.push(item.experience_band);
+            }
+            if (subtitleEl) subtitleEl.textContent = subtitleParts.join(' · ');
+
+            // Build body content
+            bodyEl.innerHTML = '';
+
+            // Overview / Description
+            if (item.overview || item.description) {
+                const section = createModalSection('Overview', item.overview || item.description);
+                bodyEl.appendChild(section);
+            }
+
+            if (type === 'ofqual') {
+                // IDs and metadata
+                const metaLines = [];
+                if (item.ofqual_id) metaLines.push(`OFQUAL ID: ${item.ofqual_id}`);
+                if (item.unit_id) metaLines.push(`Unit ID: ${item.unit_id}`);
+                if (item.nos_id) metaLines.push(`Linked NOS: ${item.nos_id} — ${item.nos_title || ''}`);
+                if (item.sector_subject_area) metaLines.push(`Sector: ${item.sector_subject_area}`);
+                if (item.glh) metaLines.push(`Guided Learning Hours: ${item.glh}`);
+
+                if (metaLines.length > 0) {
+                    const metaSection = document.createElement('div');
+                    metaSection.className = 'ls-modal-section';
+                    const metaTitle = document.createElement('div');
+                    metaTitle.className = 'ls-modal-section-title';
+                    metaTitle.textContent = 'Metadata';
+                    metaSection.appendChild(metaTitle);
+                    metaLines.forEach(line => {
+                        const p = document.createElement('p');
+                        p.style.cssText = 'color: #b8c5d6; font-size: 13px; margin: 4px 0;';
+                        p.textContent = line;
+                        metaSection.appendChild(p);
+                    });
+                    bodyEl.appendChild(metaSection);
+                }
+
+                // Learning Outcomes
+                if (item.learning_outcomes.length > 0) {
+                    const loSection = document.createElement('div');
+                    loSection.className = 'ls-modal-section';
+                    const loTitle = document.createElement('div');
+                    loTitle.className = 'ls-modal-section-title';
+                    loTitle.textContent = `Learning Outcomes (${item.learning_outcomes.length})`;
+                    loSection.appendChild(loTitle);
+
+                    const loList = document.createElement('ul');
+                    loList.className = 'ls-lo-list';
+                    item.learning_outcomes.forEach((lo, i) => {
+                        const li = document.createElement('li');
+                        li.className = 'ls-lo-item';
+                        li.innerHTML = `<strong>LO${i + 1}:</strong> ${escapeHTML(lo)}`;
+                        loList.appendChild(li);
+                    });
+                    loSection.appendChild(loList);
+                    bodyEl.appendChild(loSection);
+                }
+
+                // Assessment Criteria
+                if (item.assessment_criteria.length > 0) {
+                    const acSection = document.createElement('div');
+                    acSection.className = 'ls-modal-section';
+                    const acTitle = document.createElement('div');
+                    acTitle.className = 'ls-modal-section-title';
+                    acTitle.textContent = `Assessment Criteria (${item.assessment_criteria.length})`;
+                    acSection.appendChild(acTitle);
+
+                    const acList = document.createElement('ul');
+                    acList.className = 'ls-ac-list';
+                    item.assessment_criteria.forEach((ac, i) => {
+                        const li = document.createElement('li');
+                        li.className = 'ls-ac-item';
+                        li.innerHTML = `<strong>AC${i + 1}:</strong> ${escapeHTML(ac)}`;
+                        acList.appendChild(li);
+                    });
+                    acSection.appendChild(acList);
+                    bodyEl.appendChild(acSection);
+                }
+
+            } else if (type === 'nos') {
+                if (item.knowledge_understanding.length > 0) {
+                    const kuSection = createModalListSection('Knowledge & Understanding', item.knowledge_understanding, 'K');
+                    bodyEl.appendChild(kuSection);
+                }
+                if (item.performance_criteria.length > 0) {
+                    const pcSection = createModalListSection('Performance Criteria', item.performance_criteria, 'PC');
+                    bodyEl.appendChild(pcSection);
+                }
+                if (item.relevant_roles.length > 0) {
+                    const rolesSection = createModalSection('Relevant Roles', item.relevant_roles.join(', '));
+                    bodyEl.appendChild(rolesSection);
+                }
+
+            } else if (type === 'jd') {
+                const metaLines = [];
+                if (item.job_title) metaLines.push(`Job Title: ${item.job_title}`);
+                if (item.industry) metaLines.push(`Industry: ${item.industry}`);
+                if (item.experience_band) metaLines.push(`Experience Band: ${item.experience_band}`);
+                if (item.ofqual_level_alignment) metaLines.push(`OFQUAL Level Alignment: Level ${item.ofqual_level_alignment}`);
+
+                if (metaLines.length > 0) {
+                    const metaSection = document.createElement('div');
+                    metaSection.className = 'ls-modal-section';
+                    const metaTitle = document.createElement('div');
+                    metaTitle.className = 'ls-modal-section-title';
+                    metaTitle.textContent = 'Details';
+                    metaSection.appendChild(metaTitle);
+                    metaLines.forEach(line => {
+                        const p = document.createElement('p');
+                        p.style.cssText = 'color: #b8c5d6; font-size: 13px; margin: 4px 0;';
+                        p.textContent = line;
+                        metaSection.appendChild(p);
+                    });
+                    bodyEl.appendChild(metaSection);
+                }
+            }
+
+            modal.classList.add('open');
+        }
+
+        /**
+         * Create a simple text section for the modal.
+         */
+        function createModalSection(title, text) {
+            const section = document.createElement('div');
+            section.className = 'ls-modal-section';
+            const titleEl = document.createElement('div');
+            titleEl.className = 'ls-modal-section-title';
+            titleEl.textContent = title;
+            section.appendChild(titleEl);
+            const p = document.createElement('p');
+            p.style.cssText = 'color: #b8c5d6; font-size: 13px; line-height: 1.6;';
+            p.textContent = text;
+            section.appendChild(p);
+            return section;
+        }
+
+        /**
+         * Create a list section for the modal.
+         */
+        function createModalListSection(title, items, prefix) {
+            const section = document.createElement('div');
+            section.className = 'ls-modal-section';
+            const titleEl = document.createElement('div');
+            titleEl.className = 'ls-modal-section-title';
+            titleEl.textContent = `${title} (${items.length})`;
+            section.appendChild(titleEl);
+
+            const list = document.createElement('ul');
+            list.className = 'ls-lo-list';
+            items.forEach((item, i) => {
+                const li = document.createElement('li');
+                li.className = 'ls-lo-item';
+                li.innerHTML = `<strong>${prefix}${i + 1}:</strong> ${escapeHTML(item)}`;
+                list.appendChild(li);
+            });
+            section.appendChild(list);
+            return section;
+        }
+
+        /**
+         * Close the detail modal.
+         */
+        function closeLSDetailModal() {
+            const modal = document.getElementById('ls-detail-modal');
+            if (modal) modal.classList.remove('open');
+        }
+
+        /**
+         * Show loading state in results container.
+         */
+        function showLSLoading() {
+            const container = document.getElementById('ls-results-container');
+            const header = document.getElementById('ls-results-header');
+            if (header) header.style.display = 'none';
+            if (container) {
+                container.innerHTML = '<div class="ls-loading"><div class="ls-spinner"></div>Searching the database...</div>';
+            }
+        }
+
+        /**
+         * Show empty state with custom message.
+         */
+        function showLSEmpty(message) {
+            const container = document.getElementById('ls-results-container');
+            const header = document.getElementById('ls-results-header');
+            if (header) header.style.display = 'none';
+            if (container) {
+                container.innerHTML = `
+                    <div class="ls-empty-state">
+                        <div class="ls-empty-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        </div>
+                        <div class="ls-empty-title">No results</div>
+                        <div class="ls-empty-text">${escapeHTML(message)}</div>
+                    </div>
+                `;
+            }
+        }
+
     </script>
 </body>
 </html>
