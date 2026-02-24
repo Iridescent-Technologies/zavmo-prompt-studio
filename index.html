@@ -4105,6 +4105,396 @@
             }
         ]
         };
+        // MARKETING MODULES (from Zavmo API)
+        const MARKETING_MODULES = {
+        name: 'Marketing Modules',
+        units: [
+            {
+                id: 'MK1',
+                title: 'Development of Responsible Sales Strategies and Plans',
+                credits: 10,
+                category: 'Marketing',
+                bloomRange: 'Create',
+                learningObjective: 'Develop capability to create comprehensive, responsible sales strategies and plans aligned with organisational and marketing objectives.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Analyse sales team roles in marketing strategy implementation.' },
+                    { id: 'LO2', text: 'Conduct customer segmentation analysis for effective targeting.' },
+                    { id: 'LO3', text: 'Review business and marketing strategies to establish sales objectives.' },
+                    { id: 'LO4', text: 'Assess sales team structure and customer purchasing preferences.' },
+                    { id: 'LO5', text: 'Evaluate sales procedures for compliance and cost-effectiveness.' },
+                    { id: 'LO6', text: 'Develop and detail sales activity plans.' },
+                    { id: 'LO7', text: 'Monitor and evaluate sales strategy success with KPIs.' },
+                    { id: 'LO8', text: 'Communicate changes to stakeholders and foster openness regarding compliance.' },
+                    { id: 'LO9', text: 'Identify and adjust strategies based on legal and regulatory outcomes.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC1.1', loRef: 'LO1', text: 'Analyse sales team roles in marketing strategy implementation.' },
+                    { id: 'AC1.2', loRef: 'LO2', text: 'Conduct customer segmentation analysis for effective targeting.' },
+                    { id: 'AC1.3', loRef: 'LO3', text: 'Review business and marketing strategies to establish sales objectives.' },
+                    { id: 'AC1.4', loRef: 'LO4', text: 'Assess sales team structure and customer purchasing preferences.' },
+                    { id: 'AC1.5', loRef: 'LO5', text: 'Evaluate sales procedures for compliance and cost-effectiveness.' },
+                    { id: 'AC1.6', loRef: 'LO6', text: 'Develop and detail sales activity plans.' },
+                    { id: 'AC1.7', loRef: 'LO7', text: 'Monitor and evaluate sales strategy success with KPIs.' },
+                    { id: 'AC1.8', loRef: 'LO8', text: 'Communicate changes to stakeholders and foster openness regarding compliance.' },
+                    { id: 'AC1.9', loRef: 'LO9', text: 'Identify and adjust strategies based on legal and regulatory outcomes.' }
+                ]
+            },
+            {
+                id: 'MK2',
+                title: 'Develop Responsible Sales Strategies and Plans',
+                credits: 10,
+                category: 'Marketing',
+                bloomRange: 'Create',
+                learningObjective: 'Develop competence in creating, implementing, and communicating responsible sales strategies that align with organisational objectives.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Feed information into the sales activity plan.' },
+                    { id: 'LO2', text: 'Involve stakeholders in decision-making.' },
+                    { id: 'LO3', text: 'Foster a shared sense of purpose.' },
+                    { id: 'LO4', text: 'Communicate strategy changes to key stakeholders.' },
+                    { id: 'LO5', text: 'Evaluate sales contributions to organisational strategy.' },
+                    { id: 'LO6', text: 'Conduct analytical activities for sales development.' },
+                    { id: 'LO7', text: 'Perform customer segmentation analysis for sales maximisation.' },
+                    { id: 'LO8', text: 'Review business strategies linking marketing and sales.' },
+                    { id: 'LO9', text: 'Set sales objectives to align with organisational strategy.' },
+                    { id: 'LO10', text: 'Justify decisions on future sales strategy.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC2.1', loRef: 'LO1', text: 'Feed information into the sales activity plan.' },
+                    { id: 'AC2.2', loRef: 'LO2', text: 'Involve stakeholders in decision-making.' },
+                    { id: 'AC2.3', loRef: 'LO3', text: 'Foster a shared sense of purpose.' },
+                    { id: 'AC2.4', loRef: 'LO4', text: 'Communicate strategy changes to key stakeholders.' },
+                    { id: 'AC2.5', loRef: 'LO5', text: 'Evaluate sales contributions to organisational strategy.' },
+                    { id: 'AC2.6', loRef: 'LO6', text: 'Conduct analytical activities for sales development.' },
+                    { id: 'AC2.7', loRef: 'LO7', text: 'Perform customer segmentation analysis for sales maximisation.' },
+                    { id: 'AC2.8', loRef: 'LO8', text: 'Review business strategies linking marketing and sales.' },
+                    { id: 'AC2.9', loRef: 'LO9', text: 'Set sales objectives to align with organisational strategy.' },
+                    { id: 'AC2.10', loRef: 'LO10', text: 'Justify decisions on future sales strategy.' }
+                ]
+            },
+            {
+                id: 'MK3',
+                title: 'Understanding the relationship between sales and marketing',
+                credits: 10,
+                category: 'Marketing',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop understanding of the interconnected relationship between sales and marketing functions within an organisation.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Understanding the relationship between sales and marketing.' },
+                    { id: 'LO2', text: 'Apply key concepts of Understanding the relationship between sales and marketing in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Understanding the relationship between sales and marketing.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC3.1', loRef: 'LO1', text: 'Understand the fundamentals of Understanding the relationship between sales and marketing.' },
+                    { id: 'AC3.2', loRef: 'LO2', text: 'Apply key concepts of Understanding the relationship between sales and marketing in practice.' },
+                    { id: 'AC3.3', loRef: 'LO3', text: 'Demonstrate proficiency in Understanding the relationship between sales and marketing.' }
+                ]
+            },
+            {
+                id: 'MK4',
+                title: 'Leading a sales or marketing team',
+                credits: 10,
+                category: 'Marketing',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop leadership capability to effectively manage and direct sales or marketing teams towards achieving organisational objectives.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Leading a sales or marketing team.' },
+                    { id: 'LO2', text: 'Apply key concepts of Leading a sales or marketing team in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Leading a sales or marketing team.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC4.1', loRef: 'LO1', text: 'Understand the fundamentals of Leading a sales or marketing team.' },
+                    { id: 'AC4.2', loRef: 'LO2', text: 'Apply key concepts of Leading a sales or marketing team in practice.' },
+                    { id: 'AC4.3', loRef: 'LO3', text: 'Demonstrate proficiency in Leading a sales or marketing team.' }
+                ]
+            },
+            {
+                id: 'MK5',
+                title: 'Understanding legal, regulatory and ethical requirements in sales or marketing',
+                credits: 10,
+                category: 'Marketing',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop understanding of the legal, regulatory, and ethical frameworks that govern sales and marketing activities.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Understanding legal, regulatory and ethical requirements in sales or marketing.' },
+                    { id: 'LO2', text: 'Apply key concepts of Understanding legal, regulatory and ethical requirements in sales or marketing in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Understanding legal, regulatory and ethical requirements in sales or marketing.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC5.1', loRef: 'LO1', text: 'Understand the fundamentals of Understanding legal, regulatory and ethical requirements in sales or marketing.' },
+                    { id: 'AC5.2', loRef: 'LO2', text: 'Apply key concepts of Understanding legal, regulatory and ethical requirements in sales or marketing in practice.' },
+                    { id: 'AC5.3', loRef: 'LO3', text: 'Demonstrate proficiency in Understanding legal, regulatory and ethical requirements in sales or marketing.' }
+                ]
+            },
+            {
+                id: 'MK6',
+                title: 'Inputting and accessing sales or marketing data in information systems',
+                credits: 10,
+                category: 'Marketing',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in entering and retrieving sales and marketing data within organisational information systems.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Inputting and accessing sales or marketing data in information systems.' },
+                    { id: 'LO2', text: 'Apply key concepts of Inputting and accessing sales or marketing data in information systems in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Inputting and accessing sales or marketing data in information systems.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC6.1', loRef: 'LO1', text: 'Understand the fundamentals of Inputting and accessing sales or marketing data in information systems.' },
+                    { id: 'AC6.2', loRef: 'LO2', text: 'Apply key concepts of Inputting and accessing sales or marketing data in information systems in practice.' },
+                    { id: 'AC6.3', loRef: 'LO3', text: 'Demonstrate proficiency in Inputting and accessing sales or marketing data in information systems.' }
+                ]
+            },
+            {
+                id: 'MK7',
+                title: 'Principles of Marketing and Selling in a New Business',
+                credits: 10,
+                category: 'Marketing',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop understanding of marketing and selling principles applicable to new business ventures and emerging markets.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Principles of Marketing and Selling in a New Business.' },
+                    { id: 'LO2', text: 'Apply key concepts of Principles of Marketing and Selling in a New Business in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Principles of Marketing and Selling in a New Business.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC7.1', loRef: 'LO1', text: 'Understand the fundamentals of Principles of Marketing and Selling in a New Business.' },
+                    { id: 'AC7.2', loRef: 'LO2', text: 'Apply key concepts of Principles of Marketing and Selling in a New Business in practice.' },
+                    { id: 'AC7.3', loRef: 'LO3', text: 'Demonstrate proficiency in Principles of Marketing and Selling in a New Business.' }
+                ]
+            },
+            {
+                id: 'MK8',
+                title: 'Developing a product portfolio',
+                credits: 10,
+                category: 'Marketing',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in creating and managing a balanced product portfolio that meets market needs and organisational goals.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Developing a product portfolio.' },
+                    { id: 'LO2', text: 'Apply key concepts of Developing a product portfolio in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Developing a product portfolio.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC8.1', loRef: 'LO1', text: 'Understand the fundamentals of Developing a product portfolio.' },
+                    { id: 'AC8.2', loRef: 'LO2', text: 'Apply key concepts of Developing a product portfolio in practice.' },
+                    { id: 'AC8.3', loRef: 'LO3', text: 'Demonstrate proficiency in Developing a product portfolio.' }
+                ]
+            },
+            {
+                id: 'MK9',
+                title: 'Digital Business Practices',
+                credits: 10,
+                category: 'Marketing',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop understanding of digital business practices and their application to modern marketing and sales activities.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Digital Business Practices.' },
+                    { id: 'LO2', text: 'Apply key concepts of Digital Business Practices in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Digital Business Practices.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC9.1', loRef: 'LO1', text: 'Understand the fundamentals of Digital Business Practices.' },
+                    { id: 'AC9.2', loRef: 'LO2', text: 'Apply key concepts of Digital Business Practices in practice.' },
+                    { id: 'AC9.3', loRef: 'LO3', text: 'Demonstrate proficiency in Digital Business Practices.' }
+                ]
+            }
+        ]
+        };
+
+        // BUSINESS & FINANCE MODULES (from Zavmo API)
+        const BUSINESS_FINANCE_MODULES = {
+        name: 'Business & Finance Modules',
+        units: [
+            {
+                id: 'BF1',
+                title: 'Manage Business Processes',
+                credits: 10,
+                category: 'Business',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in designing, implementing, and managing business processes that align with organisational goals and resources.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Design processes aligned with organisational goals.' },
+                    { id: 'LO2', text: 'Ensure processes and resources are sustainable and effective.' },
+                    { id: 'LO3', text: 'Identify necessary resources.' },
+                    { id: 'LO4', text: 'Consider influences that may impact process effectiveness.' },
+                    { id: 'LO5', text: 'Link processes for organisational integration.' },
+                    { id: 'LO6', text: 'Provide information and support to stakeholders.' },
+                    { id: 'LO7', text: 'Define roles and responsibilities within processes.' },
+                    { id: 'LO8', text: 'Develop affordable process measures for management.' },
+                    { id: 'LO9', text: 'Establish methods to review and improve processes.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC1.1', loRef: 'LO1', text: 'Design processes aligned with organisational goals.' },
+                    { id: 'AC1.2', loRef: 'LO2', text: 'Ensure processes and resources are sustainable and effective.' },
+                    { id: 'AC1.3', loRef: 'LO3', text: 'Identify necessary resources.' },
+                    { id: 'AC1.4', loRef: 'LO4', text: 'Consider influences that may impact process effectiveness.' },
+                    { id: 'AC1.5', loRef: 'LO5', text: 'Link processes for organisational integration.' },
+                    { id: 'AC1.6', loRef: 'LO6', text: 'Provide information and support to stakeholders.' },
+                    { id: 'AC1.7', loRef: 'LO7', text: 'Define roles and responsibilities within processes.' },
+                    { id: 'AC1.8', loRef: 'LO8', text: 'Develop affordable process measures for management.' },
+                    { id: 'AC1.9', loRef: 'LO9', text: 'Establish methods to review and improve processes.' }
+                ]
+            },
+            {
+                id: 'BF2',
+                title: 'Manage Digital Service Delivery Operations',
+                credits: 10,
+                category: 'Business',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop leadership capability in managing digital service delivery operations to maintain service quality and stakeholder satisfaction.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Implement service operations in compliance with organisational policies and standards.' },
+                    { id: 'LO2', text: 'Maintain the provision of high-quality services to meet user needs.' },
+                    { id: 'LO3', text: 'Negotiate SLAs and OLAs with customers as per organisational requirements.' },
+                    { id: 'LO4', text: 'Ensure continuous service operations in line with SLAs.' },
+                    { id: 'LO5', text: 'Oversee teams to maintain service availability, quality, and performance.' },
+                    { id: 'LO6', text: 'Coordinate identification and resolution of service delivery issues.' },
+                    { id: 'LO7', text: 'Identify and propose service delivery improvement opportunities.' },
+                    { id: 'LO8', text: 'Manage service delivery infrastructure and tools per organisational procedures.' },
+                    { id: 'LO9', text: 'Maintain records of service management activities.' },
+                    { id: 'LO10', text: 'Produce required reports and documentation.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC2.1', loRef: 'LO1', text: 'Implement service operations in compliance with organisational policies and standards.' },
+                    { id: 'AC2.2', loRef: 'LO2', text: 'Maintain the provision of high-quality services to meet user needs.' },
+                    { id: 'AC2.3', loRef: 'LO3', text: 'Negotiate SLAs and OLAs with customers as per organisational requirements.' },
+                    { id: 'AC2.4', loRef: 'LO4', text: 'Ensure continuous service operations in line with SLAs.' },
+                    { id: 'AC2.5', loRef: 'LO5', text: 'Oversee teams to maintain service availability, quality, and performance.' },
+                    { id: 'AC2.6', loRef: 'LO6', text: 'Coordinate identification and resolution of service delivery issues.' },
+                    { id: 'AC2.7', loRef: 'LO7', text: 'Identify and propose service delivery improvement opportunities.' },
+                    { id: 'AC2.8', loRef: 'LO8', text: 'Manage service delivery infrastructure and tools per organisational procedures.' },
+                    { id: 'AC2.9', loRef: 'LO9', text: 'Maintain records of service management activities.' },
+                    { id: 'AC2.10', loRef: 'LO10', text: 'Produce required reports and documentation.' }
+                ]
+            },
+            {
+                id: 'BF3',
+                title: 'Management Information Systems',
+                credits: 10,
+                category: 'Finance',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop understanding of management information systems and their application to organisational decision-making and operations.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Management Information Systems.' },
+                    { id: 'LO2', text: 'Apply key concepts of Management Information Systems in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Management Information Systems.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC3.1', loRef: 'LO1', text: 'Understand the fundamentals of Management Information Systems.' },
+                    { id: 'AC3.2', loRef: 'LO2', text: 'Apply key concepts of Management Information Systems in practice.' },
+                    { id: 'AC3.3', loRef: 'LO3', text: 'Demonstrate proficiency in Management Information Systems.' }
+                ]
+            },
+            {
+                id: 'BF4',
+                title: 'Managing Business Operations',
+                credits: 10,
+                category: 'Business',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in managing business operations to ensure efficiency, effectiveness, and alignment with organisational strategy.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Managing Business Operations.' },
+                    { id: 'LO2', text: 'Apply key concepts of Managing Business Operations in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Managing Business Operations.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC4.1', loRef: 'LO1', text: 'Understand the fundamentals of Managing Business Operations.' },
+                    { id: 'AC4.2', loRef: 'LO2', text: 'Apply key concepts of Managing Business Operations in practice.' },
+                    { id: 'AC4.3', loRef: 'LO3', text: 'Demonstrate proficiency in Managing Business Operations.' }
+                ]
+            },
+            {
+                id: 'BF5',
+                title: 'Administer Business Processes',
+                credits: 10,
+                category: 'Business',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in administering and supporting business processes to maintain organisational effectiveness and compliance.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Administer Business Processes.' },
+                    { id: 'LO2', text: 'Apply key concepts of Administer Business Processes in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Administer Business Processes.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC5.1', loRef: 'LO1', text: 'Understand the fundamentals of Administer Business Processes.' },
+                    { id: 'AC5.2', loRef: 'LO2', text: 'Apply key concepts of Administer Business Processes in practice.' },
+                    { id: 'AC5.3', loRef: 'LO3', text: 'Demonstrate proficiency in Administer Business Processes.' }
+                ]
+            },
+            {
+                id: 'BF6',
+                title: 'Business Operations',
+                credits: 10,
+                category: 'Business',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop understanding of business operations and the practices required to sustain effective organisational functioning.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Business Operations.' },
+                    { id: 'LO2', text: 'Apply key concepts of Business Operations in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Business Operations.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC6.1', loRef: 'LO1', text: 'Understand the fundamentals of Business Operations.' },
+                    { id: 'AC6.2', loRef: 'LO2', text: 'Apply key concepts of Business Operations in practice.' },
+                    { id: 'AC6.3', loRef: 'LO3', text: 'Demonstrate proficiency in Business Operations.' }
+                ]
+            },
+            {
+                id: 'BF7',
+                title: 'Design business processes',
+                credits: 10,
+                category: 'Business',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in designing effective business processes that optimise organisational performance and resource utilisation.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Design business processes.' },
+                    { id: 'LO2', text: 'Apply key concepts of Design business processes in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Design business processes.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC7.1', loRef: 'LO1', text: 'Understand the fundamentals of Design business processes.' },
+                    { id: 'AC7.2', loRef: 'LO2', text: 'Apply key concepts of Design business processes in practice.' },
+                    { id: 'AC7.3', loRef: 'LO3', text: 'Demonstrate proficiency in Design business processes.' }
+                ]
+            },
+            {
+                id: 'BF8',
+                title: 'Contributing to carrying out lead time analysis',
+                credits: 10,
+                category: 'Finance',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in supporting lead time analysis activities to improve organisational scheduling and delivery performance.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Contributing to carrying out lead time analysis.' },
+                    { id: 'LO2', text: 'Apply key concepts of Contributing to carrying out lead time analysis in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Contributing to carrying out lead time analysis.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC8.1', loRef: 'LO1', text: 'Understand the fundamentals of Contributing to carrying out lead time analysis.' },
+                    { id: 'AC8.2', loRef: 'LO2', text: 'Apply key concepts of Contributing to carrying out lead time analysis in practice.' },
+                    { id: 'AC8.3', loRef: 'LO3', text: 'Demonstrate proficiency in Contributing to carrying out lead time analysis.' }
+                ]
+            },
+            {
+                id: 'BF9',
+                title: 'Delivering Operational Activities',
+                credits: 10,
+                category: 'Business',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in executing day-to-day operational activities that support organisational objectives and service delivery.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand the fundamentals of Delivering Operational Activities.' },
+                    { id: 'LO2', text: 'Apply key concepts of Delivering Operational Activities in practice.' },
+                    { id: 'LO3', text: 'Demonstrate proficiency in Delivering Operational Activities.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC9.1', loRef: 'LO1', text: 'Understand the fundamentals of Delivering Operational Activities.' },
+                    { id: 'AC9.2', loRef: 'LO2', text: 'Apply key concepts of Delivering Operational Activities in practice.' },
+                    { id: 'AC9.3', loRef: 'LO3', text: 'Demonstrate proficiency in Delivering Operational Activities.' }
+                ]
+            }
+        ]
+        };
+
         // COUNTRY-BASED QUALIFICATION REGISTRY
         const countryQualifications = {
             'uk': {
@@ -4116,7 +4506,9 @@
                     'isp-level-3-diploma': ISP_LEVEL_3_DIPLOMA,
                     'isp-level-4-cert': ISP_LEVEL_4_CERT,
                     'digital-tech-modules': DIGITAL_TECH_MODULES,
-                    'pm-ops-modules': PM_OPS_MODULES
+                    'pm-ops-modules': PM_OPS_MODULES,
+                    'marketing-modules': MARKETING_MODULES,
+                    'business-finance-modules': BUSINESS_FINANCE_MODULES
                 }
             },
             'au': {
