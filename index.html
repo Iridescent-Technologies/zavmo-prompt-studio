@@ -6073,12 +6073,18 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             document.getElementById('api-provider').addEventListener('change', onAPIProviderChange);
             document.getElementById('api-model').addEventListener('change', (e) => {
                 conversationState.apiModel = e.target.value;
+                if (conversationState.apiConnected) saveLLMApiSettings();
             });
             document.getElementById('temperature-slider').addEventListener('input', (e) => {
                 document.getElementById('temperature-value').textContent = e.target.value;
                 conversationState.temperature = parseFloat(e.target.value);
+                if (conversationState.apiConnected) saveLLMApiSettings();
             });
             document.getElementById('connect-api-btn').addEventListener('click', connectAPI);
+
+            // Restore saved LLM API settings (provider, model, key) from localStorage
+            restoreLLMApiUI();
+
             document.getElementById('start-lesson-btn').addEventListener('click', startLesson);
             document.getElementById('send-btn').addEventListener('click', sendLearnerMessage);
             document.getElementById('learner-input').addEventListener('keypress', (e) => {
@@ -6206,10 +6212,94 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             conversationState.apiModel = model;
             conversationState.apiConnected = true;
 
+            // Persist to localStorage so settings survive page refresh
+            saveLLMApiSettings();
+
             const providerName = conversationState.apiProvider.charAt(0).toUpperCase() + conversationState.apiProvider.slice(1);
             showToast(`Connected to ${providerName} with ${model}`, 'success');
             document.getElementById('connect-api-btn').textContent = 'Connected';
             document.getElementById('connect-api-btn').style.background = '#4CAF50';
+        }
+
+        // === LLM API Settings Persistence ===
+        // Saves provider, model, temperature and key to localStorage
+        // so team members don't have to re-enter settings on every page load.
+        function saveLLMApiSettings() {
+            const settings = {
+                provider: conversationState.apiProvider,
+                model: conversationState.apiModel,
+                key: conversationState.apiKey,
+                temperature: conversationState.temperature
+            };
+            localStorage.setItem('zavmo_llm_settings', JSON.stringify(settings));
+        }
+
+        function loadLLMApiSettings() {
+            const saved = localStorage.getItem('zavmo_llm_settings');
+            if (!saved) return false;
+            try {
+                const settings = JSON.parse(saved);
+                if (settings.provider && settings.key) {
+                    conversationState.apiProvider = settings.provider;
+                    conversationState.apiModel = settings.model;
+                    conversationState.apiKey = settings.key;
+                    conversationState.apiConnected = true;
+                    if (settings.temperature !== undefined) {
+                        conversationState.temperature = settings.temperature;
+                    }
+                    return true;
+                }
+            } catch(e) { console.warn('Failed to load LLM settings:', e); }
+            return false;
+        }
+
+        // Restore LLM API settings on page load and update the UI to match
+        function restoreLLMApiUI() {
+            if (!loadLLMApiSettings()) return;
+
+            const providerSelect = document.getElementById('api-provider');
+            const keyInput = document.getElementById('api-key');
+            const modelSelect = document.getElementById('api-model');
+            const tempSlider = document.getElementById('temperature-slider');
+            const tempValue = document.getElementById('temperature-value');
+            const connectBtn = document.getElementById('connect-api-btn');
+            const keyRow = document.getElementById('api-key-row');
+            const modelRow = document.getElementById('model-row');
+            const buttonRow = document.getElementById('api-button-row');
+
+            if (providerSelect) providerSelect.value = conversationState.apiProvider;
+
+            // Trigger model options rebuild
+            if (conversationState.apiProvider !== 'local') {
+                keyRow.style.display = 'grid';
+                modelRow.style.display = 'grid';
+                buttonRow.style.display = 'grid';
+
+                // Rebuild model dropdown for the saved provider
+                if (conversationState.apiProvider === 'openai' || conversationState.apiProvider === 'azure') {
+                    modelSelect.innerHTML = `
+                        <option value="gpt-4o">GPT-4o</option>
+                        <option value="gpt-4o-mini">GPT-4o Mini</option>
+                        <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                    `;
+                } else if (conversationState.apiProvider === 'anthropic') {
+                    modelSelect.innerHTML = `
+                        <option value="claude-sonnet-4-5-20250929">Claude Sonnet 4.5</option>
+                        <option value="claude-opus-4-5-20251101">Claude Opus 4.5</option>
+                        <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5</option>
+                    `;
+                }
+                modelSelect.value = conversationState.apiModel;
+            }
+
+            if (keyInput) keyInput.value = conversationState.apiKey;
+            if (tempSlider) tempSlider.value = conversationState.temperature;
+            if (tempValue) tempValue.textContent = conversationState.temperature;
+
+            if (connectBtn) {
+                connectBtn.textContent = 'Connected';
+                connectBtn.style.background = '#4CAF50';
+            }
         }
 
         async function startLesson() {
