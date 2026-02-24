@@ -2366,9 +2366,10 @@
                             </div>
                             <div style="background: rgba(0,217,192,0.08); border: 1px solid rgba(0,217,192,0.2); border-radius: 12px; padding: 16px;">
                                 <div style="color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Export / Import</div>
-                                <div style="display: flex; gap: 8px;">
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                                     <button id="export-all-btn" style="background: rgba(0,217,192,0.15); border: 1px solid rgba(0,217,192,0.3); color: #00d9c0; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">Export All</button>
                                     <button id="import-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">Import</button>
+                                    <button id="push-all-zavmo-btn" style="background: linear-gradient(135deg, #7c3aed, #00d9c0); border: none; color: #fff; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;" title="Push all 12 character prompts + Teaching Charter to Zavmo">&#9889; Push All</button>
                                 </div>
                             </div>
                         </div>
@@ -2410,6 +2411,7 @@
                                 <div style="display: flex; gap: 8px;">
                                     <button id="save-prompt-btn" style="background: #00d9c0; border: none; color: #1a1a2e; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;">Save Prompt</button>
                                     <button id="copy-prompt-btn" style="background: rgba(0,217,192,0.15); border: 1px solid rgba(0,217,192,0.3); color: #00d9c0; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px;">Copy to Clipboard</button>
+                                    <button id="push-to-zavmo-btn" style="background: linear-gradient(135deg, #7c3aed, #00d9c0); border: none; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; display: flex; align-items: center; gap: 6px;" title="Push this prompt to the live Zavmo application">&#9889; Push to Zavmo</button>
                                 </div>
                             </div>
                             <p style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6; margin: 0 0 16px 0;">The system prompt for the selected character. The Teaching Charter above is automatically appended to this prompt in every API call.</p>
@@ -7940,6 +7942,271 @@ Agent 13 measures its own success by:
             closeAPIModal();
             showToast(`Imported "${lesson.title}" from Zavmo API — ready to simulate!`, 'success');
         }
+        // ── PUSH TO ZAVMO ────────────────────────────────────────────
+        // Character ID mapping: Prompt Studio key → Zavmo backend ID
+        const STUDIO_TO_ZAVMO_MAP = {
+            'foundation-builder': 'builder',
+            'challenge-coach': 'coach',
+            'career-navigator': 'navigator',
+            'experiment-space': null,         // No direct match yet
+            'pattern-connector': 'connector',
+            'practical-builder': null,        // No direct match yet
+            'systems-analyst': 'analyst',
+            'collaboration-guide': 'collaborator',
+            'creative-catalyst': null,        // No direct match yet
+            'evidence-evaluator': 'challenger',
+            'qualification-certifier': null,  // No direct match yet
+            'integrator': null                // No direct match yet
+        };
+
+        // Zavmo characters that exist in backend but not in Studio
+        // storyteller → no match in Studio
+
+        function getZavmoApiSettings() {
+            const saved = localStorage.getItem('zavmo_api_settings');
+            if (saved) {
+                try { return JSON.parse(saved); } catch(e) {}
+            }
+            return { baseUrl: 'https://uat.zavmo.co.uk:8000', token: '' };
+        }
+
+        function saveZavmoApiSettings(settings) {
+            localStorage.setItem('zavmo_api_settings', JSON.stringify(settings));
+        }
+
+        async function pushPromptToZavmo(characterKey, promptText) {
+            const settings = getZavmoApiSettings();
+
+            // If no token saved, try to get from the API modal field
+            if (!settings.token) {
+                const modalToken = document.getElementById('api-token').value.trim();
+                if (modalToken) {
+                    settings.token = modalToken;
+                    saveZavmoApiSettings(settings);
+                } else {
+                    // Prompt user for token
+                    const token = prompt(
+                        'Please paste your Zavmo JWT token.\n\n' +
+                        'To get it: open uat.zavmo.co.uk → press F12 → Console tab → type:\n' +
+                        'localStorage.getItem(\'access_token\')\n\n' +
+                        'Then copy the result and paste it here:'
+                    );
+                    if (!token) return { success: false, error: 'No token provided' };
+                    settings.token = token.replace(/^["']|["']$/g, '').replace(/^Bearer\s+/i, '');
+                    saveZavmoApiSettings(settings);
+                }
+            }
+
+            const zavmoCharId = STUDIO_TO_ZAVMO_MAP[characterKey];
+            const charName = characters[characterKey]?.name || characterKey;
+
+            if (!zavmoCharId) {
+                return {
+                    success: false,
+                    error: `"${charName}" doesn't have a matching character in the Zavmo backend yet. Talib needs to add it.`,
+                    needsMapping: true
+                };
+            }
+
+            try {
+                // Try the prompt update endpoint (Talib needs to create this)
+                const response = await fetch(`${settings.baseUrl}/api/deliver/characters/${zavmoCharId}/prompt/`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'Bearer ' + settings.token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        system_prompt: promptText,
+                        teaching_charter: currentTeachingCharter,
+                        updated_from: 'prompt-studio',
+                        updated_by: sessionStorage.getItem('zavmo_access') || 'unknown'
+                    })
+                });
+
+                if (response.status === 404) {
+                    return {
+                        success: false,
+                        error: 'API endpoint not found (404). Talib needs to create PUT /api/deliver/characters/{id}/prompt/ endpoint.',
+                        needsEndpoint: true
+                    };
+                }
+
+                if (response.status === 401 || response.status === 403) {
+                    settings.token = '';
+                    saveZavmoApiSettings(settings);
+                    return {
+                        success: false,
+                        error: 'Authentication failed — token may have expired. Please try again with a fresh token.'
+                    };
+                }
+
+                if (response.status === 405) {
+                    return {
+                        success: false,
+                        error: 'Method not allowed (405). Talib needs to add PUT support to /api/deliver/characters/{id}/prompt/ endpoint.',
+                        needsEndpoint: true
+                    };
+                }
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    return { success: false, error: `API error ${response.status}: ${text.substring(0, 200)}` };
+                }
+
+                const data = await response.json();
+                return { success: true, data: data };
+
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function pushCurrentPromptToZavmo() {
+            const characterKey = currentCharacter;
+            const promptText = document.getElementById('prompt-textarea').value;
+
+            if (!promptText.trim()) {
+                showToast('No prompt to push — the editor is empty', 'error');
+                return;
+            }
+
+            const charName = characters[characterKey]?.name || characterKey;
+            const btn = document.getElementById('push-to-zavmo-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '&#8987; Pushing...';
+            btn.disabled = true;
+
+            try {
+                const result = await pushPromptToZavmo(characterKey, promptText);
+
+                if (result.success) {
+                    showToast(`${charName} prompt pushed to Zavmo successfully!`, 'success');
+                } else if (result.needsEndpoint) {
+                    showToast(result.error, 'error');
+                    // Show a more detailed message
+                    const proceed = confirm(
+                        `The Zavmo API doesn't support prompt updates yet.\n\n` +
+                        `Talib needs to create this endpoint:\n` +
+                        `PUT /api/deliver/characters/{id}/prompt/\n\n` +
+                        `In the meantime, would you like to copy the prompt to clipboard so you can paste it manually?`
+                    );
+                    if (proceed) {
+                        await navigator.clipboard.writeText(promptText);
+                        showToast('Prompt copied to clipboard', 'success');
+                    }
+                } else if (result.needsMapping) {
+                    showToast(result.error, 'error');
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (e) {
+                showToast('Push failed: ' + e.message, 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function pushAllPromptsToZavmo() {
+            const btn = document.getElementById('push-all-zavmo-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '&#8987; Pushing...';
+            btn.disabled = true;
+
+            const results = { success: 0, failed: 0, skipped: 0, errors: [] };
+
+            try {
+                const charKeys = Object.keys(characters);
+
+                for (const key of charKeys) {
+                    const charData = characters[key];
+                    const savedPrompt = localStorage.getItem(`zavmo_prompt_${key}`);
+                    const promptText = savedPrompt || charData.prompt;
+
+                    if (!promptText) {
+                        results.skipped++;
+                        continue;
+                    }
+
+                    btn.innerHTML = `&#8987; Pushing ${results.success + results.failed + results.skipped + 1}/${charKeys.length}...`;
+
+                    const result = await pushPromptToZavmo(key, promptText);
+
+                    if (result.success) {
+                        results.success++;
+                    } else if (result.needsMapping) {
+                        results.skipped++;
+                    } else if (result.needsEndpoint) {
+                        // If endpoint doesn't exist, no point continuing
+                        results.errors.push(result.error);
+                        break;
+                    } else {
+                        results.failed++;
+                        results.errors.push(`${charData.name}: ${result.error}`);
+                    }
+                }
+
+                // Also push Teaching Charter
+                if (results.errors.length === 0 || !results.errors[0]?.includes('endpoint')) {
+                    try {
+                        const settings = getZavmoApiSettings();
+                        const charterResp = await fetch(`${settings.baseUrl}/api/deliver/teaching-charter/`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': 'Bearer ' + settings.token,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                teaching_charter: currentTeachingCharter,
+                                updated_from: 'prompt-studio',
+                                updated_by: sessionStorage.getItem('zavmo_access') || 'unknown'
+                            })
+                        });
+                        // Teaching charter push is bonus — don't break on failure
+                    } catch (e) {}
+                }
+
+                if (results.errors.length > 0 && results.errors[0]?.includes('endpoint')) {
+                    showToast('API endpoint not ready yet — Talib needs to create PUT /api/deliver/characters/{id}/prompt/', 'error');
+                    const proceed = confirm(
+                        `The Zavmo API doesn't support prompt updates yet.\n\n` +
+                        `Talib needs to create these endpoints:\n` +
+                        `PUT /api/deliver/characters/{id}/prompt/\n` +
+                        `PUT /api/deliver/teaching-charter/\n\n` +
+                        `Once he does, this button will push all 12 prompts + the Teaching Charter in one click.\n\n` +
+                        `Would you like to export all prompts as JSON instead?`
+                    );
+                    if (proceed) {
+                        exportAllPrompts();
+                    }
+                } else {
+                    showToast(
+                        `Push complete: ${results.success} pushed, ${results.skipped} skipped (no mapping), ${results.failed} failed`,
+                        results.failed > 0 ? 'error' : 'success'
+                    );
+                }
+            } catch (e) {
+                showToast('Push All failed: ' + e.message, 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // Wire up Push to Zavmo buttons
+        document.getElementById('push-to-zavmo-btn').addEventListener('click', pushCurrentPromptToZavmo);
+        document.getElementById('push-all-zavmo-btn').addEventListener('click', pushAllPromptsToZavmo);
+
+        // Pre-fill API token from modal if it was entered during Fetch
+        document.getElementById('api-token').addEventListener('change', function() {
+            const token = this.value.trim();
+            if (token) {
+                const settings = getZavmoApiSettings();
+                settings.token = token;
+                saveZavmoApiSettings(settings);
+            }
+        });
     </script>
 </body>
 </html>
