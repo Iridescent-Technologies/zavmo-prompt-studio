@@ -6212,7 +6212,7 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             document.getElementById('connect-api-btn').style.background = '#4CAF50';
         }
 
-        function startLesson() {
+        async function startLesson() {
             if (!selectedUnit) {
                 showToast('Please select a unit first', 'error');
                 return;
@@ -6263,9 +6263,39 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             // Reset Quality Conversations model
             qualityConversationsModel.reset();
 
-            const openingMessage = generateCharacterResponse(character, conversationState.phase);
-            addMessageToChat(character.name, openingMessage, character.colour, 'TEACH');
+            // TEACH_1 opening: route through LLM API so the system prompt's
+            // instruction to frame the learning objective is actually followed.
+            // Falls back to an improved template when no API is connected.
             updatePhaseIndicator();
+
+            if (conversationState.apiProvider !== 'local' && conversationState.apiConnected && conversationState.apiKey) {
+                // Disable input while we wait for the API opening message
+                document.getElementById('learner-input').disabled = true;
+                document.getElementById('send-btn').disabled = true;
+                document.getElementById('mic-btn').disabled = true;
+
+                // Show a typing indicator while waiting
+                const typingId = addTypingIndicator(character.name, character.colour);
+
+                try {
+                    const openingPrompt = `This is the very start of the lesson. The learner has just arrived. `
+                        + `Introduce yourself briefly, then frame the learning objective for "${selectedUnit.title}" in plain language so the learner knows what they'll be able to do by the end. `
+                        + `Then ease into your first question to find out where they currently stand. `
+                        + `Follow your system prompt and teaching charter instructions exactly.`;
+                    const openingMessage = await callLLMAPI(character, openingPrompt);
+                    removeTypingIndicator(typingId);
+                    addMessageToChat(character.name, openingMessage, character.colour, 'TEACH');
+                } catch (err) {
+                    removeTypingIndicator(typingId);
+                    showToast('API call failed: ' + err.message + '. Using local opening.', 'error');
+                    const openingMessage = generateCharacterOpening(character, selectedUnit);
+                    addMessageToChat(character.name, openingMessage, character.colour, 'TEACH');
+                }
+            } else {
+                // Local fallback: improved template that explains the LO first
+                const openingMessage = generateCharacterOpening(character, selectedUnit);
+                addMessageToChat(character.name, openingMessage, character.colour, 'TEACH');
+            }
 
             // Enable input
             document.getElementById('learner-input').disabled = false;
@@ -6556,6 +6586,108 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             summary += `</div>`;
 
             return summary;
+        }
+
+        // === TYPING INDICATOR for API-driven opening messages ===
+        function addTypingIndicator(characterName, colour) {
+            const chatOutput = document.getElementById('chat-output');
+            const id = 'typing-' + Date.now();
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'chat-message character';
+            div.innerHTML = `<div class="message-header" style="color: ${colour};">${characterName}</div>`
+                + `<div class="message-content" style="color: #8b9cb6; font-style: italic;">Thinking...</div>`;
+            chatOutput.appendChild(div);
+            chatOutput.scrollTop = chatOutput.scrollHeight;
+            return id;
+        }
+
+        function removeTypingIndicator(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        // === IMPROVED LOCAL FALLBACK for TEACH_1 opening ===
+        // Used when no API is connected. Frames the learning objective
+        // before asking the opening question — fixing the pedagogical gap.
+        function generateCharacterOpening(character, unit) {
+            const charKey = currentCharacter;
+            const lo = unit.learningObjective || unit.title;
+            const loList = (unit.learningOutcomes || []).map(l => l.text);
+
+            // Character-specific openings that frame the LO first
+            const openings = {
+                'foundation-builder': `Welcome! I'm The Builder, and I'm here to help you build a solid foundation on "${unit.title}".\n\n`
+                    + `Here's what we're working towards: ${lo}\n\n`
+                    + (loList.length > 0 ? `By the end of our conversation, you should be able to:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                    + `But first, I want to understand where you're starting from. ${pick('What do you currently do when it comes to this?', 'How do you handle this at the moment?', 'What\'s your current approach to this?')} Just tell me honestly — there's no wrong answer, I just need to know your starting point.`,
+
+                'challenge-coach': `Right, let's dig into "${unit.title}". I'm The Coach, and my job is to push your thinking.\n\n`
+                    + `Here's what we need to cover: ${lo}\n\n`
+                    + (loList.length > 0 ? `Specifically, you'll need to demonstrate you can:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                    + `So let's see where your thinking is right now. What's your current view on this? ${pick('Why do you think that\'s true?', 'What makes you say that?', 'What evidence would you give?')}`,
+
+                'career-navigator': `Hello! I'm The Navigator, and I'm here to help you connect "${unit.title}" to your career journey.\n\n`
+                    + `Here's the learning objective: ${lo}\n\n`
+                    + (loList.length > 0 ? `By the end, you should be able to:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                    + `Let's start by understanding your context. ${pick('Where does this topic fit into your current role?', 'How does this relate to where you want your career to go?', 'What\'s your experience with this so far?')}`,
+
+                'experiment-space': `Welcome to The Lab! I'm The Experimenter, and we're going to explore "${unit.title}" hands-on.\n\n`
+                    + `Here's what we're aiming for: ${lo}\n\n`
+                    + (loList.length > 0 ? `By the end, you should be able to:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                    + `Let's start with a scenario. ${pick('Imagine you\'re faced with this situation at work — what would you do?', 'Think about the last time you dealt with something like this. What happened?', 'Let me paint a picture for you — how would you approach this?')}`,
+
+                'pattern-connector': `Hello! I'm The Connector, and I spot patterns across different areas. We're looking at "${unit.title}".\n\n`
+                    + `Here's the learning objective: ${lo}\n\n`
+                    + (loList.length > 0 ? `By the end, you should be able to:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                    + `To start, I'd like to understand your perspective. ${pick('What connections do you already see between this topic and your work?', 'Where have you seen this come up before?', 'How does this relate to other things you\'ve learnt?')}`,
+
+                'practical-builder': `Right, let's get practical. I'm The Practical Builder, and we're tackling "${unit.title}".\n\n`
+                    + `Here's what you'll be able to do by the end: ${lo}\n\n`
+                    + (loList.length > 0 ? `Specifically:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                    + `First things first — ${pick('what\'s your hands-on experience with this?', 'how have you tackled this in practice?', 'walk me through what you currently do.')}`,
+
+                'systems-analyst': `Welcome. I'm The Analyst, and we're going to take a structured look at "${unit.title}".\n\n`
+                    + `The learning objective is: ${lo}\n\n`
+                    + (loList.length > 0 ? `By the end, you should be able to:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                    + `Let's start by mapping what you know. ${pick('What\'s your current understanding of the key components here?', 'How would you break this topic down?', 'What do you see as the most important elements?')}`,
+
+                'collaboration-guide': `Hello! I'm The Collaboration Guide, and we're exploring "${unit.title}" together.\n\n`
+                    + `Here's what we're working towards: ${lo}\n\n`
+                    + (loList.length > 0 ? `By the end, you should be able to:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                    + `I'd love to start by hearing from you. ${pick('How does this topic come up in your work with others?', 'When have you had to collaborate on something like this?', 'What\'s your experience of this in a team context?')}`,
+
+                'creative-catalyst': `Welcome! I'm The Creative Catalyst, and we're going to think creatively about "${unit.title}".\n\n`
+                    + `Here's the learning objective: ${lo}\n\n`
+                    + (loList.length > 0 ? `By the end, you should be able to:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                    + `Let's start with an open question. ${pick('What comes to mind when you think about this topic?', 'If you had to explain this to someone completely new, where would you start?', 'What\'s the most interesting thing about this topic to you?')}`,
+
+                'evidence-evaluator': `Right. I'm The Evaluator, and we're going to look critically at "${unit.title}".\n\n`
+                    + `The learning objective is: ${lo}\n\n`
+                    + (loList.length > 0 ? `By the end, you should be able to:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                    + `Let's start with your current position. ${pick('What evidence do you base your current approach on?', 'How do you currently judge what good looks like here?', 'What criteria do you use when evaluating this?')}`,
+
+                'qualification-certifier': `Welcome. I'm The Certifier, and I'm here to check your readiness on "${unit.title}".\n\n`
+                    + `Here's what the qualification requires: ${lo}\n\n`
+                    + (loList.length > 0 ? `You need to demonstrate you can:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                    + `Let's see where you stand. ${pick('What do you already know about this?', 'How confident are you with this topic?', 'Where would you say your strengths are here?')}`,
+
+                'integrator': `Hello! I'm The Integrator, and we're going to bring everything together on "${unit.title}".\n\n`
+                    + `Here's the big picture: ${lo}\n\n`
+                    + (loList.length > 0 ? `By the end, you should be able to:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                    + `Let's start broad. ${pick('How do you see this fitting into the bigger picture of your learning?', 'What connections can you make between this and what you\'ve covered before?', 'Where does this sit in your overall understanding?')}`
+            };
+
+            // Return character-specific opening, or a generic one
+            if (openings[charKey]) {
+                return openings[charKey];
+            }
+
+            // Generic fallback for any unmapped character
+            return `Welcome! We're covering "${unit.title}".\n\n`
+                + `Here's the learning objective: ${lo}\n\n`
+                + (loList.length > 0 ? `By the end, you should be able to:\n` + loList.map(t => `• ${t}`).join('\n') + `\n\n` : '')
+                + `Let's start by understanding where you are. What do you already know about this topic?`;
         }
 
         function generateCharacterResponse(character, phase, learnerMessage) {
