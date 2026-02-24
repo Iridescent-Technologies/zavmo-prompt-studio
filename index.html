@@ -3715,6 +3715,396 @@
             ]
         };
 
+        const DIGITAL_TECH_MODULES = {
+        name: 'Digital Technology Modules',
+        units: [
+            {
+                id: 'DT1',
+                title: 'Assist in Delivering the Data Management Infrastructure',
+                credits: 10,
+                category: 'Data',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in data management activities to control, protect, and enhance organisational data value.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Undertake data management activities to control, protect, and enhance data value under guidance.' },
+                    { id: 'LO2', text: 'Make data available for analysis projects upon request.' },
+                    { id: 'LO3', text: 'Migrate data between systems following organisational procedures.' },
+                    { id: 'LO4', text: 'Manipulate and link various data sets as needed.' },
+                    { id: 'LO5', text: 'Produce standard data reports under supervision.' },
+                    { id: 'LO6', text: 'Interpret and apply organisational data and security standards.' },
+                    { id: 'LO7', text: 'Use defined tools and methods for data management.' },
+                    { id: 'LO8', text: 'Maintain data sets to required standards.' },
+                    { id: 'LO9', text: 'Report data quality issues per organisational protocols.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC1.1', loRef: 'LO1', text: 'Undertake data management activities to control, protect, and enhance data value under guidance.' },
+                    { id: 'AC1.2', loRef: 'LO2', text: 'Make data available for analysis projects upon request.' },
+                    { id: 'AC1.3', loRef: 'LO3', text: 'Migrate data between systems following organisational procedures.' },
+                    { id: 'AC1.4', loRef: 'LO4', text: 'Manipulate and link various data sets as needed.' },
+                    { id: 'AC1.5', loRef: 'LO5', text: 'Produce standard data reports under supervision.' },
+                    { id: 'AC1.6', loRef: 'LO6', text: 'Interpret and apply organisational data and security standards.' },
+                    { id: 'AC1.7', loRef: 'LO7', text: 'Use defined tools and methods for data management.' },
+                    { id: 'AC1.8', loRef: 'LO8', text: 'Maintain data sets to required standards.' },
+                    { id: 'AC1.9', loRef: 'LO9', text: 'Report data quality issues per organisational protocols.' }
+                ]
+            },
+            {
+                id: 'DT2',
+                title: 'Lead Cloud Engineering',
+                credits: 10,
+                category: 'Cloud',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop leadership capability in designing, implementing, and governing comprehensive cloud solutions and infrastructure.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Engage with stakeholders to define cloud infrastructure requirements' },
+                    { id: 'LO2', text: 'Design and oversee implementation of cloud solutions using platform services' },
+                    { id: 'LO3', text: 'Establish and lead effective engineering practices' },
+                    { id: 'LO4', text: 'Design and implement comprehensive security and compliance frameworks' },
+                    { id: 'LO5', text: 'Lead capacity planning and cost optimisation strategies' },
+                    { id: 'LO6', text: 'Design and implement robust disaster recovery and business continuity solutions' },
+                    { id: 'LO7', text: 'Guide migration of legacy systems to cloud platforms' },
+                    { id: 'LO8', text: 'Develop and maintain cloud governance frameworks' },
+                    { id: 'LO9', text: 'Design and oversee monitoring, logging, and observability systems' },
+                    { id: 'LO10', text: 'Lead innovation and emerging technology adoption in cloud engineering' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC2.1', loRef: 'LO1', text: 'Engage with stakeholders to define cloud infrastructure requirements' },
+                    { id: 'AC2.2', loRef: 'LO2', text: 'Design and oversee implementation of cloud solutions using platform services' },
+                    { id: 'AC2.3', loRef: 'LO3', text: 'Establish and lead effective engineering practices' },
+                    { id: 'AC2.4', loRef: 'LO4', text: 'Design and implement comprehensive security and compliance frameworks' },
+                    { id: 'AC2.5', loRef: 'LO5', text: 'Lead capacity planning and cost optimisation strategies' },
+                    { id: 'AC2.6', loRef: 'LO6', text: 'Design and implement robust disaster recovery and business continuity solutions' },
+                    { id: 'AC2.7', loRef: 'LO7', text: 'Guide migration of legacy systems to cloud platforms' },
+                    { id: 'AC2.8', loRef: 'LO8', text: 'Develop and maintain cloud governance frameworks' },
+                    { id: 'AC2.9', loRef: 'LO9', text: 'Design and oversee monitoring, logging, and observability systems' },
+                    { id: 'AC2.10', loRef: 'LO10', text: 'Lead innovation and emerging technology adoption in cloud engineering' }
+                ]
+            },
+            {
+                id: 'DT3',
+                title: 'Lead database design, implementation and operations activities',
+                credits: 10,
+                category: 'Infrastructure',
+                bloomRange: 'Apply, Evaluate, Create',
+                learningObjective: 'Develop leadership and expertise in designing, implementing, and optimising database systems and operations.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Organise and lead teams to fulfil database system activities according to organisational needs.' },
+                    { id: 'LO2', text: 'Monitor database activities to provide performance updates to stakeholders.' },
+                    { id: 'LO3', text: 'Verify compliance with information governance policies and standards.' },
+                    { id: 'LO4', text: 'Maintain seamless operation of production databases.' },
+                    { id: 'LO5', text: 'Lead change management efforts to uphold database functionality.' },
+                    { id: 'LO6', text: 'Oversee troubleshooting and problem resolution.' },
+                    { id: 'LO7', text: 'Continuously enhance database provisioning and performance.' },
+                    { id: 'LO8', text: 'Provide expert guidance on database operations to teams and users.' },
+                    { id: 'LO9', text: 'Benchmark team performance against industry standards for training needs.' },
+                    { id: 'LO10', text: 'Contribute to the development of organisational standards and policies for database operations.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC3.1', loRef: 'LO1', text: 'Organise and lead teams to fulfil database system activities according to organisational needs.' },
+                    { id: 'AC3.2', loRef: 'LO2', text: 'Monitor database activities to provide performance updates to stakeholders.' },
+                    { id: 'AC3.3', loRef: 'LO3', text: 'Verify compliance with information governance policies and standards.' },
+                    { id: 'AC3.4', loRef: 'LO4', text: 'Maintain seamless operation of production databases.' },
+                    { id: 'AC3.5', loRef: 'LO5', text: 'Lead change management efforts to uphold database functionality.' },
+                    { id: 'AC3.6', loRef: 'LO6', text: 'Oversee troubleshooting and problem resolution.' },
+                    { id: 'AC3.7', loRef: 'LO7', text: 'Continuously enhance database provisioning and performance.' },
+                    { id: 'AC3.8', loRef: 'LO8', text: 'Provide expert guidance on database operations to teams and users.' },
+                    { id: 'AC3.9', loRef: 'LO9', text: 'Benchmark team performance against industry standards for training needs.' },
+                    { id: 'AC3.10', loRef: 'LO10', text: 'Contribute to the development of organisational standards and policies for database operations.' }
+                ]
+            },
+            {
+                id: 'DT4',
+                title: 'Data Management',
+                credits: 3,
+                category: 'Data',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop foundational competence in data management practices and principles.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand data management frameworks and best practices' },
+                    { id: 'LO2', text: 'Apply data governance principles in organisational contexts' },
+                    { id: 'LO3', text: 'Implement data quality and security controls' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC4.1', loRef: 'LO1', text: 'Understand data management frameworks and best practices' },
+                    { id: 'AC4.2', loRef: 'LO2', text: 'Apply data governance principles in organisational contexts' },
+                    { id: 'AC4.3', loRef: 'LO3', text: 'Implement data quality and security controls' }
+                ]
+            },
+            {
+                id: 'DT5',
+                title: 'Data Management and Analytics',
+                credits: 3,
+                category: 'Data',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in managing data and applying analytical techniques for organisational insights.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Manage data lifecycles and repositories effectively' },
+                    { id: 'LO2', text: 'Apply analytical methods to extract meaningful insights' },
+                    { id: 'LO3', text: 'Communicate data findings to diverse stakeholders' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC5.1', loRef: 'LO1', text: 'Manage data lifecycles and repositories effectively' },
+                    { id: 'AC5.2', loRef: 'LO2', text: 'Apply analytical methods to extract meaningful insights' },
+                    { id: 'AC5.3', loRef: 'LO3', text: 'Communicate data findings to diverse stakeholders' }
+                ]
+            },
+            {
+                id: 'DT6',
+                title: 'Database Design and Development',
+                credits: 3,
+                category: 'Infrastructure',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop practical skills in designing and developing robust database systems.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Design efficient and scalable database structures' },
+                    { id: 'LO2', text: 'Develop and implement database solutions' },
+                    { id: 'LO3', text: 'Optimise database performance and security' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC6.1', loRef: 'LO1', text: 'Design efficient and scalable database structures' },
+                    { id: 'AC6.2', loRef: 'LO2', text: 'Develop and implement database solutions' },
+                    { id: 'AC6.3', loRef: 'LO3', text: 'Optimise database performance and security' }
+                ]
+            },
+            {
+                id: 'DT7',
+                title: 'AWS Cloud Systems',
+                credits: 3,
+                category: 'Cloud',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop practical knowledge of AWS cloud platforms and services.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand AWS core services and architecture' },
+                    { id: 'LO2', text: 'Design and deploy solutions using AWS' },
+                    { id: 'LO3', text: 'Manage and monitor AWS infrastructure' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC7.1', loRef: 'LO1', text: 'Understand AWS core services and architecture' },
+                    { id: 'AC7.2', loRef: 'LO2', text: 'Design and deploy solutions using AWS' },
+                    { id: 'AC7.3', loRef: 'LO3', text: 'Manage and monitor AWS infrastructure' }
+                ]
+            },
+            {
+                id: 'DT8',
+                title: 'AWS Cloud Security and Compliance',
+                credits: 3,
+                category: 'Cloud',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop expertise in implementing security and compliance controls in AWS environments.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Implement AWS security best practices and controls' },
+                    { id: 'LO2', text: 'Ensure compliance with regulatory requirements on AWS' },
+                    { id: 'LO3', text: 'Monitor and audit AWS security posture' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC8.1', loRef: 'LO1', text: 'Implement AWS security best practices and controls' },
+                    { id: 'AC8.2', loRef: 'LO2', text: 'Ensure compliance with regulatory requirements on AWS' },
+                    { id: 'AC8.3', loRef: 'LO3', text: 'Monitor and audit AWS security posture' }
+                ]
+            },
+            {
+                id: 'DT9',
+                title: 'Cloud Computing & DevOps',
+                credits: 3,
+                category: 'Cloud',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in cloud computing principles and DevOps practices for continuous delivery.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Apply cloud computing concepts and models' },
+                    { id: 'LO2', text: 'Implement DevOps practices and automation' },
+                    { id: 'LO3', text: 'Deploy and manage containerised applications' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC9.1', loRef: 'LO1', text: 'Apply cloud computing concepts and models' },
+                    { id: 'AC9.2', loRef: 'LO2', text: 'Implement DevOps practices and automation' },
+                    { id: 'AC9.3', loRef: 'LO3', text: 'Deploy and manage containerised applications' }
+                ]
+            }
+        ]
+        };
+
+
+        const PM_OPS_MODULES = {
+            name: 'Project Management & Operations Modules',
+        units: [
+            {
+                id: 'PO1',
+                title: 'Manage Digital Operations Delivery',
+                credits: 10,
+                category: 'Operations',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop leadership competence in managing and optimising digital operations delivery.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Apply agile methodologies for digital operations delivery.' },
+                    { id: 'LO2', text: 'Ensure compliance with standards, regulations, and best practices.' },
+                    { id: 'LO3', text: 'Manage risks and resources across digital operations.' },
+                    { id: 'LO4', text: 'Lead change management through collaboration with stakeholders.' },
+                    { id: 'LO5', text: 'Oversee service optimisation whilst maintaining service levels.' },
+                    { id: 'LO6', text: 'Develop team capabilities through assessment and training.' },
+                    { id: 'LO7', text: 'Monitor and analyse operational performance using metrics.' },
+                    { id: 'LO8', text: 'Report operational status and strategic alignment to stakeholders.' },
+                    { id: 'LO9', text: 'Manage incidents, escalations, and recovery procedures.' },
+                    { id: 'LO10', text: 'Facilitate continuous improvement in digital processes.' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC1.1', loRef: 'LO1', text: 'Apply agile methodologies for digital operations delivery.' },
+                    { id: 'AC1.2', loRef: 'LO2', text: 'Ensure compliance with standards, regulations, and best practices.' },
+                    { id: 'AC1.3', loRef: 'LO3', text: 'Manage risks and resources across digital operations.' },
+                    { id: 'AC1.4', loRef: 'LO4', text: 'Lead change management through collaboration with stakeholders.' },
+                    { id: 'AC1.5', loRef: 'LO5', text: 'Oversee service optimisation whilst maintaining service levels.' },
+                    { id: 'AC1.6', loRef: 'LO6', text: 'Develop team capabilities through assessment and training.' },
+                    { id: 'AC1.7', loRef: 'LO7', text: 'Monitor and analyse operational performance using metrics.' },
+                    { id: 'AC1.8', loRef: 'LO8', text: 'Report operational status and strategic alignment to stakeholders.' },
+                    { id: 'AC1.9', loRef: 'LO9', text: 'Manage incidents, escalations, and recovery procedures.' },
+                    { id: 'AC1.10', loRef: 'LO10', text: 'Facilitate continuous improvement in digital processes.' }
+                ]
+            },
+            {
+                id: 'PO2',
+                title: 'Project Management (Digital Business Solutions)',
+                credits: 3,
+                category: 'Project Management',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop practical project management capabilities for digital business solution delivery.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Plan and initiate digital business solution projects' },
+                    { id: 'LO2', text: 'Execute and monitor project activities and deliverables' },
+                    { id: 'LO3', text: 'Manage project closure and stakeholder communication' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC2.1', loRef: 'LO1', text: 'Plan and initiate digital business solution projects' },
+                    { id: 'AC2.2', loRef: 'LO2', text: 'Execute and monitor project activities and deliverables' },
+                    { id: 'AC2.3', loRef: 'LO3', text: 'Manage project closure and stakeholder communication' }
+                ]
+            },
+            {
+                id: 'PO3',
+                title: 'Agile Project Management',
+                credits: 3,
+                category: 'Project Management',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in applying agile methodologies and principles for project delivery.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand agile frameworks and ceremonies' },
+                    { id: 'LO2', text: 'Facilitate iterative delivery and sprint planning' },
+                    { id: 'LO3', text: 'Manage team collaboration and stakeholder engagement in agile contexts' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC3.1', loRef: 'LO1', text: 'Understand agile frameworks and ceremonies' },
+                    { id: 'AC3.2', loRef: 'LO2', text: 'Facilitate iterative delivery and sprint planning' },
+                    { id: 'AC3.3', loRef: 'LO3', text: 'Manage team collaboration and stakeholder engagement in agile contexts' }
+                ]
+            },
+            {
+                id: 'PO4',
+                title: 'Project Management',
+                credits: 3,
+                category: 'Project Management',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop foundational project management knowledge and practices.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand project management principles and processes' },
+                    { id: 'LO2', text: 'Apply project planning, execution, and monitoring techniques' },
+                    { id: 'LO3', text: 'Manage project scope, time, and resources' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC4.1', loRef: 'LO1', text: 'Understand project management principles and processes' },
+                    { id: 'AC4.2', loRef: 'LO2', text: 'Apply project planning, execution, and monitoring techniques' },
+                    { id: 'AC4.3', loRef: 'LO3', text: 'Manage project scope, time, and resources' }
+                ]
+            },
+            {
+                id: 'PO5',
+                title: 'Risk and Issue Management',
+                credits: 3,
+                category: 'Operations',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop competence in identifying, analysing, and managing risks and issues in organisational contexts.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Identify and assess risks and potential issues' },
+                    { id: 'LO2', text: 'Develop risk and issue response strategies' },
+                    { id: 'LO3', text: 'Monitor and control risk and issue realisation' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC5.1', loRef: 'LO1', text: 'Identify and assess risks and potential issues' },
+                    { id: 'AC5.2', loRef: 'LO2', text: 'Develop risk and issue response strategies' },
+                    { id: 'AC5.3', loRef: 'LO3', text: 'Monitor and control risk and issue realisation' }
+                ]
+            },
+            {
+                id: 'PO6',
+                title: 'Problem Solving for Business',
+                credits: 3,
+                category: 'Operations',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop systematic problem-solving approaches for business challenges.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Apply structured problem-solving methodologies' },
+                    { id: 'LO2', text: 'Analyse business problems and generate solutions' },
+                    { id: 'LO3', text: 'Implement and evaluate problem resolution outcomes' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC6.1', loRef: 'LO1', text: 'Apply structured problem-solving methodologies' },
+                    { id: 'AC6.2', loRef: 'LO2', text: 'Analyse business problems and generate solutions' },
+                    { id: 'AC6.3', loRef: 'LO3', text: 'Implement and evaluate problem resolution outcomes' }
+                ]
+            },
+            {
+                id: 'PO7',
+                title: 'Operations Management',
+                credits: 3,
+                category: 'Operations',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop capability in planning and controlling operational processes and performance.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand operational management principles and strategies' },
+                    { id: 'LO2', text: 'Apply operational planning and control techniques' },
+                    { id: 'LO3', text: 'Monitor and optimise operational performance' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC7.1', loRef: 'LO1', text: 'Understand operational management principles and strategies' },
+                    { id: 'AC7.2', loRef: 'LO2', text: 'Apply operational planning and control techniques' },
+                    { id: 'AC7.3', loRef: 'LO3', text: 'Monitor and optimise operational performance' }
+                ]
+            },
+            {
+                id: 'PO8',
+                title: 'Manage Personal Development',
+                credits: 3,
+                category: 'Leadership',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop self-awareness and capability in managing personal professional development.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Assess personal strengths, weaknesses, and development needs' },
+                    { id: 'LO2', text: 'Create and implement personal development plans' },
+                    { id: 'LO3', text: 'Reflect on progress and adjust development strategies' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC8.1', loRef: 'LO1', text: 'Assess personal strengths, weaknesses, and development needs' },
+                    { id: 'AC8.2', loRef: 'LO2', text: 'Create and implement personal development plans' },
+                    { id: 'AC8.3', loRef: 'LO3', text: 'Reflect on progress and adjust development strategies' }
+                ]
+            },
+            {
+                id: 'PO9',
+                title: 'Leadership',
+                credits: 3,
+                category: 'Leadership',
+                bloomRange: 'Apply',
+                learningObjective: 'Develop leadership capability and understanding of effective leadership practices.',
+                learningOutcomes: [
+                    { id: 'LO1', text: 'Understand leadership theories and styles' },
+                    { id: 'LO2', text: 'Lead teams and manage organisational change' },
+                    { id: 'LO3', text: 'Develop others and create supportive organisational cultures' }
+                ],
+                assessmentCriteria: [
+                    { id: 'AC9.1', loRef: 'LO1', text: 'Understand leadership theories and styles' },
+                    { id: 'AC9.2', loRef: 'LO2', text: 'Lead teams and manage organisational change' },
+                    { id: 'AC9.3', loRef: 'LO3', text: 'Develop others and create supportive organisational cultures' }
+                ]
+            }
+        ]
+        };
         // COUNTRY-BASED QUALIFICATION REGISTRY
         const countryQualifications = {
             'uk': {
@@ -3724,7 +4114,9 @@
                 qualifications: {
                     'isp-level-3-cert': ISP_LEVEL_3_CERT,
                     'isp-level-3-diploma': ISP_LEVEL_3_DIPLOMA,
-                    'isp-level-4-cert': ISP_LEVEL_4_CERT
+                    'isp-level-4-cert': ISP_LEVEL_4_CERT,
+                    'digital-tech-modules': DIGITAL_TECH_MODULES,
+                    'pm-ops-modules': PM_OPS_MODULES
                 }
             },
             'au': {
