@@ -3083,51 +3083,47 @@
 
     <!-- API CONNECTOR MODAL -->
     <div class="modal-overlay" id="api-modal-overlay">
-        <div class="api-modal">
+        <div class="api-modal" style="max-height: 85vh; display: flex; flex-direction: column;">
             <div class="modal-header">
-                <h3 class="modal-title">Connect to Zavmo Vector Database</h3>
+                <h3 class="modal-title">Fetch from Zavmo API</h3>
                 <button class="modal-close" id="modal-close-btn">&times;</button>
             </div>
 
             <div class="api-search-inputs">
-                <div class="input-group">
-                    <label class="input-label" for="api-url">API Base URL</label>
-                    <input type="text" class="input-field" id="api-url" value="https://uat.zavmo.co.uk" placeholder="https://api.zavmo.co.uk">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="input-group">
+                        <label class="input-label" for="api-url">API Base URL</label>
+                        <input type="text" class="input-field" id="api-url" value="https://uat.zavmo.co.uk:8000" placeholder="https://uat.zavmo.co.uk:8000">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="api-token">Auth Token (JWT)</label>
+                        <input type="password" class="input-field" id="api-token" placeholder="Paste JWT token from Zavmo app">
+                        <small style="color: #6b7a8d; font-size: 11px; margin-top: 4px; display: block;">Open DevTools on uat.zavmo.co.uk → Console → type: localStorage.getItem('access_token')</small>
+                    </div>
                 </div>
 
                 <div class="input-group">
-                    <label class="input-label" for="api-token">Auth Token (JWT)</label>
-                    <input type="password" class="input-field" id="api-token" placeholder="Paste JWT token from browser">
+                    <label class="input-label" for="api-search-query">Filter Modules (optional)</label>
+                    <input type="text" class="input-field" id="api-search-query" placeholder="e.g. data management, cloud, operations...">
                 </div>
 
-                <div class="input-group">
-                    <label class="input-label" for="api-search-query">Search Query</label>
-                    <input type="text" class="input-field" id="api-search-query" placeholder="e.g. sustainability, healthcare, sales...">
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label" for="api-level">OFQUAL Level</label>
-                    <select class="input-field" id="api-level">
-                        <option value="">All Levels</option>
-                        <option value="1">Level 1</option>
-                        <option value="2">Level 2</option>
-                        <option value="3">Level 3</option>
-                        <option value="4">Level 4</option>
-                        <option value="5">Level 5</option>
-                        <option value="6">Level 6</option>
-                        <option value="7">Level 7</option>
-                    </select>
-                </div>
-
-                <button class="button button-primary" id="api-search-btn" style="width: 100%;">Search</button>
+                <button class="button button-primary" id="api-search-btn" style="width: 100%;">
+                    <span id="api-search-btn-text">Fetch Modules</span>
+                    <span id="api-search-spinner" style="display: none; margin-left: 8px;">&#8987;</span>
+                </button>
             </div>
 
-            <div class="api-results" id="api-results-container" style="display: none;">
-                <!-- Results will be populated here -->
+            <div id="api-results-container" style="display: none; flex: 1; overflow-y: auto; margin: 12px 0; border: 1px solid rgba(0,217,192,0.15); border-radius: 8px; max-height: 400px;">
+                <!-- Modules and lessons will be populated here -->
+            </div>
+
+            <div id="api-lesson-detail" style="display: none; background: rgba(0,217,192,0.05); border: 1px solid rgba(0,217,192,0.2); border-radius: 8px; padding: 16px; margin: 8px 0;">
+                <h4 style="color: #00d9c0; margin: 0 0 12px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Selected Lesson</h4>
+                <div id="api-lesson-summary" style="color: #b8c5d6; font-size: 13px; line-height: 1.6;"></div>
             </div>
 
             <div style="display: flex; gap: 12px;">
-                <button class="button button-primary" id="import-selected-btn" style="flex: 1;">Import Selected</button>
+                <button class="button button-primary" id="import-selected-btn" style="flex: 1;" disabled>Import Selected Lesson</button>
                 <button class="button button-secondary" id="modal-cancel-btn" style="flex: 1;">Cancel</button>
             </div>
         </div>
@@ -4746,7 +4742,6 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
 
             // API Modal
             document.getElementById('api-search-btn').addEventListener('click', searchAPIDatabase);
-            document.getElementById('fetch-api-btn').addEventListener('click', openAPIModal);
             document.getElementById('modal-close-btn').addEventListener('click', closeAPIModal);
             document.getElementById('modal-cancel-btn').addEventListener('click', closeAPIModal);
             document.getElementById('api-modal-overlay').addEventListener('click', (e) => {
@@ -7642,83 +7637,308 @@ Agent 13 measures its own success by:
             });
         }
 
+        // ── ZAVMO API INTEGRATION ──────────────────────────────────────
+        let apiModulesCache = null;
+        let apiSelectedLesson = null;
+
         function openAPIModal() {
             document.getElementById('api-modal-overlay').classList.add('active');
             document.getElementById('api-results-container').style.display = 'none';
+            document.getElementById('api-lesson-detail').style.display = 'none';
+            document.getElementById('import-selected-btn').disabled = true;
+            apiSelectedLesson = null;
         }
 
         function closeAPIModal() {
             document.getElementById('api-modal-overlay').classList.remove('active');
             document.getElementById('api-results-container').innerHTML = '';
             document.getElementById('api-results-container').style.display = 'none';
+            document.getElementById('api-lesson-detail').style.display = 'none';
+            apiSelectedLesson = null;
         }
 
-        function searchAPIDatabase() {
-            const url = document.getElementById('api-url').value || 'https://uat.zavmo.co.uk';
-            const token = document.getElementById('api-token').value;
-            const query = document.getElementById('api-search-query').value;
-            const level = document.getElementById('api-level').value;
+        async function searchAPIDatabase() {
+            const baseUrl = (document.getElementById('api-url').value || 'https://uat.zavmo.co.uk:8000').replace(/\/+$/, '');
+            const token = document.getElementById('api-token').value.trim();
+            const filterQuery = document.getElementById('api-search-query').value.trim().toLowerCase();
 
-            if (!query) {
-                showToast('Please enter a search query', 'error');
+            if (!token) {
+                showToast('Please paste your JWT auth token. Open DevTools on uat.zavmo.co.uk → Console → type: localStorage.getItem(\'access_token\')', 'error');
                 return;
             }
 
-            // Simulate API search (in real implementation, this would call the API)
-            const simulatedResults = [
-                {
-                    id: 'sim-1',
-                    name: `${query} - Level ${level || '3'} Unit 1`,
-                    qualification: 'OFQUAL Qualification',
-                    level: level || '3'
-                },
-                {
-                    id: 'sim-2',
-                    name: `${query} - Level ${level || '3'} Unit 2`,
-                    qualification: 'OFQUAL Qualification',
-                    level: level || '3'
-                }
-            ];
+            // Show loading state
+            document.getElementById('api-search-btn-text').textContent = 'Fetching...';
+            document.getElementById('api-search-spinner').style.display = 'inline';
+            document.getElementById('api-search-btn').disabled = true;
 
-            displayAPIResults(simulatedResults);
+            try {
+                const response = await fetch(`${baseUrl}/api/deliver/modules/`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        throw new Error('Authentication failed — your token may have expired. Please get a fresh one from the Zavmo app.');
+                    }
+                    throw new Error(`API returned ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (!data.data || !data.data.modules) {
+                    throw new Error('Unexpected API response format');
+                }
+
+                apiModulesCache = data.data.modules;
+
+                // Now fetch details for each module to get lessons
+                // We'll do this in batches to avoid overwhelming the API
+                const moduleDetails = [];
+                for (let i = 0; i < apiModulesCache.length; i++) {
+                    try {
+                        const modResp = await fetch(`${baseUrl}/api/deliver/modules/${i}/`, {
+                            headers: { 'Authorization': 'Bearer ' + token }
+                        });
+                        if (modResp.ok) {
+                            const modData = await modResp.json();
+                            moduleDetails.push(modData.data);
+                        }
+                        // Update loading text with progress
+                        document.getElementById('api-search-btn-text').textContent = `Fetching... (${i + 1}/${apiModulesCache.length})`;
+                    } catch (e) {
+                        console.warn(`Failed to fetch module ${i}:`, e);
+                    }
+                }
+
+                displayAPIModules(moduleDetails, filterQuery, baseUrl, token);
+
+            } catch (error) {
+                showToast(error.message, 'error');
+                console.error('API fetch error:', error);
+            } finally {
+                document.getElementById('api-search-btn-text').textContent = 'Fetch Modules';
+                document.getElementById('api-search-spinner').style.display = 'none';
+                document.getElementById('api-search-btn').disabled = false;
+            }
         }
 
-        function displayAPIResults(results) {
+        function displayAPIModules(modules, filterQuery, baseUrl, token) {
             const container = document.getElementById('api-results-container');
             container.innerHTML = '';
 
-            if (results.length === 0) {
-                container.innerHTML = '<p style="color: #b8c5d6; text-align: center; padding: 20px;">No results found</p>';
+            // Filter modules if query provided
+            let filtered = modules;
+            if (filterQuery) {
+                filtered = modules.filter(m =>
+                    m.title.toLowerCase().includes(filterQuery) ||
+                    (m.nos_id && m.nos_id.toLowerCase().includes(filterQuery)) ||
+                    (m.learning_outcomes && m.learning_outcomes.some(lo => lo.toLowerCase().includes(filterQuery)))
+                );
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="color: #b8c5d6; text-align: center; padding: 20px;">No modules found matching your filter. Try a different search term or clear the filter.</p>';
                 container.style.display = 'block';
                 return;
             }
 
-            results.forEach(result => {
-                const item = document.createElement('div');
-                item.className = 'api-result-item';
-                item.innerHTML = `
-                    <input type="checkbox" class="api-result-checkbox" value="${result.id}">
-                    <div class="api-result-info">
-                        <div class="api-result-name">${result.name}</div>
-                        <div class="api-result-meta">${result.qualification} • Level ${result.level}</div>
+            // Build accordion-style module list
+            filtered.forEach(mod => {
+                const moduleDiv = document.createElement('div');
+                moduleDiv.style.cssText = 'border-bottom: 1px solid rgba(0,217,192,0.1);';
+
+                // Module header (clickable to expand)
+                const header = document.createElement('div');
+                header.style.cssText = 'padding: 12px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s;';
+                header.onmouseenter = () => header.style.background = 'rgba(0,217,192,0.05)';
+                header.onmouseleave = () => header.style.background = 'transparent';
+
+                const headerLeft = document.createElement('div');
+                headerLeft.innerHTML = `
+                    <div style="color: #e8ecf1; font-size: 13px; font-weight: 600;">${mod.module_id}: ${mod.title}</div>
+                    <div style="color: #6b7a8d; font-size: 11px; margin-top: 3px;">
+                        ${mod.credits ? mod.credits + ' credits' : ''} ${mod.nos_id ? '• NOS: ' + mod.nos_id : ''} • ${mod.lessons ? mod.lessons.length : 0} lessons
                     </div>
                 `;
-                container.appendChild(item);
+                header.appendChild(headerLeft);
+
+                const arrow = document.createElement('span');
+                arrow.textContent = '\u25B6';
+                arrow.style.cssText = 'color: #00d9c0; font-size: 12px; transition: transform 0.3s;';
+                header.appendChild(arrow);
+
+                // Lessons container (hidden by default)
+                const lessonsDiv = document.createElement('div');
+                lessonsDiv.style.cssText = 'display: none; padding: 0 16px 12px 16px;';
+
+                if (mod.lessons && mod.lessons.length > 0) {
+                    mod.lessons.forEach(lesson => {
+                        const lessonItem = document.createElement('div');
+                        lessonItem.style.cssText = 'padding: 8px 12px; margin: 4px 0; background: rgba(10,22,40,0.5); border-radius: 6px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s;';
+                        lessonItem.onmouseenter = () => { lessonItem.style.borderColor = 'rgba(0,217,192,0.3)'; lessonItem.style.background = 'rgba(0,217,192,0.05)'; };
+                        lessonItem.onmouseleave = () => { if (!lessonItem.classList.contains('selected')) { lessonItem.style.borderColor = 'transparent'; lessonItem.style.background = 'rgba(10,22,40,0.5)'; } };
+
+                        const bloomBadge = lesson.bloom_name ? `<span style="background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 10px; padding: 1px 6px; border-radius: 3px; margin-left: 8px;">${lesson.bloom_name}</span>` : '';
+
+                        lessonItem.innerHTML = `
+                            <div style="color: #e8ecf1; font-size: 12px; font-weight: 500;">${lesson.lesson_id}: ${lesson.title}${bloomBadge}</div>
+                            ${lesson.learning_outcome ? `<div style="color: #6b7a8d; font-size: 11px; margin-top: 3px;">LO: ${lesson.learning_outcome}</div>` : ''}
+                        `;
+
+                        lessonItem.addEventListener('click', () => {
+                            // Deselect all other lessons
+                            container.querySelectorAll('.selected').forEach(el => {
+                                el.classList.remove('selected');
+                                el.style.borderColor = 'transparent';
+                                el.style.background = 'rgba(10,22,40,0.5)';
+                            });
+                            // Select this lesson
+                            lessonItem.classList.add('selected');
+                            lessonItem.style.borderColor = '#00d9c0';
+                            lessonItem.style.background = 'rgba(0,217,192,0.08)';
+
+                            selectAPILesson(lesson, mod, baseUrl, token);
+                        });
+
+                        lessonsDiv.appendChild(lessonItem);
+                    });
+                }
+
+                // Learning outcomes summary
+                if (mod.learning_outcomes && mod.learning_outcomes.length > 0) {
+                    const loSummary = document.createElement('div');
+                    loSummary.style.cssText = 'padding: 8px 12px; margin: 8px 0 4px 0; background: rgba(0,217,192,0.03); border-radius: 6px; border-left: 3px solid rgba(0,217,192,0.3);';
+                    loSummary.innerHTML = `
+                        <div style="color: #00d9c0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Module Learning Outcomes</div>
+                        ${mod.learning_outcomes.map((lo, i) => `<div style="color: #b8c5d6; font-size: 11px; margin: 2px 0;">LO${i + 1}: ${lo}</div>`).join('')}
+                    `;
+                    lessonsDiv.appendChild(loSummary);
+                }
+
+                header.addEventListener('click', () => {
+                    const isOpen = lessonsDiv.style.display !== 'none';
+                    lessonsDiv.style.display = isOpen ? 'none' : 'block';
+                    arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)';
+                });
+
+                moduleDiv.appendChild(header);
+                moduleDiv.appendChild(lessonsDiv);
+                container.appendChild(moduleDiv);
             });
 
+            // Show count
+            const countDiv = document.createElement('div');
+            countDiv.style.cssText = 'padding: 8px 16px; color: #6b7a8d; font-size: 11px; border-bottom: 1px solid rgba(0,217,192,0.1); position: sticky; top: 0; background: #0e1b2d; z-index: 1;';
+            countDiv.textContent = `${filtered.length} module${filtered.length !== 1 ? 's' : ''} found${filterQuery ? ' matching "' + filterQuery + '"' : ''} — click a module to see its lessons`;
+            container.insertBefore(countDiv, container.firstChild);
+
             container.style.display = 'block';
+            showToast(`Loaded ${filtered.length} modules from Zavmo API`, 'success');
+        }
+
+        async function selectAPILesson(lesson, mod, baseUrl, token) {
+            const detailPanel = document.getElementById('api-lesson-detail');
+            const summaryDiv = document.getElementById('api-lesson-summary');
+
+            // Build the lesson data for import
+            apiSelectedLesson = {
+                title: lesson.title,
+                lessonId: lesson.lesson_id,
+                moduleTitle: mod.title,
+                moduleId: mod.module_id,
+                credits: mod.credits || 0,
+                bloomName: lesson.bloom_name || 'Remember',
+                bloomLevel: lesson.bloom_level || 1,
+                learningOutcome: lesson.learning_outcome || lesson.title,
+                learningOutcomes: mod.learning_outcomes || [],
+                assessmentCriteria: []
+            };
+
+            // Show summary
+            summaryDiv.innerHTML = `
+                <div style="margin-bottom: 8px;"><strong style="color: #e8ecf1;">Module:</strong> ${mod.module_id} — ${mod.title}</div>
+                <div style="margin-bottom: 8px;"><strong style="color: #e8ecf1;">Lesson:</strong> ${lesson.lesson_id} — ${lesson.title}</div>
+                <div style="margin-bottom: 8px;"><strong style="color: #e8ecf1;">Bloom's:</strong> ${lesson.bloom_name || 'N/A'} (Level ${lesson.bloom_level || 'N/A'})</div>
+                <div style="margin-bottom: 8px;"><strong style="color: #e8ecf1;">Learning Outcome:</strong> ${lesson.learning_outcome || lesson.title}</div>
+                ${mod.learning_outcomes && mod.learning_outcomes.length > 0 ? `
+                <div style="margin-bottom: 4px;"><strong style="color: #e8ecf1;">Module LOs (${mod.learning_outcomes.length}):</strong></div>
+                <div style="margin-left: 12px; margin-bottom: 8px;">${mod.learning_outcomes.map((lo, i) => `<div style="margin: 2px 0;">LO${i + 1}: ${lo}</div>`).join('')}</div>
+                ` : ''}
+            `;
+
+            detailPanel.style.display = 'block';
+            document.getElementById('import-selected-btn').disabled = false;
         }
 
         function importSelectedUnits() {
-            const checkboxes = document.querySelectorAll('.api-result-checkbox:checked');
-            if (checkboxes.length === 0) {
-                showToast('Please select at least one unit to import', 'error');
+            if (!apiSelectedLesson) {
+                showToast('Please select a lesson first', 'error');
                 return;
             }
 
-            // Simulate import
-            showToast(`Imported ${checkboxes.length} unit(s) from Zavmo API`, 'success');
+            const lesson = apiSelectedLesson;
+
+            // Map Bloom's name to a range string
+            const bloomMap = {
+                'Remember': 'Remember',
+                'Understand': 'Understand',
+                'Apply': 'Apply',
+                'Analyse': 'Analyse',
+                'Evaluate': 'Evaluate',
+                'Create': 'Create',
+                'REMEMBER_UNDERSTAND': 'Remember, Understand',
+                'APPLY_ANALYSE': 'Apply, Analyse',
+                'EVALUATE_CREATE': 'Evaluate, Create'
+            };
+            const bloomRange = bloomMap[lesson.bloomName] || lesson.bloomName || 'Remember, Understand';
+
+            // Build a unit object compatible with the existing populateQualificationDisplay()
+            const importedUnit = {
+                id: lesson.lessonId,
+                title: lesson.title,
+                credits: lesson.credits,
+                category: 'API Import',
+                bloomRange: bloomRange,
+                learningObjective: lesson.learningOutcome,
+                learningOutcomes: lesson.learningOutcomes.map((lo, i) => ({
+                    id: `LO${i + 1}`,
+                    text: lo
+                })),
+                assessmentCriteria: lesson.assessmentCriteria.length > 0
+                    ? lesson.assessmentCriteria
+                    : lesson.learningOutcomes.map((lo, i) => ({
+                        id: `AC${i + 1}.1`,
+                        loRef: `LO${i + 1}`,
+                        text: lo
+                    }))
+            };
+
+            // Set it as the selected unit
+            selectedUnit = importedUnit;
+            populateQualificationDisplay(importedUnit);
+
+            // Update the qualification and unit dropdowns to show the import
+            const qualSelect = document.getElementById('qualification-select');
+            // Add a temporary option for the API import
+            let apiOpt = qualSelect.querySelector('option[value="api-import"]');
+            if (!apiOpt) {
+                apiOpt = document.createElement('option');
+                apiOpt.value = 'api-import';
+                qualSelect.insertBefore(apiOpt, qualSelect.querySelector('option[value="api-add"]'));
+            }
+            apiOpt.textContent = `API: ${lesson.moduleTitle}`;
+            qualSelect.value = 'api-import';
+
+            const unitSelect = document.getElementById('unit-select');
+            unitSelect.innerHTML = '';
+            const unitOpt = document.createElement('option');
+            unitOpt.value = lesson.lessonId;
+            unitOpt.textContent = `${lesson.lessonId}: ${lesson.title}`;
+            unitSelect.appendChild(unitOpt);
+
             closeAPIModal();
+            showToast(`Imported "${lesson.title}" from Zavmo API — ready to simulate!`, 'success');
         }
     </script>
 </body>
