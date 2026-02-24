@@ -5969,6 +5969,9 @@ ${getTeachingCharter()}
             }
 
             const data = await response.json();
+            if (!data.choices || !data.choices.length) {
+                throw new Error('No response choices returned from API');
+            }
             return data.choices[0].message.content;
         }
 
@@ -6688,12 +6691,14 @@ ${getTeachingCharter()}
 
         function saveTeachingCharter() {
             const textarea = document.getElementById('teaching-charter-textarea');
+            if (!textarea) return;
             currentTeachingCharter = textarea.value;
             localStorage.setItem('zavmo_teaching_charter', currentTeachingCharter);
             const status = document.getElementById('charter-save-status');
-            status.style.display = 'block';
-            setTimeout(() => { status.style.display = 'none'; }, 3000);
-            // Update preview text
+            if (status) {
+                status.style.display = 'block';
+                setTimeout(() => { status.style.display = 'none'; }, 3000);
+            }
             const previewText = document.getElementById('charter-preview-text');
             if (previewText) previewText.textContent = currentTeachingCharter;
             showToast('Teaching Charter saved', 'success');
@@ -6704,7 +6709,7 @@ ${getTeachingCharter()}
                 currentTeachingCharter = DEFAULT_TEACHING_CHARTER;
                 localStorage.removeItem('zavmo_teaching_charter');
                 const textarea = document.getElementById('teaching-charter-textarea');
-                textarea.value = currentTeachingCharter;
+                if (textarea) textarea.value = currentTeachingCharter;
                 showToast('Teaching Charter reset to default', 'info');
             }
         }
@@ -6787,8 +6792,10 @@ Agent 13 measures its own success by:
                 preview.textContent = currentAgent13Charter;
             }
             const status = document.getElementById('agent13-charter-save-status');
-            status.style.display = 'inline';
-            setTimeout(() => { status.style.display = 'none'; }, 3000);
+            if (status) {
+                status.style.display = 'inline';
+                setTimeout(() => { status.style.display = 'none'; }, 3000);
+            }
             showToast('Agent 13 Charter saved', 'success');
         }
 
@@ -6868,8 +6875,10 @@ Agent 13 measures its own success by:
             const preview = document.getElementById('agent13-prompt-preview-text');
             if (preview) preview.textContent = textarea.value;
             const status = document.getElementById('agent13-prompt-save-status');
-            status.style.display = 'inline';
-            setTimeout(() => { status.style.display = 'none'; }, 3000);
+            if (status) {
+                status.style.display = 'inline';
+                setTimeout(() => { status.style.display = 'none'; }, 3000);
+            }
             showToast('Agent 13 prompt saved', 'success');
         }
 
@@ -6888,8 +6897,11 @@ Agent 13 measures its own success by:
 
         function copyAgent13Prompt() {
             const textarea = document.getElementById('agent13-prompt-textarea');
+            if (!textarea) return;
             navigator.clipboard.writeText(textarea.value).then(() => {
                 showToast('Agent 13 prompt copied to clipboard', 'success');
+            }).catch(() => {
+                showToast('Failed to copy to clipboard', 'error');
             });
         }
 
@@ -7233,8 +7245,8 @@ Agent 13 measures its own success by:
         let currentRecTab = 'pending';
         function switchRecTab(tab) {
             currentRecTab = tab;
-            document.querySelectorAll('.rec-tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.rec-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
                 if (btn.textContent.toLowerCase().startsWith(tab)) btn.classList.add('active');
             });
             displayRecommendationsPanel();
@@ -7965,7 +7977,7 @@ Agent 13 measures its own success by:
         function getZavmoApiSettings() {
             const saved = localStorage.getItem('zavmo_api_settings');
             if (saved) {
-                try { return JSON.parse(saved); } catch(e) {}
+                try { return JSON.parse(saved); } catch(e) { console.warn('Failed to parse Zavmo API settings:', e); }
             }
             return { baseUrl: 'https://uat.zavmo.co.uk:8000', token: '' };
         }
