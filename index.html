@@ -12528,8 +12528,8 @@ Agent 13 measures its own success by:
             var satSum = 0;
             var growthSum = 0;
             agents.forEach(function(a) {
-                totalInt += (a.interactions || 0);
-                satSum += (a.satisfaction || 0);
+                totalInt += (a.totalInteractions || a.interactions || 0);
+                satSum += parseFloat(a.satisfaction) || 0;
                 growthSum += (a.growthMindset || 0);
             });
             var totalIntEl = document.getElementById('xa-agent-total-int');
