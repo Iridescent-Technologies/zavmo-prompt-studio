@@ -2708,6 +2708,270 @@
                 flex-direction: column;
             }
         }
+
+        /* === xAPI ANALYTICS PAGE === */
+        .xa-page { padding: 24px; max-width: 1400px; margin: 0 auto; }
+        .xa-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2); }
+        .xa-header-left { display: flex; align-items: center; gap: 16px; }
+        .xa-header-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center; }
+        .xa-header h2 { color: #ffffff; font-size: 22px; margin: 0; }
+        .xa-header p { color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0; }
+
+        /* Sub-tab navigation */
+        .xa-tabs { display: flex; gap: 4px; margin-bottom: 24px; background: rgba(13,30,54,0.6); border-radius: 12px; padding: 4px; border: 1px solid rgba(26,58,92,0.5); overflow-x: auto; }
+        .xa-tab-btn { padding: 10px 20px; border: none; background: transparent; color: #6b7c93; font-size: 13px; font-weight: 500; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; font-family: inherit; }
+        .xa-tab-btn:hover { color: #b8c5d6; background: rgba(0,217,192,0.05); }
+        .xa-tab-btn.active { background: rgba(0,217,192,0.15); color: #00d9c0; font-weight: 600; }
+        .xa-tab-content { display: none; }
+        .xa-tab-content.active { display: block; }
+
+        /* KPI Cards */
+        .xa-kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .xa-kpi-card { background: rgba(13,30,54,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(26,58,92,0.5); border-radius: 12px; padding: 20px; transition: all 0.3s ease; }
+        .xa-kpi-card:hover { border-color: rgba(0,217,192,0.3); transform: translateY(-2px); }
+        .xa-kpi-label { color: #6b7c93; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .xa-kpi-value { color: #ffffff; font-size: 28px; font-weight: 600; margin-bottom: 4px; }
+        .xa-kpi-change { font-size: 12px; font-weight: 500; }
+        .xa-kpi-change.positive { color: #00d9c0; }
+        .xa-kpi-change.negative { color: #fc8181; }
+        .xa-kpi-sparkline { height: 32px; margin-top: 8px; }
+        .xa-kpi-sparkline svg { width: 100%; height: 100%; }
+        .xa-kpi-sparkline path { fill: none; stroke: #00d9c0; stroke-width: 2; }
+        .xa-kpi-sparkline .spark-fill { fill: rgba(0,217,192,0.1); stroke: none; }
+
+        /* Glass cards */
+        .xa-glass { background: rgba(13,30,54,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(26,58,92,0.5); border-radius: 16px; padding: 24px; }
+        .xa-glass-sm { background: rgba(13,30,54,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(26,58,92,0.5); border-radius: 12px; padding: 16px; }
+        .xa-card-title { color: #ffffff; font-size: 14px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .xa-card-title svg { color: #00d9c0; }
+
+        /* Charts grid */
+        .xa-charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .xa-charts-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .xa-chart-area { min-height: 200px; position: relative; }
+
+        /* Heatmap */
+        .xa-heatmap { display: grid; grid-template-columns: 40px repeat(24, 1fr); gap: 2px; }
+        .xa-heatmap-cell { aspect-ratio: 1; border-radius: 3px; background: rgba(0,217,192,0.05); transition: all 0.2s ease; cursor: pointer; min-width: 0; }
+        .xa-heatmap-cell:hover { transform: scale(1.3); z-index: 1; }
+        .xa-heatmap-cell.l1 { background: rgba(0,217,192,0.15); }
+        .xa-heatmap-cell.l2 { background: rgba(0,217,192,0.3); }
+        .xa-heatmap-cell.l3 { background: rgba(0,217,192,0.5); }
+        .xa-heatmap-cell.l4 { background: rgba(0,217,192,0.7); }
+        .xa-heatmap-cell.l5 { background: rgba(0,217,192,0.9); }
+        .xa-heatmap-label { color: #6b7c93; font-size: 10px; display: flex; align-items: center; }
+
+        /* Bar charts */
+        .xa-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .xa-bar-label { color: #b8c5d6; font-size: 12px; width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-shrink: 0; }
+        .xa-bar-track { flex: 1; height: 24px; background: rgba(0,217,192,0.08); border-radius: 6px; overflow: hidden; position: relative; }
+        .xa-bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #00d9c0, #00ffeb); transition: width 0.6s ease; display: flex; align-items: center; padding-left: 8px; }
+        .xa-bar-value { color: #0a1628; font-size: 11px; font-weight: 600; }
+
+        /* Stacked bar */
+        .xa-stacked-bar { display: flex; height: 32px; border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
+        .xa-stacked-segment { height: 100%; transition: width 0.6s ease; position: relative; cursor: pointer; }
+        .xa-stacked-segment:hover { opacity: 0.85; }
+        .xa-bloom-1 { background: #4a5568; }
+        .xa-bloom-2 { background: #2d7d9a; }
+        .xa-bloom-3 { background: #00d9c0; }
+        .xa-bloom-4 { background: #00b4d8; }
+        .xa-bloom-5 { background: #0077b6; }
+        .xa-bloom-6 { background: #6c63ff; }
+
+        /* Bloom's legend */
+        .xa-bloom-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+        .xa-bloom-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #b8c5d6; }
+        .xa-bloom-legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+        /* Keyword cloud */
+        .xa-keyword-cloud { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; min-height: 160px; padding: 16px; }
+        .xa-keyword { padding: 6px 14px; border-radius: 20px; background: rgba(0,217,192,0.1); color: #00d9c0; cursor: pointer; transition: all 0.3s ease; font-weight: 500; border: 1px solid transparent; }
+        .xa-keyword:hover { background: rgba(0,217,192,0.2); border-color: rgba(0,217,192,0.3); transform: scale(1.05); }
+        .xa-keyword.size-1 { font-size: 11px; }
+        .xa-keyword.size-2 { font-size: 13px; }
+        .xa-keyword.size-3 { font-size: 16px; }
+        .xa-keyword.size-4 { font-size: 20px; font-weight: 600; }
+        .xa-keyword.size-5 { font-size: 24px; font-weight: 600; }
+
+        /* Time range selector */
+        .xa-time-range { display: flex; gap: 4px; background: rgba(13,30,54,0.8); border-radius: 8px; padding: 3px; border: 1px solid rgba(26,58,92,0.5); }
+        .xa-time-btn { padding: 6px 14px; border: none; background: transparent; color: #6b7c93; font-size: 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; font-family: inherit; }
+        .xa-time-btn:hover { color: #b8c5d6; }
+        .xa-time-btn.active { background: rgba(0,217,192,0.15); color: #00d9c0; }
+
+        /* Live Feed */
+        .xa-feed-container { max-height: 600px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(0,217,192,0.3) transparent; }
+        .xa-feed-container::-webkit-scrollbar { width: 6px; }
+        .xa-feed-container::-webkit-scrollbar-thumb { background: rgba(0,217,192,0.3); border-radius: 3px; }
+        .xa-statement-card { background: rgba(13,30,54,0.4); border: 1px solid rgba(26,58,92,0.3); border-radius: 12px; padding: 16px; margin-bottom: 8px; cursor: pointer; transition: all 0.3s ease; }
+        .xa-statement-card:hover { border-color: rgba(0,217,192,0.3); background: rgba(13,30,54,0.6); }
+        .xa-statement-card.expanded { border-color: rgba(0,217,192,0.4); background: rgba(13,30,54,0.7); }
+        .xa-statement-row { display: flex; align-items: center; gap: 12px; }
+        .xa-statement-actor { display: flex; align-items: center; gap: 8px; min-width: 140px; }
+        .xa-statement-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center; color: #00d9c0; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+        .xa-statement-name { color: #ffffff; font-size: 13px; font-weight: 500; }
+        .xa-statement-verb { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+        .xa-verb-remember { background: rgba(74,85,104,0.4); color: #a0aec0; }
+        .xa-verb-understand { background: rgba(45,125,154,0.3); color: #63b3ed; }
+        .xa-verb-apply { background: rgba(0,217,192,0.2); color: #00d9c0; }
+        .xa-verb-analyse { background: rgba(0,180,216,0.2); color: #00b4d8; }
+        .xa-verb-evaluate { background: rgba(0,119,182,0.3); color: #63b3ed; }
+        .xa-verb-create { background: rgba(108,99,255,0.3); color: #a78bfa; }
+        .xa-statement-object { color: #b8c5d6; font-size: 13px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .xa-statement-meta { display: flex; align-items: center; gap: 16px; color: #6b7c93; font-size: 12px; flex-shrink: 0; }
+        .xa-statement-agent { color: #00d9c0; font-size: 12px; }
+        .xa-statement-time { color: #6b7c93; font-size: 12px; }
+        .xa-statement-detail { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(26,58,92,0.3); display: none; }
+        .xa-statement-card.expanded .xa-statement-detail { display: block; }
+        .xa-statement-json { background: rgba(10,22,40,0.8); border: 1px solid rgba(26,58,92,0.5); border-radius: 8px; padding: 12px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: #b8c5d6; overflow-x: auto; white-space: pre-wrap; max-height: 300px; overflow-y: auto; }
+
+        /* Feed toolbar */
+        .xa-feed-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+        .xa-feed-filter { padding: 6px 12px; border: 1px solid rgba(26,58,92,0.5); background: rgba(13,30,54,0.6); color: #b8c5d6; font-size: 12px; border-radius: 6px; cursor: pointer; font-family: inherit; }
+        .xa-feed-filter option { background: #0d1e36; color: #b8c5d6; }
+        .xa-feed-search { padding: 8px 14px; border: 1px solid rgba(26,58,92,0.5); background: rgba(13,30,54,0.6); color: #ffffff; font-size: 13px; border-radius: 8px; flex: 1; min-width: 200px; outline: none; font-family: inherit; }
+        .xa-feed-search:focus { border-color: rgba(0,217,192,0.4); }
+        .xa-feed-search::placeholder { color: #6b7c93; }
+        .xa-btn-teal { padding: 8px 16px; background: #00d9c0; color: #0a1628; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-family: inherit; }
+        .xa-btn-teal:hover { background: #00ffeb; box-shadow: 0 0 20px rgba(0,217,192,0.4); }
+        .xa-btn-outline { padding: 8px 16px; background: transparent; color: #b8c5d6; border: 1px solid rgba(26,58,92,0.5); border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; font-family: inherit; }
+        .xa-btn-outline:hover { border-color: #00d9c0; color: #00d9c0; }
+        .xa-btn-outline.active { border-color: #00d9c0; color: #00d9c0; background: rgba(0,217,192,0.1); }
+
+        /* Agent Performance */
+        .xa-agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+        .xa-agent-card { background: rgba(13,30,54,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(26,58,92,0.5); border-radius: 16px; padding: 24px; transition: all 0.4s ease; }
+        .xa-agent-card:hover { transform: translateY(-4px); border-color: rgba(0,217,192,0.3); box-shadow: 0 12px 32px rgba(0,217,192,0.08); }
+        .xa-agent-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .xa-agent-avatar { width: 44px; height: 44px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #00d9c0; }
+        .xa-agent-name { color: #ffffff; font-size: 15px; font-weight: 600; }
+        .xa-agent-role { color: #6b7c93; font-size: 12px; }
+        .xa-agent-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .xa-agent-stat { text-align: center; }
+        .xa-agent-stat-value { color: #ffffff; font-size: 18px; font-weight: 600; }
+        .xa-agent-stat-label { color: #6b7c93; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .xa-agent-verbs { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+        .xa-agent-verb-tag { padding: 3px 8px; border-radius: 4px; font-size: 10px; background: rgba(0,217,192,0.1); color: #00d9c0; }
+        .xa-compare-checkbox { position: absolute; top: 12px; right: 12px; }
+
+        /* Kirkpatrick levels */
+        .xa-kirk-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .xa-kirk-label { color: #b8c5d6; font-size: 11px; width: 80px; }
+        .xa-kirk-track { flex: 1; height: 8px; background: rgba(0,217,192,0.08); border-radius: 4px; overflow: hidden; }
+        .xa-kirk-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+        .xa-kirk-reaction { background: #4a5568; }
+        .xa-kirk-learning { background: #2d7d9a; }
+        .xa-kirk-behaviour { background: #00d9c0; }
+        .xa-kirk-results { background: #6c63ff; }
+        .xa-kirk-value { color: #6b7c93; font-size: 11px; width: 36px; text-align: right; }
+
+        /* WONDERS Radar */
+        .xa-radar-container { width: 200px; height: 200px; margin: 0 auto; }
+
+        /* Learner Journeys */
+        .xa-learner-search { display: flex; gap: 12px; margin-bottom: 24px; }
+        .xa-journey-timeline { position: relative; padding-left: 32px; }
+        .xa-journey-line { position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: rgba(0,217,192,0.2); }
+        .xa-journey-node { position: relative; margin-bottom: 16px; }
+        .xa-journey-dot { position: absolute; left: -24px; top: 4px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #00d9c0; background: #0a1628; }
+        .xa-journey-dot.completed { background: #00d9c0; }
+        .xa-journey-content { background: rgba(13,30,54,0.4); border: 1px solid rgba(26,58,92,0.3); border-radius: 10px; padding: 14px; }
+        .xa-journey-title { color: #ffffff; font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+        .xa-journey-desc { color: #6b7c93; font-size: 12px; }
+        .xa-journey-time { color: #6b7c93; font-size: 11px; margin-top: 6px; }
+        .xa-journey-bloom { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; margin-top: 4px; }
+
+        /* Growth trajectory chart */
+        .xa-trajectory-chart { height: 200px; position: relative; }
+        .xa-trajectory-chart svg { width: 100%; height: 100%; }
+        .xa-trajectory-line { fill: none; stroke: #00d9c0; stroke-width: 2; }
+        .xa-trajectory-area { fill: rgba(0,217,192,0.1); }
+        .xa-trajectory-dot { fill: #00d9c0; }
+
+        /* Statement Library */
+        .xa-lib-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .xa-lib-table thead th { color: #6b7c93; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; padding: 12px 16px; text-align: left; border-bottom: 1px solid rgba(26,58,92,0.5); position: sticky; top: 0; background: rgba(13,30,54,0.95); }
+        .xa-lib-table tbody td { color: #b8c5d6; font-size: 13px; padding: 12px 16px; border-bottom: 1px solid rgba(26,58,92,0.2); }
+        .xa-lib-table tbody tr { transition: all 0.2s ease; cursor: pointer; }
+        .xa-lib-table tbody tr:hover { background: rgba(0,217,192,0.05); }
+        .xa-lib-verb-name { color: #ffffff; font-weight: 500; }
+        .xa-lib-iri { color: #6b7c93; font-size: 11px; font-family: 'SF Mono', 'Fira Code', monospace; }
+        .xa-lib-status { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+        .xa-lib-status.active { background: rgba(0,217,192,0.15); color: #00d9c0; }
+        .xa-lib-status.available { background: rgba(107,124,147,0.2); color: #6b7c93; }
+        .xa-lib-status.deprecated { background: rgba(252,129,129,0.15); color: #fc8181; }
+        .xa-lib-count { color: #00d9c0; font-weight: 600; }
+        .xa-lib-scroll { max-height: 500px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(0,217,192,0.3) transparent; }
+        .xa-lib-scroll::-webkit-scrollbar { width: 6px; }
+        .xa-lib-scroll::-webkit-scrollbar-thumb { background: rgba(0,217,192,0.3); border-radius: 3px; }
+
+        /* Statement Builder */
+        .xa-builder-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .xa-builder-form { display: flex; flex-direction: column; gap: 16px; }
+        .xa-form-group { display: flex; flex-direction: column; gap: 6px; }
+        .xa-form-label { color: #b8c5d6; font-size: 12px; font-weight: 500; }
+        .xa-form-input { padding: 10px 14px; border: 1px solid rgba(26,58,92,0.5); background: rgba(13,30,54,0.6); color: #ffffff; font-size: 13px; border-radius: 8px; outline: none; font-family: inherit; transition: border-color 0.2s; }
+        .xa-form-input:focus { border-color: rgba(0,217,192,0.4); }
+        .xa-form-input::placeholder { color: #6b7c93; }
+        .xa-form-select { padding: 10px 14px; border: 1px solid rgba(26,58,92,0.5); background: rgba(13,30,54,0.6); color: #ffffff; font-size: 13px; border-radius: 8px; outline: none; font-family: inherit; cursor: pointer; }
+        .xa-form-select option { background: #0d1e36; color: #b8c5d6; }
+        .xa-form-textarea { padding: 10px 14px; border: 1px solid rgba(26,58,92,0.5); background: rgba(13,30,54,0.6); color: #ffffff; font-size: 13px; border-radius: 8px; outline: none; font-family: inherit; resize: vertical; min-height: 80px; }
+        .xa-form-textarea:focus { border-color: rgba(0,217,192,0.4); }
+        .xa-json-preview { background: rgba(10,22,40,0.8); border: 1px solid rgba(26,58,92,0.5); border-radius: 12px; padding: 16px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: #00d9c0; overflow: auto; max-height: 500px; white-space: pre-wrap; }
+        .xa-tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .xa-tag { padding: 4px 10px; border-radius: 6px; font-size: 11px; cursor: pointer; border: 1px solid rgba(26,58,92,0.5); background: transparent; color: #6b7c93; transition: all 0.2s ease; font-family: inherit; }
+        .xa-tag:hover { border-color: rgba(0,217,192,0.3); color: #b8c5d6; }
+        .xa-tag.selected { background: rgba(0,217,192,0.15); border-color: rgba(0,217,192,0.4); color: #00d9c0; }
+
+        /* Neurodiversity badges */
+        .xa-neuro-badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 500; }
+        .xa-neuro-adhd { background: rgba(255,183,77,0.15); color: #ffb74d; }
+        .xa-neuro-dyslexia { background: rgba(129,199,132,0.15); color: #81c784; }
+        .xa-neuro-autism { background: rgba(100,181,246,0.15); color: #64b5f6; }
+
+        /* Growth mindset indicator */
+        .xa-growth-indicator { display: flex; align-items: center; gap: 6px; }
+        .xa-growth-bar { flex: 1; height: 6px; background: rgba(0,217,192,0.08); border-radius: 3px; overflow: hidden; }
+        .xa-growth-fill { height: 100%; background: linear-gradient(90deg, #00d9c0, #00ffeb); border-radius: 3px; transition: width 0.6s ease; }
+        .xa-growth-pct { color: #00d9c0; font-size: 12px; font-weight: 600; width: 40px; text-align: right; }
+
+        /* Loading & empty states */
+        .xa-loading { text-align: center; padding: 48px; color: #6b7c93; font-size: 14px; }
+        .xa-loading-spinner { width: 32px; height: 32px; border: 3px solid rgba(0,217,192,0.2); border-top-color: #00d9c0; border-radius: 50%; animation: xa-spin 0.8s linear infinite; margin: 0 auto 16px; }
+        @keyframes xa-spin { to { transform: rotate(360deg); } }
+        .xa-empty { text-align: center; padding: 48px; }
+        .xa-empty-icon { color: #6b7c93; margin-bottom: 12px; }
+        .xa-empty-title { color: #ffffff; font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+        .xa-empty-text { color: #6b7c93; font-size: 13px; max-width: 400px; margin: 0 auto; }
+
+        /* Awaiting backend state */
+        .xa-awaiting { text-align: center; padding: 48px; background: rgba(0,217,192,0.03); border: 1px dashed rgba(0,217,192,0.2); border-radius: 12px; }
+        .xa-awaiting-icon { color: #00d9c0; margin-bottom: 12px; opacity: 0.5; }
+        .xa-awaiting-title { color: #ffffff; font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+        .xa-awaiting-text { color: #6b7c93; font-size: 13px; max-width: 500px; margin: 0 auto; }
+
+        /* Pulse indicator for live feed */
+        .xa-pulse { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #00d9c0; position: relative; }
+        .xa-pulse::before { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: rgba(0,217,192,0.3); animation: xa-pulse-ring 2s ease-out infinite; }
+        @keyframes xa-pulse-ring { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .xa-charts-grid { grid-template-columns: 1fr; }
+            .xa-charts-grid-3 { grid-template-columns: 1fr; }
+            .xa-builder-layout { grid-template-columns: 1fr; }
+            .xa-agent-grid { grid-template-columns: 1fr; }
+            .xa-statement-row { flex-wrap: wrap; }
+        }
+        @media (max-width: 600px) {
+            .xa-kpi-grid { grid-template-columns: 1fr 1fr; }
+            .xa-tabs { flex-wrap: wrap; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .xa-pulse::before { animation: none; }
+            .xa-loading-spinner { animation-duration: 0.01ms !important; }
+        }
     </style>
 </head>
 <body>
@@ -2909,6 +3173,7 @@
                     <button class="nav-tab" data-tab="agent13" style="color: #00d9c0;">Agent 13</button>
                     <button class="nav-tab" data-tab="sim-compare">Simulation & Comparison</button>
                     <button class="nav-tab" data-tab="learning-specs">Learning Specs</button>
+                    <button class="nav-tab" data-tab="xapi-analytics">xAPI Analytics</button>
                 </nav>
             </div>
         </header>
@@ -3801,6 +4066,444 @@
                 </div>
             </div>
             <!-- END AGENT 13 PAGE -->
+
+            <!-- xAPI ANALYTICS PAGE (hidden by default) -->
+            <div id="xapi-analytics-page" style="display: none; width: 100%; overflow-y: auto;">
+                <div class="panel" style="width: 100%;">
+                    <div class="xa-page">
+
+                        <!-- HEADER -->
+                        <div class="xa-header">
+                            <div class="xa-header-left">
+                                <div class="xa-header-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d9c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/><ellipse cx="12" cy="5" rx="9" ry="3"/></svg>
+                                </div>
+                                <div>
+                                    <h2>xAPI Analytics</h2>
+                                    <p>Real-time learning activity, agent performance, and xAPI statement intelligence</p>
+                                </div>
+                            </div>
+                            <div class="xa-time-range" id="xa-time-range">
+                                <button class="xa-time-btn active" data-period="today">Today</button>
+                                <button class="xa-time-btn" data-period="7d">7 Days</button>
+                                <button class="xa-time-btn" data-period="30d">30 Days</button>
+                                <button class="xa-time-btn" data-period="90d">90 Days</button>
+                            </div>
+                        </div>
+
+                        <!-- SUB-TAB NAVIGATION -->
+                        <div class="xa-tabs" id="xa-tabs">
+                            <button class="xa-tab-btn active" data-xa-tab="xa-overview">Overview</button>
+                            <button class="xa-tab-btn" data-xa-tab="xa-live-feed">Live Feed</button>
+                            <button class="xa-tab-btn" data-xa-tab="xa-agent-perf">Agent Performance</button>
+                            <button class="xa-tab-btn" data-xa-tab="xa-journeys">Learner Journeys</button>
+                            <button class="xa-tab-btn" data-xa-tab="xa-library">Statement Library</button>
+                            <button class="xa-tab-btn" data-xa-tab="xa-builder">Statement Builder</button>
+                        </div>
+
+                        <!-- ===== SUB-TAB 1: OVERVIEW DASHBOARD ===== -->
+                        <div class="xa-tab-content active" id="xa-overview">
+                            <!-- KPI Cards -->
+                            <div class="xa-kpi-grid" id="xa-kpi-grid">
+                                <div class="xa-kpi-card">
+                                    <div class="xa-kpi-label">Active Learners</div>
+                                    <div class="xa-kpi-value" id="xa-kpi-learners">--</div>
+                                    <div class="xa-kpi-change positive" id="xa-kpi-learners-change"></div>
+                                    <div class="xa-kpi-sparkline" id="xa-kpi-learners-spark"></div>
+                                </div>
+                                <div class="xa-kpi-card">
+                                    <div class="xa-kpi-label">Statements Today</div>
+                                    <div class="xa-kpi-value" id="xa-kpi-statements">--</div>
+                                    <div class="xa-kpi-change positive" id="xa-kpi-statements-change"></div>
+                                    <div class="xa-kpi-sparkline" id="xa-kpi-statements-spark"></div>
+                                </div>
+                                <div class="xa-kpi-card">
+                                    <div class="xa-kpi-label">Avg Session Duration</div>
+                                    <div class="xa-kpi-value" id="xa-kpi-duration">--</div>
+                                    <div class="xa-kpi-change positive" id="xa-kpi-duration-change"></div>
+                                    <div class="xa-kpi-sparkline" id="xa-kpi-duration-spark"></div>
+                                </div>
+                                <div class="xa-kpi-card">
+                                    <div class="xa-kpi-label">Course Completions</div>
+                                    <div class="xa-kpi-value" id="xa-kpi-completions">--</div>
+                                    <div class="xa-kpi-change positive" id="xa-kpi-completions-change"></div>
+                                    <div class="xa-kpi-sparkline" id="xa-kpi-completions-spark"></div>
+                                </div>
+                                <div class="xa-kpi-card">
+                                    <div class="xa-kpi-label">Growth Mindset Score</div>
+                                    <div class="xa-kpi-value" id="xa-kpi-growth">--</div>
+                                    <div class="xa-kpi-change positive" id="xa-kpi-growth-change"></div>
+                                    <div class="xa-kpi-sparkline" id="xa-kpi-growth-spark"></div>
+                                </div>
+                                <div class="xa-kpi-card">
+                                    <div class="xa-kpi-label">Agent Interactions</div>
+                                    <div class="xa-kpi-value" id="xa-kpi-interactions">--</div>
+                                    <div class="xa-kpi-change positive" id="xa-kpi-interactions-change"></div>
+                                    <div class="xa-kpi-sparkline" id="xa-kpi-interactions-spark"></div>
+                                </div>
+                            </div>
+
+                            <!-- Charts Row 1: Popular Courses + Keyword Cloud -->
+                            <div class="xa-charts-grid">
+                                <div class="xa-glass">
+                                    <div class="xa-card-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                                        Popular Courses
+                                    </div>
+                                    <div class="xa-chart-area" id="xa-popular-courses">
+                                        <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading course data...</div>
+                                    </div>
+                                </div>
+                                <div class="xa-glass">
+                                    <div class="xa-card-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                        Trending Keywords
+                                    </div>
+                                    <div class="xa-keyword-cloud" id="xa-keyword-cloud">
+                                        <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading keywords...</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Charts Row 2: Activity Heatmap + Bloom's Distribution -->
+                            <div class="xa-charts-grid">
+                                <div class="xa-glass">
+                                    <div class="xa-card-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        Activity Heatmap
+                                    </div>
+                                    <div class="xa-chart-area" id="xa-heatmap-container">
+                                        <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading activity data...</div>
+                                    </div>
+                                </div>
+                                <div class="xa-glass">
+                                    <div class="xa-card-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                        Bloom's Taxonomy Distribution
+                                    </div>
+                                    <div class="xa-chart-area" id="xa-blooms-chart">
+                                        <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading taxonomy data...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== SUB-TAB 2: LIVE FEED ===== -->
+                        <div class="xa-tab-content" id="xa-live-feed">
+                            <div class="xa-feed-toolbar">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span class="xa-pulse"></span>
+                                    <span style="color: #00d9c0; font-size: 13px; font-weight: 500;">Live</span>
+                                </div>
+                                <input type="text" class="xa-feed-search" id="xa-feed-search" placeholder="Search statements..." aria-label="Search xAPI statements">
+                                <select class="xa-feed-filter" id="xa-feed-verb-filter" aria-label="Filter by verb category">
+                                    <option value="">All Verbs</option>
+                                    <option value="remember">Remember</option>
+                                    <option value="understand">Understand</option>
+                                    <option value="apply">Apply</option>
+                                    <option value="analyse">Analyse</option>
+                                    <option value="evaluate">Evaluate</option>
+                                    <option value="create">Create</option>
+                                </select>
+                                <select class="xa-feed-filter" id="xa-feed-agent-filter" aria-label="Filter by agent">
+                                    <option value="">All Agents</option>
+                                </select>
+                                <button class="xa-btn-outline" id="xa-feed-pause-btn" aria-label="Pause live feed">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                                    Pause
+                                </button>
+                                <button class="xa-btn-outline" id="xa-feed-export-btn" aria-label="Export statements as CSV">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Export CSV
+                                </button>
+                            </div>
+                            <div class="xa-feed-container" id="xa-feed-container">
+                                <div class="xa-loading"><div class="xa-loading-spinner"></div>Connecting to live feed...</div>
+                            </div>
+                            <div style="text-align: center; margin-top: 16px;">
+                                <button class="xa-btn-outline" id="xa-feed-load-more" style="display: none;">Load More Statements</button>
+                            </div>
+                        </div>
+
+                        <!-- ===== SUB-TAB 3: AGENT PERFORMANCE ===== -->
+                        <div class="xa-tab-content" id="xa-agent-perf">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="xa-btn-outline active" id="xa-agent-view-grid" aria-label="Grid view">Grid View</button>
+                                    <button class="xa-btn-outline" id="xa-agent-view-compare" aria-label="Comparison view">Compare Mode</button>
+                                </div>
+                                <select class="xa-feed-filter" id="xa-agent-sort" aria-label="Sort agents">
+                                    <option value="interactions">Sort by Interactions</option>
+                                    <option value="learners">Sort by Learners</option>
+                                    <option value="growth">Sort by Growth Mindset</option>
+                                    <option value="satisfaction">Sort by Satisfaction</option>
+                                </select>
+                            </div>
+                            <div class="xa-agent-grid" id="xa-agent-grid">
+                                <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading agent performance data...</div>
+                            </div>
+                            <!-- Comparison panel (hidden by default) -->
+                            <div id="xa-agent-compare-panel" style="display: none;">
+                                <div class="xa-glass" style="margin-top: 24px;">
+                                    <div class="xa-card-title">Agent Comparison</div>
+                                    <div id="xa-compare-content">
+                                        <p style="color: #6b7c93; font-size: 13px;">Select 2-3 agents above to compare their performance metrics side by side.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== SUB-TAB 4: LEARNER JOURNEYS ===== -->
+                        <div class="xa-tab-content" id="xa-journeys">
+                            <div class="xa-learner-search">
+                                <input type="text" class="xa-feed-search" id="xa-learner-search-input" placeholder="Search for a learner by name or ID..." aria-label="Search for a learner" style="flex: 1;">
+                                <button class="xa-btn-teal" id="xa-learner-search-btn">Search</button>
+                            </div>
+                            <div id="xa-learner-profile" style="display: none;">
+                                <div class="xa-charts-grid" style="margin-bottom: 24px;">
+                                    <div class="xa-glass">
+                                        <div class="xa-card-title">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                            Learner Profile
+                                        </div>
+                                        <div id="xa-learner-info">
+                                            <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading learner data...</div>
+                                        </div>
+                                    </div>
+                                    <div class="xa-glass">
+                                        <div class="xa-card-title">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                                            Growth Trajectory
+                                        </div>
+                                        <div class="xa-trajectory-chart" id="xa-growth-trajectory"></div>
+                                    </div>
+                                </div>
+                                <div class="xa-glass" style="margin-bottom: 24px;">
+                                    <div class="xa-card-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        Learning Journey Timeline
+                                    </div>
+                                    <div class="xa-journey-timeline" id="xa-journey-timeline">
+                                        <div class="xa-journey-line"></div>
+                                        <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading journey data...</div>
+                                    </div>
+                                </div>
+                                <div class="xa-charts-grid">
+                                    <div class="xa-glass">
+                                        <div class="xa-card-title">Engagement Patterns</div>
+                                        <div id="xa-engagement-patterns">
+                                            <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading patterns...</div>
+                                        </div>
+                                    </div>
+                                    <div class="xa-glass">
+                                        <div class="xa-card-title">Milestones and Achievements</div>
+                                        <div id="xa-milestones">
+                                            <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading milestones...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="xa-learner-empty">
+                                <div class="xa-empty">
+                                    <div class="xa-empty-icon">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    </div>
+                                    <div class="xa-empty-title">Search for a Learner</div>
+                                    <div class="xa-empty-text">Enter a learner's name or ID above to explore their unique learning journey, growth trajectory, and engagement patterns.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== SUB-TAB 5: STATEMENT LIBRARY ===== -->
+                        <div class="xa-tab-content" id="xa-library">
+                            <div class="xa-feed-toolbar" style="margin-bottom: 16px;">
+                                <input type="text" class="xa-feed-search" id="xa-lib-search" placeholder="Search verbs, IRIs, or descriptions..." aria-label="Search statement library">
+                                <select class="xa-feed-filter" id="xa-lib-bloom-filter" aria-label="Filter by Bloom's level">
+                                    <option value="">All Bloom's Levels</option>
+                                    <option value="remember">Remember</option>
+                                    <option value="understand">Understand</option>
+                                    <option value="apply">Apply</option>
+                                    <option value="analyse">Analyse</option>
+                                    <option value="evaluate">Evaluate</option>
+                                    <option value="create">Create</option>
+                                </select>
+                                <select class="xa-feed-filter" id="xa-lib-status-filter" aria-label="Filter by status">
+                                    <option value="">All Statuses</option>
+                                    <option value="active">Active</option>
+                                    <option value="available">Available</option>
+                                    <option value="deprecated">Deprecated</option>
+                                </select>
+                                <button class="xa-btn-outline" id="xa-lib-export-btn">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Export JSON
+                                </button>
+                            </div>
+                            <div class="xa-lib-scroll">
+                                <table class="xa-lib-table" id="xa-lib-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Verb</th>
+                                            <th>IRI</th>
+                                            <th>Bloom's Level</th>
+                                            <th>Description</th>
+                                            <th>Agents</th>
+                                            <th>Frequency</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="xa-lib-tbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- ===== SUB-TAB 6: STATEMENT BUILDER ===== -->
+                        <div class="xa-tab-content" id="xa-builder">
+                            <div class="xa-builder-layout">
+                                <div class="xa-glass">
+                                    <div class="xa-card-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        Build Statement Template
+                                    </div>
+                                    <div class="xa-builder-form" id="xa-builder-form">
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Verb</label>
+                                            <select class="xa-form-select" id="xa-builder-verb">
+                                                <option value="">Select a verb...</option>
+                                                <option value="experienced">experienced</option>
+                                                <option value="understood">understood</option>
+                                                <option value="applied">applied</option>
+                                                <option value="analysed">analysed</option>
+                                                <option value="evaluated">evaluated</option>
+                                                <option value="created">created</option>
+                                                <option value="planned">planned</option>
+                                                <option value="experimented">experimented</option>
+                                                <option value="connected">connected</option>
+                                                <option value="recognised">recognised</option>
+                                                <option value="demonstrated">demonstrated</option>
+                                                <option value="built">built</option>
+                                                <option value="collaborated">collaborated</option>
+                                                <option value="facilitated">facilitated</option>
+                                                <option value="innovated">innovated</option>
+                                                <option value="transformed">transformed</option>
+                                                <option value="synthesised">synthesised</option>
+                                                <option value="integrated">integrated</option>
+                                                <option value="monitored">monitored</option>
+                                                <option value="orchestrated">orchestrated</option>
+                                                <option value="custom">Custom verb...</option>
+                                            </select>
+                                            <input type="text" class="xa-form-input" id="xa-builder-custom-verb" placeholder="Enter custom verb" style="display: none;">
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Verb IRI</label>
+                                            <input type="text" class="xa-form-input" id="xa-builder-iri" placeholder="https://zavmo.co.uk/xapi/verbs/" aria-label="Verb IRI">
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Object Type</label>
+                                            <select class="xa-form-select" id="xa-builder-object-type">
+                                                <option value="Activity">Activity</option>
+                                                <option value="Agent">Agent</option>
+                                                <option value="SubStatement">SubStatement</option>
+                                                <option value="StatementRef">StatementRef</option>
+                                            </select>
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Object Name</label>
+                                            <input type="text" class="xa-form-input" id="xa-builder-object-name" placeholder="e.g. Introduction to Neuroscience" aria-label="Object name">
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Description</label>
+                                            <textarea class="xa-form-textarea" id="xa-builder-description" placeholder="Describe when this statement should be generated..." aria-label="Statement description"></textarea>
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Bloom's Taxonomy Level</label>
+                                            <div class="xa-tag-row" id="xa-builder-bloom-tags">
+                                                <button class="xa-tag" data-bloom="remember">Remember</button>
+                                                <button class="xa-tag" data-bloom="understand">Understand</button>
+                                                <button class="xa-tag" data-bloom="apply">Apply</button>
+                                                <button class="xa-tag" data-bloom="analyse">Analyse</button>
+                                                <button class="xa-tag" data-bloom="evaluate">Evaluate</button>
+                                                <button class="xa-tag" data-bloom="create">Create</button>
+                                            </div>
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Kirkpatrick Level</label>
+                                            <div class="xa-tag-row" id="xa-builder-kirk-tags">
+                                                <button class="xa-tag" data-kirk="reaction">Reaction</button>
+                                                <button class="xa-tag" data-kirk="learning">Learning</button>
+                                                <button class="xa-tag" data-kirk="behaviour">Behaviour</button>
+                                                <button class="xa-tag" data-kirk="results">Results</button>
+                                            </div>
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">WONDERS Intelligence</label>
+                                            <div class="xa-tag-row" id="xa-builder-wonders-tags">
+                                                <button class="xa-tag" data-wonders="wonder">Wonder</button>
+                                                <button class="xa-tag" data-wonders="openness">Openness</button>
+                                                <button class="xa-tag" data-wonders="narrative">Narrative</button>
+                                                <button class="xa-tag" data-wonders="drive">Drive</button>
+                                                <button class="xa-tag" data-wonders="empathy">Empathy</button>
+                                                <button class="xa-tag" data-wonders="reasoning">Reasoning</button>
+                                                <button class="xa-tag" data-wonders="synthesis">Synthesis</button>
+                                            </div>
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Assign to Agents</label>
+                                            <div class="xa-tag-row" id="xa-builder-agent-tags"></div>
+                                        </div>
+                                        <div style="display: flex; gap: 12px; margin-top: 8px;">
+                                            <button class="xa-btn-teal" id="xa-builder-save">Save Template</button>
+                                            <button class="xa-btn-outline" id="xa-builder-test">Test Preview</button>
+                                            <button class="xa-btn-outline" id="xa-builder-reset">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="xa-glass" style="margin-bottom: 16px;">
+                                        <div class="xa-card-title">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                                            JSON Preview
+                                        </div>
+                                        <div class="xa-json-preview" id="xa-builder-json">{
+  "actor": {
+    "mbox": "mailto:learner@example.com",
+    "name": "Learner Name"
+  },
+  "verb": {
+    "id": "",
+    "display": { "en-GB": "" }
+  },
+  "object": {
+    "objectType": "Activity",
+    "id": "",
+    "definition": {
+      "name": { "en-GB": "" },
+      "type": "https://zavmo.co.uk/xapi/activity-types/learning-activity"
+    }
+  },
+  "context": {
+    "extensions": {
+      "https://zavmo.co.uk/xapi/context/blooms-level": "",
+      "https://zavmo.co.uk/xapi/context/kirkpatrick-level": "",
+      "https://zavmo.co.uk/xapi/context/wonders-dimension": ""
+    }
+  }
+}</div>
+                                    </div>
+                                    <div class="xa-glass">
+                                        <div class="xa-card-title">Saved Templates</div>
+                                        <div id="xa-builder-templates">
+                                            <p style="color: #6b7c93; font-size: 13px;">No saved templates yet. Build a statement template and click Save to store it here.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END xAPI ANALYTICS PAGE -->
 
         </div>
     </div>
@@ -9198,12 +9901,14 @@ Agent 13 measures its own success by:
             const simComparePage = document.getElementById('sim-compare-page');
             const agent13Page = document.getElementById('agent13-page');
             const learningSpecsPage = document.getElementById('learning-specs-page');
+            const xapiAnalyticsPage = document.getElementById('xapi-analytics-page');
 
             // Hide everything first
             if (charactersPage) charactersPage.style.display = 'none';
             if (simComparePage) simComparePage.style.display = 'none';
             if (agent13Page) agent13Page.style.display = 'none';
             if (learningSpecsPage) learningSpecsPage.style.display = 'none';
+            if (xapiAnalyticsPage) xapiAnalyticsPage.style.display = 'none';
 
             if (tabName === 'characters') {
                 // Characters page: full-width dashboard (mirrors Agent 13)
@@ -9218,6 +9923,10 @@ Agent 13 measures its own success by:
                 // Learning Specifications: data explorer for Neo4j content
                 if (learningSpecsPage) learningSpecsPage.style.display = 'block';
                 initLearningSpecsPage();
+            } else if (tabName === 'xapi-analytics') {
+                // xAPI Analytics: real-time learning analytics dashboard
+                if (xapiAnalyticsPage) xapiAnalyticsPage.style.display = 'block';
+                initXapiAnalyticsPage();
             }
         }
 
@@ -10995,6 +11704,1351 @@ Agent 13 measures its own success by:
                     </div>
                 `;
             }
+        }
+
+        // ================================================================
+        // xAPI ANALYTICS PAGE
+        // Real-time learning analytics dashboard
+        // ================================================================
+
+        const XA_API_BASE = ZAVMO_BASE_URL + '/api/xapi';
+        let xaInitialised = false;
+        let xaFeedPaused = false;
+        let xaFeedInterval = null;
+        let xaCurrentPeriod = 'today';
+        let xaSelectedAgentsForCompare = [];
+        let xaSavedTemplates = [];
+        let xaBuilderBloom = '';
+        let xaBuilderKirk = '';
+        let xaBuilderWonders = [];
+
+        // Character data for agent performance
+        const XA_CHARACTERS = [
+            { id: 'foundation-builder', name: 'Foundation Builder', icon: 'FB', role: 'Foundational knowledge and recall' },
+            { id: 'challenge-coach', name: 'Challenge Coach', icon: 'CC', role: 'Pushing boundaries and resilience' },
+            { id: 'career-navigator', name: 'Career Navigator', icon: 'CN', role: 'Career guidance and pathways' },
+            { id: 'pattern-connector', name: 'Pattern Connector', icon: 'PC', role: 'Cross-domain pattern recognition' },
+            { id: 'systems-analyst', name: 'Systems Analyst', icon: 'SA', role: 'Systematic analysis and evaluation' },
+            { id: 'collaboration-guide', name: 'Collaboration Guide', icon: 'CG', role: 'Team learning and collaboration' },
+            { id: 'evidence-evaluator', name: 'Evidence Evaluator', icon: 'EE', role: 'Critical thinking and evidence' },
+            { id: 'experiment-space', name: 'Experiment Space', icon: 'ES', role: 'Hands-on experimentation' },
+            { id: 'practical-builder', name: 'Practical Builder', icon: 'PB', role: 'Practical application and building' },
+            { id: 'creative-catalyst', name: 'Creative Catalyst', icon: 'CT', role: 'Creative thinking and innovation' },
+            { id: 'qualification-certifier', name: 'Qualification Certifier', icon: 'QC', role: 'Assessment and certification' },
+            { id: 'integrator', name: 'Integrator', icon: 'IN', role: 'Knowledge integration and synthesis' }
+        ];
+
+        // Bloom's taxonomy levels
+        const XA_BLOOMS = [
+            { id: 'remember', label: 'Remember', colour: '#4a5568' },
+            { id: 'understand', label: 'Understand', colour: '#2d7d9a' },
+            { id: 'apply', label: 'Apply', colour: '#00d9c0' },
+            { id: 'analyse', label: 'Analyse', colour: '#00b4d8' },
+            { id: 'evaluate', label: 'Evaluate', colour: '#0077b6' },
+            { id: 'create', label: 'Create', colour: '#6c63ff' }
+        ];
+
+        // xAPI Verb library — comprehensive catalogue
+        const XA_VERB_LIBRARY = [
+            { verb: 'experienced', iri: 'https://zavmo.co.uk/xapi/verbs/experienced', bloom: 'remember', description: 'Learner encountered or was exposed to content', agents: ['foundation-builder'], status: 'active', frequency: 0 },
+            { verb: 'understood', iri: 'https://zavmo.co.uk/xapi/verbs/understood', bloom: 'understand', description: 'Learner demonstrated comprehension of a concept', agents: ['foundation-builder', 'pattern-connector'], status: 'active', frequency: 0 },
+            { verb: 'applied', iri: 'https://zavmo.co.uk/xapi/verbs/applied', bloom: 'apply', description: 'Learner used knowledge in a practical context', agents: ['practical-builder', 'experiment-space'], status: 'active', frequency: 0 },
+            { verb: 'analysed', iri: 'https://zavmo.co.uk/xapi/verbs/analysed', bloom: 'analyse', description: 'Learner broke down complex information into components', agents: ['systems-analyst', 'evidence-evaluator'], status: 'active', frequency: 0 },
+            { verb: 'evaluated', iri: 'https://zavmo.co.uk/xapi/verbs/evaluated', bloom: 'evaluate', description: 'Learner made judgements based on criteria and evidence', agents: ['evidence-evaluator', 'qualification-certifier'], status: 'active', frequency: 0 },
+            { verb: 'created', iri: 'https://zavmo.co.uk/xapi/verbs/created', bloom: 'create', description: 'Learner produced original work or synthesis', agents: ['creative-catalyst', 'integrator'], status: 'active', frequency: 0 },
+            { verb: 'planned', iri: 'https://zavmo.co.uk/xapi/verbs/planned', bloom: 'create', description: 'Learner designed a strategy or approach', agents: ['career-navigator', 'systems-analyst'], status: 'active', frequency: 0 },
+            { verb: 'experimented', iri: 'https://zavmo.co.uk/xapi/verbs/experimented', bloom: 'apply', description: 'Learner tested ideas through hands-on exploration', agents: ['experiment-space'], status: 'active', frequency: 0 },
+            { verb: 'connected', iri: 'https://zavmo.co.uk/xapi/verbs/connected', bloom: 'analyse', description: 'Learner identified relationships between concepts', agents: ['pattern-connector', 'integrator'], status: 'active', frequency: 0 },
+            { verb: 'recognised', iri: 'https://zavmo.co.uk/xapi/verbs/recognised', bloom: 'remember', description: 'Learner identified or recalled previously learned content', agents: ['foundation-builder'], status: 'active', frequency: 0 },
+            { verb: 'demonstrated', iri: 'https://zavmo.co.uk/xapi/verbs/demonstrated', bloom: 'apply', description: 'Learner showed competence through performance', agents: ['practical-builder', 'qualification-certifier'], status: 'active', frequency: 0 },
+            { verb: 'built', iri: 'https://zavmo.co.uk/xapi/verbs/built', bloom: 'create', description: 'Learner constructed a tangible output or artefact', agents: ['practical-builder', 'creative-catalyst'], status: 'active', frequency: 0 },
+            { verb: 'collaborated', iri: 'https://zavmo.co.uk/xapi/verbs/collaborated', bloom: 'apply', description: 'Learner worked with peers to achieve a shared goal', agents: ['collaboration-guide'], status: 'active', frequency: 0 },
+            { verb: 'facilitated', iri: 'https://zavmo.co.uk/xapi/verbs/facilitated', bloom: 'evaluate', description: 'Learner guided or supported others in their learning', agents: ['collaboration-guide'], status: 'active', frequency: 0 },
+            { verb: 'innovated', iri: 'https://zavmo.co.uk/xapi/verbs/innovated', bloom: 'create', description: 'Learner introduced novel ideas or approaches', agents: ['creative-catalyst'], status: 'active', frequency: 0 },
+            { verb: 'transformed', iri: 'https://zavmo.co.uk/xapi/verbs/transformed', bloom: 'create', description: 'Learner fundamentally changed their approach or understanding', agents: ['integrator'], status: 'active', frequency: 0 },
+            { verb: 'synthesised', iri: 'https://zavmo.co.uk/xapi/verbs/synthesised', bloom: 'create', description: 'Learner combined multiple sources into a coherent whole', agents: ['integrator', 'pattern-connector'], status: 'active', frequency: 0 },
+            { verb: 'integrated', iri: 'https://zavmo.co.uk/xapi/verbs/integrated', bloom: 'evaluate', description: 'Learner merged knowledge from different domains', agents: ['integrator'], status: 'active', frequency: 0 },
+            { verb: 'monitored', iri: 'https://zavmo.co.uk/xapi/verbs/monitored', bloom: 'evaluate', description: 'Learner tracked their own progress or performance', agents: ['systems-analyst'], status: 'active', frequency: 0 },
+            { verb: 'orchestrated', iri: 'https://zavmo.co.uk/xapi/verbs/orchestrated', bloom: 'create', description: 'Learner coordinated complex multi-step learning activities', agents: ['systems-analyst', 'collaboration-guide'], status: 'active', frequency: 0 },
+            { verb: 'assessed', iri: 'https://zavmo.co.uk/xapi/verbs/assessed', bloom: 'evaluate', description: 'Learner completed a formal or informal assessment', agents: ['qualification-certifier'], status: 'active', frequency: 0 },
+            { verb: 'certified', iri: 'https://zavmo.co.uk/xapi/verbs/certified', bloom: 'evaluate', description: 'Learner achieved a certification or qualification milestone', agents: ['qualification-certifier'], status: 'active', frequency: 0 },
+            { verb: 'completed', iri: 'http://adlnet.gov/expapi/verbs/completed', bloom: 'apply', description: 'Learner finished a course, module, or learning activity', agents: ['all'], status: 'active', frequency: 0 },
+            { verb: 'systematised', iri: 'https://zavmo.co.uk/xapi/verbs/systematised', bloom: 'analyse', description: 'Learner organised information into a structured framework', agents: ['systems-analyst'], status: 'active', frequency: 0 },
+            { verb: 'attempted', iri: 'http://adlnet.gov/expapi/verbs/attempted', bloom: 'remember', description: 'Learner started but may not have completed an activity', agents: ['all'], status: 'active', frequency: 0 },
+            { verb: 'passed', iri: 'http://adlnet.gov/expapi/verbs/passed', bloom: 'apply', description: 'Learner met the pass threshold for an assessment', agents: ['qualification-certifier'], status: 'active', frequency: 0 },
+            { verb: 'failed', iri: 'http://adlnet.gov/expapi/verbs/failed', bloom: 'apply', description: 'Learner did not meet the pass threshold (opportunity for growth)', agents: ['qualification-certifier', 'challenge-coach'], status: 'active', frequency: 0 },
+            { verb: 'reflected', iri: 'https://zavmo.co.uk/xapi/verbs/reflected', bloom: 'evaluate', description: 'Learner engaged in metacognitive reflection on their learning', agents: ['career-navigator', 'challenge-coach'], status: 'active', frequency: 0 },
+            { verb: 'persevered', iri: 'https://zavmo.co.uk/xapi/verbs/persevered', bloom: 'apply', description: 'Learner continued despite difficulty — growth mindset indicator', agents: ['challenge-coach'], status: 'active', frequency: 0 },
+            { verb: 'questioned', iri: 'https://zavmo.co.uk/xapi/verbs/questioned', bloom: 'analyse', description: 'Learner asked a meaningful question to deepen understanding', agents: ['all'], status: 'active', frequency: 0 }
+        ];
+
+        /**
+         * Initialise the xAPI Analytics page.
+         * Called when the tab is first activated.
+         */
+        function initXapiAnalyticsPage() {
+            if (xaInitialised) return;
+            xaInitialised = true;
+
+            // Sub-tab navigation
+            const tabBtns = document.querySelectorAll('.xa-tab-btn[data-xa-tab]');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-xa-tab');
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.xa-tab-content').forEach(c => c.classList.remove('active'));
+                    const target = document.getElementById(tabId);
+                    if (target) target.classList.add('active');
+                });
+            });
+
+            // Time range selector
+            const timeBtns = document.querySelectorAll('#xa-time-range .xa-time-btn');
+            timeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    timeBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    xaCurrentPeriod = this.getAttribute('data-period');
+                    xaLoadOverviewData();
+                });
+            });
+
+            // Load initial data
+            xaLoadOverviewData();
+            xaLoadLiveFeed();
+            xaRenderStatementLibrary();
+            xaInitBuilder();
+            xaLoadAgentPerformance();
+
+            // Live feed controls
+            const pauseBtn = document.getElementById('xa-feed-pause-btn');
+            if (pauseBtn) {
+                pauseBtn.addEventListener('click', function() {
+                    xaFeedPaused = !xaFeedPaused;
+                    this.innerHTML = xaFeedPaused
+                        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Resume'
+                        : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Pause';
+                    this.classList.toggle('active', xaFeedPaused);
+                });
+            }
+
+            // Export CSV
+            const exportBtn = document.getElementById('xa-feed-export-btn');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', xaExportFeedCSV);
+            }
+
+            // Feed filters
+            const feedSearch = document.getElementById('xa-feed-search');
+            if (feedSearch) {
+                feedSearch.addEventListener('input', xaFilterFeed);
+            }
+            const verbFilter = document.getElementById('xa-feed-verb-filter');
+            if (verbFilter) {
+                verbFilter.addEventListener('change', xaFilterFeed);
+            }
+            const agentFilter = document.getElementById('xa-feed-agent-filter');
+            if (agentFilter) {
+                // Populate agent filter dropdown
+                XA_CHARACTERS.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    agentFilter.appendChild(opt);
+                });
+                agentFilter.addEventListener('change', xaFilterFeed);
+            }
+
+            // Statement library filters
+            const libSearch = document.getElementById('xa-lib-search');
+            if (libSearch) libSearch.addEventListener('input', xaFilterLibrary);
+            const libBloomFilter = document.getElementById('xa-lib-bloom-filter');
+            if (libBloomFilter) libBloomFilter.addEventListener('change', xaFilterLibrary);
+            const libStatusFilter = document.getElementById('xa-lib-status-filter');
+            if (libStatusFilter) libStatusFilter.addEventListener('change', xaFilterLibrary);
+
+            // Library export
+            const libExportBtn = document.getElementById('xa-lib-export-btn');
+            if (libExportBtn) {
+                libExportBtn.addEventListener('click', xaExportLibraryJSON);
+            }
+
+            // Learner search
+            const learnerSearchBtn = document.getElementById('xa-learner-search-btn');
+            if (learnerSearchBtn) {
+                learnerSearchBtn.addEventListener('click', xaSearchLearner);
+            }
+            const learnerSearchInput = document.getElementById('xa-learner-search-input');
+            if (learnerSearchInput) {
+                learnerSearchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') xaSearchLearner();
+                });
+            }
+
+            // Agent view modes
+            const gridViewBtn = document.getElementById('xa-agent-view-grid');
+            const compareViewBtn = document.getElementById('xa-agent-view-compare');
+            if (gridViewBtn) {
+                gridViewBtn.addEventListener('click', function() {
+                    gridViewBtn.classList.add('active');
+                    if (compareViewBtn) compareViewBtn.classList.remove('active');
+                    const comparePanel = document.getElementById('xa-agent-compare-panel');
+                    if (comparePanel) comparePanel.style.display = 'none';
+                    xaSelectedAgentsForCompare = [];
+                    document.querySelectorAll('.xa-compare-cb').forEach(cb => { cb.checked = false; });
+                });
+            }
+            if (compareViewBtn) {
+                compareViewBtn.addEventListener('click', function() {
+                    compareViewBtn.classList.add('active');
+                    if (gridViewBtn) gridViewBtn.classList.remove('active');
+                    const comparePanel = document.getElementById('xa-agent-compare-panel');
+                    if (comparePanel) comparePanel.style.display = 'block';
+                });
+            }
+
+            // Load saved templates from localStorage
+            try {
+                const saved = localStorage.getItem('zavmo_xa_templates');
+                if (saved) xaSavedTemplates = JSON.parse(saved);
+            } catch (e) { /* ignore */ }
+
+            // Start auto-refresh for live feed (every 5 seconds)
+            xaFeedInterval = setInterval(function() {
+                if (!xaFeedPaused) {
+                    xaAddNewStatementToFeed();
+                }
+            }, 5000);
+        }
+
+        // ---------------------------------------------------------------
+        // OVERVIEW DASHBOARD
+        // ---------------------------------------------------------------
+
+        /**
+         * Load and render all overview dashboard data.
+         * Attempts live API first, falls back to demonstration data.
+         */
+        async function xaLoadOverviewData() {
+            try {
+                const response = await zavmoFetch(XA_API_BASE + '/stats/overview?period=' + xaCurrentPeriod);
+                const data = await response.json();
+                if (data && data.status === 'success' && data.data) {
+                    xaRenderOverviewKPIs(data.data);
+                    return;
+                }
+            } catch (err) {
+                // Backend not yet available — use demonstration data
+            }
+            xaRenderOverviewWithDemoData();
+        }
+
+        /**
+         * Render overview with demonstration data to show the UI.
+         */
+        function xaRenderOverviewWithDemoData() {
+            // Generate realistic demo KPI data
+            const demoKPIs = {
+                activeLearners: { value: 1247, change: 12.3, trend: [980, 1020, 1085, 1130, 1190, 1210, 1247] },
+                statementsToday: { value: 8934, change: 8.7, trend: [6200, 7100, 7800, 8200, 8500, 8700, 8934] },
+                avgDuration: { value: '24m', change: 5.2, trend: [18, 19, 21, 22, 23, 23, 24] },
+                completions: { value: 342, change: 15.1, trend: [220, 250, 270, 290, 310, 325, 342] },
+                growthMindset: { value: '78%', change: 3.4, trend: [68, 70, 72, 74, 75, 76, 78] },
+                interactions: { value: 15623, change: 10.8, trend: [11000, 12200, 13100, 13800, 14500, 15100, 15623] }
+            };
+
+            // KPI cards
+            xaSetKPI('xa-kpi-learners', demoKPIs.activeLearners.value.toLocaleString(), demoKPIs.activeLearners.change, demoKPIs.activeLearners.trend);
+            xaSetKPI('xa-kpi-statements', demoKPIs.statementsToday.value.toLocaleString(), demoKPIs.statementsToday.change, demoKPIs.statementsToday.trend);
+            xaSetKPI('xa-kpi-duration', demoKPIs.avgDuration.value, demoKPIs.avgDuration.change, demoKPIs.avgDuration.trend);
+            xaSetKPI('xa-kpi-completions', demoKPIs.completions.value.toLocaleString(), demoKPIs.completions.change, demoKPIs.completions.trend);
+            xaSetKPI('xa-kpi-growth', demoKPIs.growthMindset.value, demoKPIs.growthMindset.change, demoKPIs.growthMindset.trend);
+            xaSetKPI('xa-kpi-interactions', demoKPIs.interactions.value.toLocaleString(), demoKPIs.interactions.change, demoKPIs.interactions.trend);
+
+            // Popular courses
+            xaRenderPopularCourses([
+                { name: 'Leadership Essentials', count: 1240 },
+                { name: 'Data Analytics Fundamentals', count: 1085 },
+                { name: 'Effective Communication', count: 980 },
+                { name: 'Project Management Pro', count: 870 },
+                { name: 'Neuroscience of Learning', count: 760 },
+                { name: 'Digital Transformation', count: 650 },
+                { name: 'Emotional Intelligence', count: 580 },
+                { name: 'Agile Methodology', count: 510 },
+                { name: 'Critical Thinking', count: 445 },
+                { name: 'Creative Problem Solving', count: 390 }
+            ]);
+
+            // Keyword cloud
+            xaRenderKeywordCloud([
+                { word: 'leadership', count: 420 }, { word: 'neuroscience', count: 380 },
+                { word: 'collaboration', count: 350 }, { word: 'analytics', count: 310 },
+                { word: 'growth mindset', count: 290 }, { word: 'resilience', count: 270 },
+                { word: 'innovation', count: 250 }, { word: 'critical thinking', count: 230 },
+                { word: 'communication', count: 210 }, { word: 'problem solving', count: 195 },
+                { word: 'creativity', count: 180 }, { word: 'adaptability', count: 165 },
+                { word: 'emotional intelligence', count: 155 }, { word: 'strategy', count: 140 },
+                { word: 'data literacy', count: 130 }, { word: 'teamwork', count: 120 },
+                { word: 'decision making', count: 110 }, { word: 'learning design', count: 100 },
+                { word: 'wellbeing', count: 95 }, { word: 'metacognition', count: 85 }
+            ]);
+
+            // Activity heatmap
+            xaRenderHeatmap();
+
+            // Bloom's distribution
+            xaRenderBloomsChart([
+                { agent: 'Foundation Builder', remember: 35, understand: 30, apply: 20, analyse: 10, evaluate: 3, create: 2 },
+                { agent: 'Challenge Coach', remember: 5, understand: 15, apply: 25, analyse: 25, evaluate: 20, create: 10 },
+                { agent: 'Career Navigator', remember: 10, understand: 20, apply: 30, analyse: 20, evaluate: 15, create: 5 },
+                { agent: 'Pattern Connector', remember: 5, understand: 15, apply: 15, analyse: 35, evaluate: 20, create: 10 },
+                { agent: 'Systems Analyst', remember: 5, understand: 10, apply: 15, analyse: 35, evaluate: 25, create: 10 },
+                { agent: 'Creative Catalyst', remember: 2, understand: 8, apply: 15, analyse: 15, evaluate: 20, create: 40 }
+            ]);
+        }
+
+        /**
+         * Render overview KPIs from live data.
+         */
+        function xaRenderOverviewKPIs(data) {
+            if (data.activeLearners) xaSetKPI('xa-kpi-learners', data.activeLearners.value, data.activeLearners.change, data.activeLearners.trend);
+            if (data.statementsToday) xaSetKPI('xa-kpi-statements', data.statementsToday.value, data.statementsToday.change, data.statementsToday.trend);
+            if (data.avgDuration) xaSetKPI('xa-kpi-duration', data.avgDuration.value, data.avgDuration.change, data.avgDuration.trend);
+            if (data.completions) xaSetKPI('xa-kpi-completions', data.completions.value, data.completions.change, data.completions.trend);
+            if (data.growthMindset) xaSetKPI('xa-kpi-growth', data.growthMindset.value, data.growthMindset.change, data.growthMindset.trend);
+            if (data.interactions) xaSetKPI('xa-kpi-interactions', data.interactions.value, data.interactions.change, data.interactions.trend);
+        }
+
+        /**
+         * Set a single KPI card with value, change indicator, and sparkline.
+         */
+        function xaSetKPI(id, value, change, trend) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+
+            const changeEl = document.getElementById(id + '-change');
+            if (changeEl) {
+                const isPositive = change >= 0;
+                changeEl.className = 'xa-kpi-change ' + (isPositive ? 'positive' : 'negative');
+                changeEl.textContent = (isPositive ? '+' : '') + change.toFixed(1) + '% vs last period';
+            }
+
+            const sparkEl = document.getElementById(id + '-spark');
+            if (sparkEl && trend && trend.length > 1) {
+                sparkEl.innerHTML = xaCreateSparkline(trend);
+            }
+        }
+
+        /**
+         * Create an SVG sparkline from data points.
+         */
+        function xaCreateSparkline(data) {
+            const w = 120, h = 32;
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min || 1;
+            const step = w / (data.length - 1);
+
+            let pathD = '';
+            let areaD = 'M0,' + h + ' ';
+            data.forEach((v, i) => {
+                const x = i * step;
+                const y = h - ((v - min) / range) * (h - 4) - 2;
+                if (i === 0) {
+                    pathD += 'M' + x + ',' + y;
+                    areaD += 'L' + x + ',' + y;
+                } else {
+                    pathD += ' L' + x + ',' + y;
+                    areaD += ' L' + x + ',' + y;
+                }
+            });
+            areaD += ' L' + (w) + ',' + h + ' Z';
+
+            return '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none"><path class="spark-fill" d="' + areaD + '"/><path d="' + pathD + '"/></svg>';
+        }
+
+        /**
+         * Render popular courses bar chart.
+         */
+        function xaRenderPopularCourses(courses) {
+            const container = document.getElementById('xa-popular-courses');
+            if (!container) return;
+            const maxCount = courses.length > 0 ? courses[0].count : 1;
+            let html = '';
+            courses.forEach(c => {
+                const pct = (c.count / maxCount * 100).toFixed(0);
+                html += '<div class="xa-bar-row">' +
+                    '<span class="xa-bar-label" title="' + xaEscapeAttr(c.name) + '">' + xaEscapeHTML(c.name) + '</span>' +
+                    '<div class="xa-bar-track"><div class="xa-bar-fill" style="width: ' + pct + '%"><span class="xa-bar-value">' + c.count.toLocaleString() + '</span></div></div>' +
+                    '</div>';
+            });
+            container.innerHTML = html;
+        }
+
+        /**
+         * Render keyword cloud.
+         */
+        function xaRenderKeywordCloud(keywords) {
+            const container = document.getElementById('xa-keyword-cloud');
+            if (!container) return;
+            const maxCount = keywords.length > 0 ? keywords[0].count : 1;
+            // Shuffle for visual variety
+            const shuffled = [...keywords].sort(() => Math.random() - 0.5);
+            let html = '';
+            shuffled.forEach(k => {
+                const ratio = k.count / maxCount;
+                let sizeClass = 'size-1';
+                if (ratio > 0.8) sizeClass = 'size-5';
+                else if (ratio > 0.6) sizeClass = 'size-4';
+                else if (ratio > 0.4) sizeClass = 'size-3';
+                else if (ratio > 0.2) sizeClass = 'size-2';
+                html += '<span class="xa-keyword ' + sizeClass + '" title="' + k.count + ' mentions">' + xaEscapeHTML(k.word) + '</span>';
+            });
+            container.innerHTML = html;
+        }
+
+        /**
+         * Render activity heatmap (7 days x 24 hours).
+         */
+        function xaRenderHeatmap() {
+            const container = document.getElementById('xa-heatmap-container');
+            if (!container) return;
+
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            let html = '<div class="xa-heatmap">';
+
+            // Header row with hours
+            html += '<div class="xa-heatmap-label"></div>';
+            for (let h = 0; h < 24; h++) {
+                if (h % 3 === 0) {
+                    html += '<div class="xa-heatmap-label" style="justify-content: center; font-size: 9px;">' + (h < 10 ? '0' : '') + h + '</div>';
+                } else {
+                    html += '<div></div>';
+                }
+            }
+
+            // Data rows
+            days.forEach(day => {
+                html += '<div class="xa-heatmap-label">' + day + '</div>';
+                for (let h = 0; h < 24; h++) {
+                    // Generate realistic activity patterns (higher during work hours)
+                    let intensity = Math.random();
+                    if (h >= 9 && h <= 17) intensity = 0.3 + Math.random() * 0.7;
+                    else if (h >= 7 && h <= 20) intensity = 0.1 + Math.random() * 0.4;
+                    else intensity = Math.random() * 0.15;
+                    if (day === 'Sat' || day === 'Sun') intensity *= 0.4;
+
+                    let level = '';
+                    if (intensity > 0.8) level = 'l5';
+                    else if (intensity > 0.6) level = 'l4';
+                    else if (intensity > 0.4) level = 'l3';
+                    else if (intensity > 0.2) level = 'l2';
+                    else if (intensity > 0.05) level = 'l1';
+
+                    const count = Math.round(intensity * 150);
+                    html += '<div class="xa-heatmap-cell ' + level + '" title="' + day + ' ' + (h < 10 ? '0' : '') + h + ':00 — ' + count + ' statements"></div>';
+                }
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        /**
+         * Render Bloom's taxonomy stacked bar chart.
+         */
+        function xaRenderBloomsChart(agentData) {
+            const container = document.getElementById('xa-blooms-chart');
+            if (!container) return;
+
+            let html = '';
+            agentData.forEach(a => {
+                const total = a.remember + a.understand + a.apply + a.analyse + a.evaluate + a.create;
+                html += '<div style="margin-bottom: 12px;">' +
+                    '<div style="color: #b8c5d6; font-size: 12px; margin-bottom: 4px;">' + xaEscapeHTML(a.agent) + '</div>' +
+                    '<div class="xa-stacked-bar">' +
+                    '<div class="xa-stacked-segment xa-bloom-1" style="width: ' + (a.remember / total * 100) + '%" title="Remember: ' + a.remember + '%"></div>' +
+                    '<div class="xa-stacked-segment xa-bloom-2" style="width: ' + (a.understand / total * 100) + '%" title="Understand: ' + a.understand + '%"></div>' +
+                    '<div class="xa-stacked-segment xa-bloom-3" style="width: ' + (a.apply / total * 100) + '%" title="Apply: ' + a.apply + '%"></div>' +
+                    '<div class="xa-stacked-segment xa-bloom-4" style="width: ' + (a.analyse / total * 100) + '%" title="Analyse: ' + a.analyse + '%"></div>' +
+                    '<div class="xa-stacked-segment xa-bloom-5" style="width: ' + (a.evaluate / total * 100) + '%" title="Evaluate: ' + a.evaluate + '%"></div>' +
+                    '<div class="xa-stacked-segment xa-bloom-6" style="width: ' + (a.create / total * 100) + '%" title="Create: ' + a.create + '%"></div>' +
+                    '</div></div>';
+            });
+
+            // Legend
+            html += '<div class="xa-bloom-legend">';
+            XA_BLOOMS.forEach(b => {
+                html += '<div class="xa-bloom-legend-item"><div class="xa-bloom-legend-dot" style="background: ' + b.colour + '"></div>' + b.label + '</div>';
+            });
+            html += '</div>';
+
+            container.innerHTML = html;
+        }
+
+        // ---------------------------------------------------------------
+        // LIVE FEED
+        // ---------------------------------------------------------------
+
+        let xaFeedStatements = [];
+
+        /**
+         * Load initial live feed data.
+         */
+        async function xaLoadLiveFeed() {
+            try {
+                const response = await zavmoFetch(XA_API_BASE + '/statements?limit=20&since=' + xaGetPeriodStart());
+                const data = await response.json();
+                if (data && data.status === 'success' && data.data) {
+                    xaFeedStatements = data.data;
+                    xaRenderFeed();
+                    return;
+                }
+            } catch (err) {
+                // Use demo data
+            }
+            xaFeedStatements = xaGenerateDemoStatements(20);
+            xaRenderFeed();
+        }
+
+        /**
+         * Generate demonstration xAPI statements.
+         */
+        function xaGenerateDemoStatements(count) {
+            const learners = [
+                'Sarah Mitchell', 'James Chen', 'Priya Patel', 'David Okonkwo', 'Emma Williams',
+                'Mohammed Al-Rashid', 'Lucy Thompson', 'Raj Kumar', 'Hannah Lewis', 'Tomasz Kowalski',
+                'Aisha Begum', 'Oliver Hughes', 'Fatima Hassan', 'Ben Taylor', 'Yuki Tanaka',
+                'Charlotte Brown', 'Kwame Asante', 'Sophie Martin', 'Daniel Kim', 'Zara Ahmed'
+            ];
+            const courses = [
+                'Leadership Essentials', 'Data Analytics Fundamentals', 'Effective Communication',
+                'Project Management Pro', 'Neuroscience of Learning', 'Digital Transformation',
+                'Emotional Intelligence', 'Critical Thinking', 'Creative Problem Solving', 'Agile Methodology'
+            ];
+            const statements = [];
+
+            for (let i = 0; i < count; i++) {
+                const verb = XA_VERB_LIBRARY[Math.floor(Math.random() * XA_VERB_LIBRARY.length)];
+                const character = XA_CHARACTERS[Math.floor(Math.random() * XA_CHARACTERS.length)];
+                const learner = learners[Math.floor(Math.random() * learners.length)];
+                const course = courses[Math.floor(Math.random() * courses.length)];
+                const time = new Date(Date.now() - Math.random() * 3600000 * 2);
+                const score = verb.bloom === 'evaluate' || verb.bloom === 'apply' ? Math.round(60 + Math.random() * 40) : null;
+
+                statements.push({
+                    id: 'stmt-' + Date.now() + '-' + i,
+                    actor: { name: learner, mbox: 'mailto:' + learner.toLowerCase().replace(/\s/g, '.') + '@example.com' },
+                    verb: { id: verb.iri, display: verb.verb },
+                    object: { name: course, id: 'https://zavmo.co.uk/courses/' + course.toLowerCase().replace(/\s/g, '-') },
+                    result: score ? { score: { scaled: score / 100, raw: score, max: 100 }, completion: true } : null,
+                    context: { agent: character.name, agentId: character.id, bloom: verb.bloom },
+                    timestamp: time.toISOString()
+                });
+            }
+
+            return statements.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        }
+
+        /**
+         * Render the live feed statements.
+         */
+        function xaRenderFeed() {
+            const container = document.getElementById('xa-feed-container');
+            if (!container) return;
+
+            if (xaFeedStatements.length === 0) {
+                container.innerHTML = '<div class="xa-empty"><div class="xa-empty-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><ellipse cx="12" cy="5" rx="9" ry="3"/></svg></div><div class="xa-empty-title">No Statements Yet</div><div class="xa-empty-text">xAPI statements will appear here as learners interact with the platform.</div></div>';
+                return;
+            }
+
+            let html = '';
+            xaFeedStatements.forEach(s => {
+                const initials = s.actor.name.split(' ').map(n => n[0]).join('');
+                const verbClass = 'xa-verb-' + (s.context.bloom || 'remember');
+                const timeStr = xaFormatTime(new Date(s.timestamp));
+                const resultStr = s.result && s.result.score ? ' — Score: ' + s.result.score.raw + '/' + s.result.score.max : '';
+
+                html += '<div class="xa-statement-card" data-verb="' + xaEscapeAttr(s.context.bloom || '') + '" data-agent="' + xaEscapeAttr(s.context.agentId || '') + '" data-text="' + xaEscapeAttr((s.actor.name + ' ' + s.verb.display + ' ' + s.object.name).toLowerCase()) + '" onclick="this.classList.toggle(\'expanded\')">' +
+                    '<div class="xa-statement-row">' +
+                    '<div class="xa-statement-actor"><div class="xa-statement-avatar">' + xaEscapeHTML(initials) + '</div><span class="xa-statement-name">' + xaEscapeHTML(s.actor.name) + '</span></div>' +
+                    '<span class="xa-statement-verb ' + verbClass + '">' + xaEscapeHTML(s.verb.display) + '</span>' +
+                    '<span class="xa-statement-object">' + xaEscapeHTML(s.object.name) + resultStr + '</span>' +
+                    '<div class="xa-statement-meta"><span class="xa-statement-agent">' + xaEscapeHTML(s.context.agent || '') + '</span><span class="xa-statement-time">' + timeStr + '</span></div>' +
+                    '</div>' +
+                    '<div class="xa-statement-detail"><div class="xa-statement-json">' + xaEscapeHTML(JSON.stringify(s, null, 2)) + '</div></div>' +
+                    '</div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        /**
+         * Add a new simulated statement to the feed (for demo purposes).
+         */
+        function xaAddNewStatementToFeed() {
+            const newStatements = xaGenerateDemoStatements(1);
+            if (newStatements.length > 0) {
+                xaFeedStatements.unshift(newStatements[0]);
+                if (xaFeedStatements.length > 100) xaFeedStatements.pop();
+                xaRenderFeed();
+            }
+        }
+
+        /**
+         * Filter the live feed based on search and filter inputs.
+         */
+        function xaFilterFeed() {
+            const searchVal = (document.getElementById('xa-feed-search') || {}).value || '';
+            const verbVal = (document.getElementById('xa-feed-verb-filter') || {}).value || '';
+            const agentVal = (document.getElementById('xa-feed-agent-filter') || {}).value || '';
+
+            const cards = document.querySelectorAll('.xa-statement-card');
+            cards.forEach(card => {
+                let show = true;
+                if (searchVal && card.getAttribute('data-text').indexOf(searchVal.toLowerCase()) === -1) show = false;
+                if (verbVal && card.getAttribute('data-verb') !== verbVal) show = false;
+                if (agentVal && card.getAttribute('data-agent') !== agentVal) show = false;
+                card.style.display = show ? '' : 'none';
+            });
+        }
+
+        /**
+         * Export current feed as CSV.
+         */
+        function xaExportFeedCSV() {
+            let csv = 'Timestamp,Learner,Verb,Object,Agent,Bloom Level,Score\n';
+            xaFeedStatements.forEach(s => {
+                const score = s.result && s.result.score ? s.result.score.raw : '';
+                csv += '"' + s.timestamp + '","' + s.actor.name + '","' + s.verb.display + '","' + s.object.name + '","' + (s.context.agent || '') + '","' + (s.context.bloom || '') + '","' + score + '"\n';
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'zavmo-xapi-statements-' + new Date().toISOString().split('T')[0] + '.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Statements exported as CSV', 'success');
+        }
+
+        // ---------------------------------------------------------------
+        // AGENT PERFORMANCE
+        // ---------------------------------------------------------------
+
+        /**
+         * Load and render agent performance data.
+         */
+        async function xaLoadAgentPerformance() {
+            try {
+                const response = await zavmoFetch(XA_API_BASE + '/agents/performance');
+                const data = await response.json();
+                if (data && data.status === 'success' && data.data) {
+                    xaRenderAgentGrid(data.data);
+                    return;
+                }
+            } catch (err) {
+                // Use demo data
+            }
+            xaRenderAgentGrid(xaGenerateDemoAgentData());
+        }
+
+        /**
+         * Generate demo agent performance data.
+         */
+        function xaGenerateDemoAgentData() {
+            return XA_CHARACTERS.map(c => ({
+                id: c.id,
+                name: c.name,
+                icon: c.icon,
+                role: c.role,
+                totalInteractions: Math.round(800 + Math.random() * 2000),
+                uniqueLearners: Math.round(200 + Math.random() * 500),
+                avgDuration: Math.round(12 + Math.random() * 20) + 'm',
+                satisfaction: (3.5 + Math.random() * 1.5).toFixed(1),
+                growthMindset: Math.round(55 + Math.random() * 40),
+                blooms: {
+                    remember: Math.round(5 + Math.random() * 30),
+                    understand: Math.round(10 + Math.random() * 25),
+                    apply: Math.round(10 + Math.random() * 25),
+                    analyse: Math.round(5 + Math.random() * 25),
+                    evaluate: Math.round(5 + Math.random() * 20),
+                    create: Math.round(2 + Math.random() * 20)
+                },
+                kirkpatrick: {
+                    reaction: Math.round(60 + Math.random() * 40),
+                    learning: Math.round(50 + Math.random() * 40),
+                    behaviour: Math.round(30 + Math.random() * 40),
+                    results: Math.round(20 + Math.random() * 40)
+                },
+                topVerbs: ['experienced', 'understood', 'applied'].sort(() => Math.random() - 0.5).slice(0, 3),
+                neurodiversity: {
+                    adhd: Math.round(60 + Math.random() * 35),
+                    dyslexia: Math.round(55 + Math.random() * 40),
+                    autism: Math.round(50 + Math.random() * 40)
+                }
+            }));
+        }
+
+        /**
+         * Render the agent performance grid.
+         */
+        function xaRenderAgentGrid(agents) {
+            const container = document.getElementById('xa-agent-grid');
+            if (!container) return;
+
+            let html = '';
+            agents.forEach(a => {
+                const bloomTotal = Object.values(a.blooms).reduce((sum, v) => sum + v, 0) || 1;
+                html += '<div class="xa-agent-card" style="position: relative;" data-agent-id="' + xaEscapeAttr(a.id) + '">' +
+                    '<input type="checkbox" class="xa-compare-cb" data-agent="' + xaEscapeAttr(a.id) + '" style="position: absolute; top: 12px; right: 12px; display: none;" onchange="xaToggleCompareAgent(\'' + xaEscapeAttr(a.id) + '\')" aria-label="Select ' + xaEscapeAttr(a.name) + ' for comparison">' +
+                    '<div class="xa-agent-header">' +
+                    '<div class="xa-agent-avatar">' + xaEscapeHTML(a.icon) + '</div>' +
+                    '<div><div class="xa-agent-name">' + xaEscapeHTML(a.name) + '</div><div class="xa-agent-role">' + xaEscapeHTML(a.role) + '</div></div>' +
+                    '</div>' +
+                    '<div class="xa-agent-stats">' +
+                    '<div class="xa-agent-stat"><div class="xa-agent-stat-value">' + a.totalInteractions.toLocaleString() + '</div><div class="xa-agent-stat-label">Interactions</div></div>' +
+                    '<div class="xa-agent-stat"><div class="xa-agent-stat-value">' + a.uniqueLearners.toLocaleString() + '</div><div class="xa-agent-stat-label">Learners</div></div>' +
+                    '<div class="xa-agent-stat"><div class="xa-agent-stat-value">' + a.avgDuration + '</div><div class="xa-agent-stat-label">Avg Duration</div></div>' +
+                    '<div class="xa-agent-stat"><div class="xa-agent-stat-value">' + a.satisfaction + '</div><div class="xa-agent-stat-label">Satisfaction</div></div>' +
+                    '</div>' +
+                    // Bloom's mini bar
+                    '<div class="xa-stacked-bar" style="height: 8px; margin-bottom: 8px;">' +
+                    '<div class="xa-stacked-segment xa-bloom-1" style="width: ' + (a.blooms.remember / bloomTotal * 100) + '%"></div>' +
+                    '<div class="xa-stacked-segment xa-bloom-2" style="width: ' + (a.blooms.understand / bloomTotal * 100) + '%"></div>' +
+                    '<div class="xa-stacked-segment xa-bloom-3" style="width: ' + (a.blooms.apply / bloomTotal * 100) + '%"></div>' +
+                    '<div class="xa-stacked-segment xa-bloom-4" style="width: ' + (a.blooms.analyse / bloomTotal * 100) + '%"></div>' +
+                    '<div class="xa-stacked-segment xa-bloom-5" style="width: ' + (a.blooms.evaluate / bloomTotal * 100) + '%"></div>' +
+                    '<div class="xa-stacked-segment xa-bloom-6" style="width: ' + (a.blooms.create / bloomTotal * 100) + '%"></div>' +
+                    '</div>' +
+                    // Growth mindset
+                    '<div class="xa-growth-indicator" style="margin-bottom: 8px;">' +
+                    '<span style="color: #6b7c93; font-size: 11px; width: 90px;">Growth Mindset</span>' +
+                    '<div class="xa-growth-bar"><div class="xa-growth-fill" style="width: ' + a.growthMindset + '%"></div></div>' +
+                    '<span class="xa-growth-pct">' + a.growthMindset + '%</span>' +
+                    '</div>' +
+                    // Kirkpatrick
+                    '<div style="margin-bottom: 8px;">' +
+                    xaRenderKirkpatrickBars(a.kirkpatrick) +
+                    '</div>' +
+                    // Neurodiversity support
+                    '<div style="display: flex; gap: 6px; margin-bottom: 8px;">' +
+                    '<span class="xa-neuro-badge xa-neuro-adhd">ADHD ' + a.neurodiversity.adhd + '%</span>' +
+                    '<span class="xa-neuro-badge xa-neuro-dyslexia">Dyslexia ' + a.neurodiversity.dyslexia + '%</span>' +
+                    '<span class="xa-neuro-badge xa-neuro-autism">Autism ' + a.neurodiversity.autism + '%</span>' +
+                    '</div>' +
+                    // Top verbs
+                    '<div class="xa-agent-verbs">' +
+                    a.topVerbs.map(v => '<span class="xa-agent-verb-tag">' + xaEscapeHTML(v) + '</span>').join('') +
+                    '</div>' +
+                    '</div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        /**
+         * Render Kirkpatrick level bars.
+         */
+        function xaRenderKirkpatrickBars(kirk) {
+            const levels = [
+                { key: 'reaction', label: 'Reaction', cls: 'xa-kirk-reaction' },
+                { key: 'learning', label: 'Learning', cls: 'xa-kirk-learning' },
+                { key: 'behaviour', label: 'Behaviour', cls: 'xa-kirk-behaviour' },
+                { key: 'results', label: 'Results', cls: 'xa-kirk-results' }
+            ];
+            return levels.map(l => {
+                const val = kirk[l.key] || 0;
+                return '<div class="xa-kirk-bar">' +
+                    '<span class="xa-kirk-label">' + l.label + '</span>' +
+                    '<div class="xa-kirk-track"><div class="xa-kirk-fill ' + l.cls + '" style="width: ' + val + '%"></div></div>' +
+                    '<span class="xa-kirk-value">' + val + '%</span>' +
+                    '</div>';
+            }).join('');
+        }
+
+        /**
+         * Toggle agent selection for comparison mode.
+         */
+        function xaToggleCompareAgent(agentId) {
+            const idx = xaSelectedAgentsForCompare.indexOf(agentId);
+            if (idx > -1) {
+                xaSelectedAgentsForCompare.splice(idx, 1);
+            } else if (xaSelectedAgentsForCompare.length < 3) {
+                xaSelectedAgentsForCompare.push(agentId);
+            } else {
+                showToast('You can compare up to 3 agents at a time', 'warning');
+                const cb = document.querySelector('.xa-compare-cb[data-agent="' + agentId + '"]');
+                if (cb) cb.checked = false;
+                return;
+            }
+
+            if (xaSelectedAgentsForCompare.length >= 2) {
+                xaRenderComparison();
+            }
+        }
+
+        /**
+         * Render agent comparison view.
+         */
+        function xaRenderComparison() {
+            const content = document.getElementById('xa-compare-content');
+            if (!content) return;
+
+            const cards = document.querySelectorAll('.xa-agent-card');
+            const selectedData = [];
+            cards.forEach(card => {
+                if (xaSelectedAgentsForCompare.includes(card.getAttribute('data-agent-id'))) {
+                    selectedData.push(card.getAttribute('data-agent-id'));
+                }
+            });
+
+            content.innerHTML = '<p style="color: #00d9c0; font-size: 13px;">Comparing ' + xaSelectedAgentsForCompare.length + ' agents. Full comparison view will be populated with live data from the Zavmo backend.</p>';
+        }
+
+        // ---------------------------------------------------------------
+        // LEARNER JOURNEYS
+        // ---------------------------------------------------------------
+
+        /**
+         * Search for a learner and display their journey.
+         */
+        async function xaSearchLearner() {
+            const input = document.getElementById('xa-learner-search-input');
+            const query = input ? input.value.trim() : '';
+            if (!query) {
+                showToast('Please enter a learner name or ID', 'warning');
+                return;
+            }
+
+            const profile = document.getElementById('xa-learner-profile');
+            const empty = document.getElementById('xa-learner-empty');
+            if (profile) profile.style.display = 'block';
+            if (empty) empty.style.display = 'none';
+
+            // Try live API first
+            try {
+                const response = await zavmoFetch(XA_API_BASE + '/learners/search?q=' + encodeURIComponent(query));
+                const data = await response.json();
+                if (data && data.status === 'success' && data.data && data.data.length > 0) {
+                    xaRenderLearnerProfile(data.data[0]);
+                    return;
+                }
+            } catch (err) {
+                // Use demo data
+            }
+
+            // Demo profile
+            xaRenderLearnerProfile({
+                name: query.charAt(0).toUpperCase() + query.slice(1),
+                email: query.toLowerCase().replace(/\s/g, '.') + '@example.com',
+                enrolledCourses: 5,
+                completedCourses: 3,
+                totalStatements: 847,
+                avgSessionDuration: '28m',
+                bloomsProgress: { remember: 95, understand: 88, apply: 72, analyse: 55, evaluate: 38, create: 22 },
+                growthMindset: 76,
+                activeAgents: ['Foundation Builder', 'Challenge Coach', 'Career Navigator'],
+                journey: xaGenerateDemoJourney(),
+                milestones: [
+                    { title: 'First Course Completed', date: '2025-11-15', type: 'completion' },
+                    { title: 'Growth Mindset Breakthrough', date: '2025-12-03', type: 'growth' },
+                    { title: 'Leadership Essentials Certified', date: '2026-01-20', type: 'certification' },
+                    { title: '100 Statements Milestone', date: '2026-02-10', type: 'milestone' }
+                ]
+            });
+        }
+
+        /**
+         * Generate demo journey events.
+         */
+        function xaGenerateDemoJourney() {
+            const events = [];
+            const verbs = ['experienced', 'understood', 'applied', 'analysed', 'evaluated', 'created'];
+            const courses = ['Leadership Essentials', 'Data Analytics', 'Neuroscience of Learning'];
+            const agents = ['Foundation Builder', 'Challenge Coach', 'Pattern Connector'];
+            const now = Date.now();
+
+            for (let i = 0; i < 15; i++) {
+                const verb = verbs[Math.min(Math.floor(i / 2.5), verbs.length - 1)];
+                const bloomIdx = verbs.indexOf(verb);
+                events.push({
+                    verb: verb,
+                    object: courses[i % courses.length],
+                    agent: agents[i % agents.length],
+                    bloom: verb,
+                    bloomLevel: bloomIdx + 1,
+                    timestamp: new Date(now - (15 - i) * 86400000 * 2).toISOString(),
+                    completed: i < 12
+                });
+            }
+            return events;
+        }
+
+        /**
+         * Render a learner's profile and journey.
+         */
+        function xaRenderLearnerProfile(learner) {
+            // Profile info
+            const info = document.getElementById('xa-learner-info');
+            if (info) {
+                info.innerHTML = '<div style="margin-bottom: 16px;">' +
+                    '<div style="color: #ffffff; font-size: 18px; font-weight: 600; margin-bottom: 4px;">' + xaEscapeHTML(learner.name) + '</div>' +
+                    '<div style="color: #6b7c93; font-size: 12px;">' + xaEscapeHTML(learner.email || '') + '</div>' +
+                    '</div>' +
+                    '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">' +
+                    '<div><div style="color: #ffffff; font-size: 20px; font-weight: 600;">' + learner.enrolledCourses + '</div><div style="color: #6b7c93; font-size: 10px; text-transform: uppercase;">Enrolled</div></div>' +
+                    '<div><div style="color: #ffffff; font-size: 20px; font-weight: 600;">' + learner.completedCourses + '</div><div style="color: #6b7c93; font-size: 10px; text-transform: uppercase;">Completed</div></div>' +
+                    '<div><div style="color: #ffffff; font-size: 20px; font-weight: 600;">' + (learner.totalStatements || 0).toLocaleString() + '</div><div style="color: #6b7c93; font-size: 10px; text-transform: uppercase;">Statements</div></div>' +
+                    '<div><div style="color: #ffffff; font-size: 20px; font-weight: 600;">' + (learner.avgSessionDuration || '--') + '</div><div style="color: #6b7c93; font-size: 10px; text-transform: uppercase;">Avg Session</div></div>' +
+                    '</div>' +
+                    '<div style="margin-top: 16px;">' +
+                    '<div class="xa-growth-indicator">' +
+                    '<span style="color: #6b7c93; font-size: 11px; width: 90px;">Growth Mindset</span>' +
+                    '<div class="xa-growth-bar"><div class="xa-growth-fill" style="width: ' + (learner.growthMindset || 0) + '%"></div></div>' +
+                    '<span class="xa-growth-pct">' + (learner.growthMindset || 0) + '%</span>' +
+                    '</div></div>';
+            }
+
+            // Growth trajectory chart
+            const trajectoryEl = document.getElementById('xa-growth-trajectory');
+            if (trajectoryEl && learner.journey) {
+                const points = learner.journey.map((e, i) => ({ x: i, y: e.bloomLevel || 1 }));
+                const w = 300, h = 180;
+                const maxY = 6;
+                const stepX = w / Math.max(points.length - 1, 1);
+
+                let pathD = '';
+                let areaD = 'M0,' + h + ' ';
+                points.forEach((p, i) => {
+                    const x = i * stepX;
+                    const y = h - (p.y / maxY) * (h - 20) - 10;
+                    if (i === 0) { pathD += 'M' + x + ',' + y; areaD += 'L' + x + ',' + y; }
+                    else { pathD += ' L' + x + ',' + y; areaD += ' L' + x + ',' + y; }
+                });
+                areaD += ' L' + ((points.length - 1) * stepX) + ',' + h + ' Z';
+
+                let dotsHTML = '';
+                points.forEach((p, i) => {
+                    const x = i * stepX;
+                    const y = h - (p.y / maxY) * (h - 20) - 10;
+                    dotsHTML += '<circle class="xa-trajectory-dot" cx="' + x + '" cy="' + y + '" r="3"/>';
+                });
+
+                trajectoryEl.innerHTML = '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
+                    '<path class="xa-trajectory-area" d="' + areaD + '"/>' +
+                    '<path class="xa-trajectory-line" d="' + pathD + '"/>' +
+                    dotsHTML + '</svg>';
+            }
+
+            // Journey timeline
+            const timeline = document.getElementById('xa-journey-timeline');
+            if (timeline && learner.journey) {
+                let html = '<div class="xa-journey-line"></div>';
+                learner.journey.forEach(e => {
+                    const bloomClass = 'xa-verb-' + (e.bloom || 'remember');
+                    html += '<div class="xa-journey-node">' +
+                        '<div class="xa-journey-dot' + (e.completed ? ' completed' : '') + '"></div>' +
+                        '<div class="xa-journey-content">' +
+                        '<div class="xa-journey-title">' + xaEscapeHTML(e.verb) + ' — ' + xaEscapeHTML(e.object) + '</div>' +
+                        '<div class="xa-journey-desc">via ' + xaEscapeHTML(e.agent) + '</div>' +
+                        '<span class="xa-journey-bloom ' + bloomClass + '">' + xaEscapeHTML(e.bloom) + '</span>' +
+                        '<div class="xa-journey-time">' + xaFormatDate(new Date(e.timestamp)) + '</div>' +
+                        '</div></div>';
+                });
+                timeline.innerHTML = html;
+            }
+
+            // Milestones
+            const milestonesEl = document.getElementById('xa-milestones');
+            if (milestonesEl && learner.milestones) {
+                let html = '';
+                learner.milestones.forEach(m => {
+                    const icon = m.type === 'certification' ? '&#9733;' : m.type === 'growth' ? '&#9650;' : m.type === 'completion' ? '&#10003;' : '&#9679;';
+                    html += '<div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(26,58,92,0.2);">' +
+                        '<span style="color: #00d9c0; font-size: 16px;">' + icon + '</span>' +
+                        '<div><div style="color: #ffffff; font-size: 13px; font-weight: 500;">' + xaEscapeHTML(m.title) + '</div>' +
+                        '<div style="color: #6b7c93; font-size: 11px;">' + xaEscapeHTML(m.date) + '</div></div></div>';
+                });
+                milestonesEl.innerHTML = html;
+            }
+
+            // Engagement patterns
+            const patterns = document.getElementById('xa-engagement-patterns');
+            if (patterns) {
+                patterns.innerHTML = '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">' +
+                    '<div><div style="color: #ffffff; font-size: 16px; font-weight: 600;">09:00 - 11:00</div><div style="color: #6b7c93; font-size: 11px; text-transform: uppercase;">Peak Learning Hours</div></div>' +
+                    '<div><div style="color: #ffffff; font-size: 16px; font-weight: 600;">Tuesday</div><div style="color: #6b7c93; font-size: 11px; text-transform: uppercase;">Most Active Day</div></div>' +
+                    '<div><div style="color: #ffffff; font-size: 16px; font-weight: 600;">3.2 days</div><div style="color: #6b7c93; font-size: 11px; text-transform: uppercase;">Avg Re-engagement</div></div>' +
+                    '<div><div style="color: #ffffff; font-size: 16px; font-weight: 600;">4 sessions</div><div style="color: #6b7c93; font-size: 11px; text-transform: uppercase;">Weekly Average</div></div>' +
+                    '</div>';
+            }
+        }
+
+        // ---------------------------------------------------------------
+        // STATEMENT LIBRARY
+        // ---------------------------------------------------------------
+
+        /**
+         * Render the statement library table.
+         */
+        function xaRenderStatementLibrary() {
+            const tbody = document.getElementById('xa-lib-tbody');
+            if (!tbody) return;
+
+            // Add demo frequency counts
+            XA_VERB_LIBRARY.forEach(v => {
+                if (!v.frequency) v.frequency = Math.round(Math.random() * 500 + 50);
+            });
+
+            xaFilterLibrary();
+        }
+
+        /**
+         * Filter and re-render the statement library.
+         */
+        function xaFilterLibrary() {
+            const tbody = document.getElementById('xa-lib-tbody');
+            if (!tbody) return;
+
+            const searchVal = ((document.getElementById('xa-lib-search') || {}).value || '').toLowerCase();
+            const bloomVal = (document.getElementById('xa-lib-bloom-filter') || {}).value || '';
+            const statusVal = (document.getElementById('xa-lib-status-filter') || {}).value || '';
+
+            const filtered = XA_VERB_LIBRARY.filter(v => {
+                if (searchVal && v.verb.indexOf(searchVal) === -1 && v.iri.indexOf(searchVal) === -1 && v.description.toLowerCase().indexOf(searchVal) === -1) return false;
+                if (bloomVal && v.bloom !== bloomVal) return false;
+                if (statusVal && v.status !== statusVal) return false;
+                return true;
+            });
+
+            let html = '';
+            filtered.forEach(v => {
+                const agentNames = v.agents.map(id => {
+                    if (id === 'all') return 'All';
+                    const char = XA_CHARACTERS.find(c => c.id === id);
+                    return char ? char.name : id;
+                }).join(', ');
+
+                const bloomLabel = XA_BLOOMS.find(b => b.id === v.bloom);
+                const bloomColour = bloomLabel ? bloomLabel.colour : '#6b7c93';
+
+                html += '<tr>' +
+                    '<td><span class="xa-lib-verb-name">' + xaEscapeHTML(v.verb) + '</span></td>' +
+                    '<td><span class="xa-lib-iri">' + xaEscapeHTML(v.iri) + '</span></td>' +
+                    '<td><span style="color: ' + bloomColour + '; font-weight: 500;">' + xaEscapeHTML(bloomLabel ? bloomLabel.label : v.bloom) + '</span></td>' +
+                    '<td>' + xaEscapeHTML(v.description) + '</td>' +
+                    '<td style="font-size: 12px; color: #6b7c93;">' + xaEscapeHTML(agentNames) + '</td>' +
+                    '<td><span class="xa-lib-count">' + v.frequency.toLocaleString() + '</span></td>' +
+                    '<td><span class="xa-lib-status ' + v.status + '">' + v.status.charAt(0).toUpperCase() + v.status.slice(1) + '</span></td>' +
+                    '</tr>';
+            });
+
+            tbody.innerHTML = html || '<tr><td colspan="7" style="text-align: center; padding: 32px; color: #6b7c93;">No verbs match your filters</td></tr>';
+        }
+
+        /**
+         * Export statement library as JSON.
+         */
+        function xaExportLibraryJSON() {
+            const json = JSON.stringify(XA_VERB_LIBRARY, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'zavmo-xapi-verb-library.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Statement library exported as JSON', 'success');
+        }
+
+        // ---------------------------------------------------------------
+        // STATEMENT BUILDER
+        // ---------------------------------------------------------------
+
+        /**
+         * Initialise the statement builder.
+         */
+        function xaInitBuilder() {
+            // Verb selector
+            const verbSelect = document.getElementById('xa-builder-verb');
+            const customVerbInput = document.getElementById('xa-builder-custom-verb');
+            if (verbSelect) {
+                verbSelect.addEventListener('change', function() {
+                    if (customVerbInput) {
+                        customVerbInput.style.display = this.value === 'custom' ? 'block' : 'none';
+                    }
+                    xaUpdateBuilderPreview();
+                });
+            }
+            if (customVerbInput) {
+                customVerbInput.addEventListener('input', xaUpdateBuilderPreview);
+            }
+
+            // IRI and Object fields
+            ['xa-builder-iri', 'xa-builder-object-type', 'xa-builder-object-name', 'xa-builder-description'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', xaUpdateBuilderPreview);
+                if (el) el.addEventListener('change', xaUpdateBuilderPreview);
+            });
+
+            // Bloom's tags
+            document.querySelectorAll('#xa-builder-bloom-tags .xa-tag').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('#xa-builder-bloom-tags .xa-tag').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    xaBuilderBloom = this.getAttribute('data-bloom');
+                    xaUpdateBuilderPreview();
+                });
+            });
+
+            // Kirkpatrick tags
+            document.querySelectorAll('#xa-builder-kirk-tags .xa-tag').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('#xa-builder-kirk-tags .xa-tag').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    xaBuilderKirk = this.getAttribute('data-kirk');
+                    xaUpdateBuilderPreview();
+                });
+            });
+
+            // WONDERS tags (multi-select)
+            document.querySelectorAll('#xa-builder-wonders-tags .xa-tag').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    xaBuilderWonders = Array.from(document.querySelectorAll('#xa-builder-wonders-tags .xa-tag.selected')).map(b => b.getAttribute('data-wonders'));
+                    xaUpdateBuilderPreview();
+                });
+            });
+
+            // Agent tags
+            const agentTagContainer = document.getElementById('xa-builder-agent-tags');
+            if (agentTagContainer) {
+                XA_CHARACTERS.forEach(c => {
+                    const btn = document.createElement('button');
+                    btn.className = 'xa-tag';
+                    btn.setAttribute('data-agent', c.id);
+                    btn.textContent = c.name;
+                    btn.addEventListener('click', function() {
+                        this.classList.toggle('selected');
+                        xaUpdateBuilderPreview();
+                    });
+                    agentTagContainer.appendChild(btn);
+                });
+            }
+
+            // Save template
+            const saveBtn = document.getElementById('xa-builder-save');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function() {
+                    const template = xaBuildTemplate();
+                    if (!template.verb.display) {
+                        showToast('Please select a verb first', 'warning');
+                        return;
+                    }
+                    xaSavedTemplates.push(template);
+                    try {
+                        localStorage.setItem('zavmo_xa_templates', JSON.stringify(xaSavedTemplates));
+                    } catch (e) { /* storage full */ }
+                    showToast('Template saved successfully', 'success');
+                    xaRenderSavedTemplates();
+                });
+            }
+
+            // Test preview
+            const testBtn = document.getElementById('xa-builder-test');
+            if (testBtn) {
+                testBtn.addEventListener('click', function() {
+                    const template = xaBuildTemplate();
+                    if (!template.verb.display) {
+                        showToast('Please select a verb first', 'warning');
+                        return;
+                    }
+                    showToast('Test statement generated — check the Live Feed tab', 'success');
+                    // Add test statement to feed
+                    const testStatement = {
+                        id: 'test-' + Date.now(),
+                        actor: { name: 'Test Learner', mbox: 'mailto:test@zavmo.co.uk' },
+                        verb: { id: template.verb.id, display: template.verb.display },
+                        object: { name: template.object.name || 'Test Activity', id: template.object.id || 'https://zavmo.co.uk/test' },
+                        result: null,
+                        context: { agent: 'Statement Builder', agentId: 'builder', bloom: xaBuilderBloom },
+                        timestamp: new Date().toISOString()
+                    };
+                    xaFeedStatements.unshift(testStatement);
+                    xaRenderFeed();
+                });
+            }
+
+            // Reset
+            const resetBtn = document.getElementById('xa-builder-reset');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function() {
+                    if (verbSelect) verbSelect.value = '';
+                    if (customVerbInput) { customVerbInput.value = ''; customVerbInput.style.display = 'none'; }
+                    ['xa-builder-iri', 'xa-builder-object-name', 'xa-builder-description'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.value = '';
+                    });
+                    const objectType = document.getElementById('xa-builder-object-type');
+                    if (objectType) objectType.value = 'Activity';
+                    document.querySelectorAll('#xa-builder-bloom-tags .xa-tag, #xa-builder-kirk-tags .xa-tag, #xa-builder-wonders-tags .xa-tag, #xa-builder-agent-tags .xa-tag').forEach(b => b.classList.remove('selected'));
+                    xaBuilderBloom = '';
+                    xaBuilderKirk = '';
+                    xaBuilderWonders = [];
+                    xaUpdateBuilderPreview();
+                    showToast('Builder reset', 'info');
+                });
+            }
+
+            xaRenderSavedTemplates();
+        }
+
+        /**
+         * Build a template object from the current form state.
+         */
+        function xaBuildTemplate() {
+            const verbSelect = document.getElementById('xa-builder-verb');
+            const customVerb = document.getElementById('xa-builder-custom-verb');
+            const verbValue = verbSelect ? verbSelect.value : '';
+            const verb = verbValue === 'custom' ? (customVerb ? customVerb.value : '') : verbValue;
+            const iri = (document.getElementById('xa-builder-iri') || {}).value || ('https://zavmo.co.uk/xapi/verbs/' + verb);
+            const objectType = (document.getElementById('xa-builder-object-type') || {}).value || 'Activity';
+            const objectName = (document.getElementById('xa-builder-object-name') || {}).value || '';
+            const description = (document.getElementById('xa-builder-description') || {}).value || '';
+            const selectedAgents = Array.from(document.querySelectorAll('#xa-builder-agent-tags .xa-tag.selected')).map(b => b.getAttribute('data-agent'));
+
+            return {
+                verb: { id: iri, display: verb },
+                object: { objectType: objectType, id: 'https://zavmo.co.uk/activities/' + objectName.toLowerCase().replace(/\s/g, '-'), name: objectName },
+                description: description,
+                bloom: xaBuilderBloom,
+                kirkpatrick: xaBuilderKirk,
+                wonders: xaBuilderWonders,
+                agents: selectedAgents,
+                createdAt: new Date().toISOString()
+            };
+        }
+
+        /**
+         * Update the JSON preview in the builder.
+         */
+        function xaUpdateBuilderPreview() {
+            const template = xaBuildTemplate();
+            const preview = {
+                actor: { mbox: 'mailto:learner@example.com', name: 'Learner Name' },
+                verb: { id: template.verb.id || '', display: { 'en-GB': template.verb.display || '' } },
+                object: {
+                    objectType: template.object.objectType,
+                    id: template.object.id || '',
+                    definition: {
+                        name: { 'en-GB': template.object.name || '' },
+                        type: 'https://zavmo.co.uk/xapi/activity-types/learning-activity'
+                    }
+                },
+                context: {
+                    extensions: {
+                        'https://zavmo.co.uk/xapi/context/blooms-level': template.bloom || '',
+                        'https://zavmo.co.uk/xapi/context/kirkpatrick-level': template.kirkpatrick || '',
+                        'https://zavmo.co.uk/xapi/context/wonders-dimension': template.wonders.length > 0 ? template.wonders : ''
+                    }
+                }
+            };
+
+            const jsonEl = document.getElementById('xa-builder-json');
+            if (jsonEl) jsonEl.textContent = JSON.stringify(preview, null, 2);
+        }
+
+        /**
+         * Render saved templates list.
+         */
+        function xaRenderSavedTemplates() {
+            const container = document.getElementById('xa-builder-templates');
+            if (!container) return;
+
+            if (xaSavedTemplates.length === 0) {
+                container.innerHTML = '<p style="color: #6b7c93; font-size: 13px;">No saved templates yet. Build a statement template and click Save to store it here.</p>';
+                return;
+            }
+
+            let html = '';
+            xaSavedTemplates.forEach((t, i) => {
+                html += '<div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(26,58,92,0.2);">' +
+                    '<div><span style="color: #ffffff; font-weight: 500;">' + xaEscapeHTML(t.verb.display || 'Unknown') + '</span>' +
+                    '<span style="color: #6b7c93; font-size: 12px; margin-left: 8px;">' + xaEscapeHTML(t.object.name || '') + '</span>' +
+                    (t.bloom ? ' <span class="xa-statement-verb xa-verb-' + t.bloom + '">' + xaEscapeHTML(t.bloom) + '</span>' : '') +
+                    '</div>' +
+                    '<button class="xa-btn-outline" style="padding: 4px 10px; font-size: 11px;" onclick="xaDeleteTemplate(' + i + ')">Remove</button>' +
+                    '</div>';
+            });
+            container.innerHTML = html;
+        }
+
+        /**
+         * Delete a saved template.
+         */
+        function xaDeleteTemplate(index) {
+            xaSavedTemplates.splice(index, 1);
+            try {
+                localStorage.setItem('zavmo_xa_templates', JSON.stringify(xaSavedTemplates));
+            } catch (e) { /* ignore */ }
+            xaRenderSavedTemplates();
+            showToast('Template removed', 'info');
+        }
+
+        // ---------------------------------------------------------------
+        // UTILITY FUNCTIONS
+        // ---------------------------------------------------------------
+
+        /**
+         * Get period start date string based on selected time range.
+         */
+        function xaGetPeriodStart() {
+            const now = new Date();
+            switch (xaCurrentPeriod) {
+                case 'today': return new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+                case '7d': return new Date(now.getTime() - 7 * 86400000).toISOString();
+                case '30d': return new Date(now.getTime() - 30 * 86400000).toISOString();
+                case '90d': return new Date(now.getTime() - 90 * 86400000).toISOString();
+                default: return new Date(now.getTime() - 86400000).toISOString();
+            }
+        }
+
+        /**
+         * Format a date for display.
+         */
+        function xaFormatTime(date) {
+            const now = new Date();
+            const diff = now - date;
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+            return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+        }
+
+        /**
+         * Format a full date.
+         */
+        function xaFormatDate(date) {
+            return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        /**
+         * Escape HTML entities for safe rendering.
+         */
+        function xaEscapeHTML(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = String(str);
+            return div.innerHTML;
+        }
+
+        /**
+         * Escape attribute value.
+         */
+        function xaEscapeAttr(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
 
     </script>

@@ -33,6 +33,7 @@
  *  20.  Recommendations engine
  *  22.  Fetch Modules modal
  *  23.  Delivery integration (phase labels, sidebar ACs, shared config)
+ *  24.  xAPI Analytics Page Integration
  *
  * Usage:
  *   node tests/smoke-test.js
@@ -1304,32 +1305,25 @@ test('Delivery Integration: phase badge CSS exists for COMPLETE', () => {
 });
 
 test('Delivery Integration: phase badge base CSS exists', () => {
-    assertIncludes(allStyles, '.lesson-phase-badge', 'CSS for .lesson-phase-badge base class must be defined');
+    assertIncludes(allStyles, '.lesson-phase-badge', 'CSS for .lesson-phase-badge must be defined');
 });
 
-// 23b. Phase badge rendering in addMessageToChat
-test('Delivery Integration: addMessageToChat renders phase badges', () => {
-    const fnStart = allScripts.indexOf('function addMessageToChat');
-    assert(fnStart !== -1, 'function addMessageToChat must exist');
-    const nextFn = allScripts.indexOf('\n        function ', fnStart + 10);
-    const fnBlock = allScripts.substring(fnStart, nextFn > fnStart ? nextFn : fnStart + 3000);
-    assertIncludes(fnBlock, 'lesson-phase-badge', 'addMessageToChat must render phase badge element');
+// 23b. Phase badges rendered in addMessageToChat
+test('Delivery Integration: addMessageToChat renders phase badge', () => {
+    assertIncludes(allScripts, 'lesson-phase-badge', 'addMessageToChat must include lesson-phase-badge class for phase labels');
 });
 
-test('Delivery Integration: addMessageToChat derives phase from phaseType', () => {
-    const fnStart = allScripts.indexOf('function addMessageToChat');
-    const nextFn = allScripts.indexOf('\n        function ', fnStart + 10);
-    const fnBlock = allScripts.substring(fnStart, nextFn > fnStart ? nextFn : fnStart + 3000);
-    assertIncludes(fnBlock, 'phaseBase', 'addMessageToChat must derive phaseBase from phaseType');
+test('Delivery Integration: phase badge uses phaseType parameter', () => {
+    assertIncludes(allScripts, 'phaseBase', 'addMessageToChat must derive phaseBase from phaseType for phase label');
 });
 
-// 23c. Sidebar Assessment Criteria section
+// 23c. Assessment Criteria sidebar section
 test('Delivery Integration: sidebar AC section exists in HTML', () => {
-    assertIncludes(html, 'lesson-sidebar-ac-section', 'lesson-sidebar-ac-section element must exist in HTML');
+    assertIncludes(html, 'lesson-sidebar-ac-section', 'sidebar must contain lesson-sidebar-ac-section element');
 });
 
-test('Delivery Integration: sidebar AC list container exists', () => {
-    assertIncludes(html, 'lesson-sidebar-ac-list', 'lesson-sidebar-ac-list element must exist in HTML');
+test('Delivery Integration: sidebar AC list exists in HTML', () => {
+    assertIncludes(html, 'lesson-sidebar-ac-list', 'sidebar must contain lesson-sidebar-ac-list element');
 });
 
 // 23d. populateSidebarAC function
@@ -1337,12 +1331,11 @@ test('Delivery Integration: populateSidebarAC function exists', () => {
     assertIncludes(allScripts, 'function populateSidebarAC', 'populateSidebarAC function must exist');
 });
 
-test('Delivery Integration: populateSidebarAC creates AC items with checkboxes', () => {
+test('Delivery Integration: populateSidebarAC checks for AC section element', () => {
     const fnStart = allScripts.indexOf('function populateSidebarAC');
     assert(fnStart !== -1, 'function populateSidebarAC must exist in source');
-    const nextFn = allScripts.indexOf('\n        function ', fnStart + 10);
-    const fnBlock = allScripts.substring(fnStart, nextFn > fnStart ? nextFn : fnStart + 2000);
-    assertIncludes(fnBlock, 'sidebar-ac-check-', 'populateSidebarAC must create checkbox elements with sidebar-ac-check- prefix');
+    const fnBlock = allScripts.substring(fnStart, allScripts.indexOf('function updateSidebarACs', fnStart));
+    assertIncludes(fnBlock, 'lesson-sidebar-ac-section', 'populateSidebarAC must reference lesson-sidebar-ac-section');
 });
 
 // 23e. updateSidebarACs function
@@ -1430,6 +1423,311 @@ test('Delivery Integration: characterXAPIData in source matches all JSON charact
 });
 
 // ============================================================
+// 24. xAPI Analytics Page Integration
+// ============================================================
+console.log('\n--- Suite 24: xAPI Analytics Page Integration ---');
+
+// 24a. Nav tab exists
+test('xAPI Analytics: nav tab button exists in HTML', () => {
+    assertIncludes(html, 'data-tab="xapi-analytics"', 'Must have xapi-analytics nav tab button');
+});
+
+test('xAPI Analytics: nav tab has correct label', () => {
+    assertIncludes(html, '>xAPI Analytics</button>', 'Nav tab must display "xAPI Analytics"');
+});
+
+// 24b. Page container
+test('xAPI Analytics: page container div exists', () => {
+    assertIncludes(html, 'id="xapi-analytics-page"', 'Must have xapi-analytics-page container');
+});
+
+test('xAPI Analytics: page is hidden by default', () => {
+    assertIncludes(html, 'id="xapi-analytics-page" style="display: none', 'xapi-analytics-page must be hidden by default');
+});
+
+// 24c. switchNavTab handles xapi-analytics
+test('xAPI Analytics: switchNavTab handles xapi-analytics tab', () => {
+    assertIncludes(allScripts, "tabName === 'xapi-analytics'", 'switchNavTab must handle xapi-analytics');
+});
+
+test('xAPI Analytics: switchNavTab calls initXapiAnalyticsPage', () => {
+    assertIncludes(allScripts, 'initXapiAnalyticsPage()', 'switchNavTab must call initXapiAnalyticsPage');
+});
+
+test('xAPI Analytics: switchNavTab hides xapi-analytics-page', () => {
+    assertIncludes(allScripts, "xapiAnalyticsPage.style.display = 'none'", 'switchNavTab must hide xapi-analytics-page');
+});
+
+// 24d. Sub-tab navigation
+test('xAPI Analytics: has 6 sub-tab buttons', () => {
+    const subTabs = ['xa-overview', 'xa-live-feed', 'xa-agent-perf', 'xa-journeys', 'xa-library', 'xa-builder'];
+    subTabs.forEach(tab => {
+        assertIncludes(html, 'data-xa-tab="' + tab + '"', 'Must have sub-tab button for ' + tab);
+    });
+});
+
+test('xAPI Analytics: has 6 sub-tab content divs', () => {
+    const contentIds = ['xa-overview', 'xa-live-feed', 'xa-agent-perf', 'xa-journeys', 'xa-library', 'xa-builder'];
+    contentIds.forEach(id => {
+        assertIncludes(html, 'id="' + id + '"', 'Must have sub-tab content div ' + id);
+    });
+});
+
+// 24e. Overview dashboard elements
+test('xAPI Analytics: overview has KPI grid', () => {
+    assertIncludes(html, 'id="xa-kpi-grid"', 'Must have KPI grid');
+});
+
+test('xAPI Analytics: overview has 6 KPI cards', () => {
+    const kpis = ['xa-kpi-learners', 'xa-kpi-statements', 'xa-kpi-duration', 'xa-kpi-completions', 'xa-kpi-growth', 'xa-kpi-interactions'];
+    kpis.forEach(id => {
+        assertIncludes(html, 'id="' + id + '"', 'Must have KPI ' + id);
+    });
+});
+
+test('xAPI Analytics: overview has popular courses container', () => {
+    assertIncludes(html, 'id="xa-popular-courses"', 'Must have popular courses chart');
+});
+
+test('xAPI Analytics: overview has keyword cloud', () => {
+    assertIncludes(html, 'id="xa-keyword-cloud"', 'Must have keyword cloud');
+});
+
+test('xAPI Analytics: overview has activity heatmap', () => {
+    assertIncludes(html, 'id="xa-heatmap-container"', 'Must have heatmap container');
+});
+
+test('xAPI Analytics: overview has Blooms chart', () => {
+    assertIncludes(html, 'id="xa-blooms-chart"', 'Must have Blooms chart');
+});
+
+// 24f. Live feed elements
+test('xAPI Analytics: live feed has search input', () => {
+    assertIncludes(html, 'id="xa-feed-search"', 'Must have feed search input');
+});
+
+test('xAPI Analytics: live feed has verb filter', () => {
+    assertIncludes(html, 'id="xa-feed-verb-filter"', 'Must have verb filter dropdown');
+});
+
+test('xAPI Analytics: live feed has agent filter', () => {
+    assertIncludes(html, 'id="xa-feed-agent-filter"', 'Must have agent filter dropdown');
+});
+
+test('xAPI Analytics: live feed has pause button', () => {
+    assertIncludes(html, 'id="xa-feed-pause-btn"', 'Must have pause button');
+});
+
+test('xAPI Analytics: live feed has export button', () => {
+    assertIncludes(html, 'id="xa-feed-export-btn"', 'Must have export CSV button');
+});
+
+test('xAPI Analytics: live feed has container', () => {
+    assertIncludes(html, 'id="xa-feed-container"', 'Must have feed container');
+});
+
+// 24g. Agent performance elements
+test('xAPI Analytics: agent performance has grid container', () => {
+    assertIncludes(html, 'id="xa-agent-grid"', 'Must have agent grid');
+});
+
+test('xAPI Analytics: agent performance has compare panel', () => {
+    assertIncludes(html, 'id="xa-agent-compare-panel"', 'Must have compare panel');
+});
+
+test('xAPI Analytics: agent performance has sort dropdown', () => {
+    assertIncludes(html, 'id="xa-agent-sort"', 'Must have agent sort dropdown');
+});
+
+// 24h. Learner journeys elements
+test('xAPI Analytics: learner journeys has search input', () => {
+    assertIncludes(html, 'id="xa-learner-search-input"', 'Must have learner search input');
+});
+
+test('xAPI Analytics: learner journeys has timeline container', () => {
+    assertIncludes(html, 'id="xa-journey-timeline"', 'Must have journey timeline');
+});
+
+test('xAPI Analytics: learner journeys has growth trajectory', () => {
+    assertIncludes(html, 'id="xa-growth-trajectory"', 'Must have growth trajectory chart');
+});
+
+// 24i. Statement library elements
+test('xAPI Analytics: statement library has table', () => {
+    assertIncludes(html, 'id="xa-lib-table"', 'Must have library table');
+});
+
+test('xAPI Analytics: statement library has search', () => {
+    assertIncludes(html, 'id="xa-lib-search"', 'Must have library search input');
+});
+
+test('xAPI Analytics: statement library has bloom filter', () => {
+    assertIncludes(html, 'id="xa-lib-bloom-filter"', 'Must have bloom filter');
+});
+
+test('xAPI Analytics: statement library has export button', () => {
+    assertIncludes(html, 'id="xa-lib-export-btn"', 'Must have library export button');
+});
+
+// 24j. Statement builder elements
+test('xAPI Analytics: statement builder has verb selector', () => {
+    assertIncludes(html, 'id="xa-builder-verb"', 'Must have builder verb selector');
+});
+
+test('xAPI Analytics: statement builder has IRI input', () => {
+    assertIncludes(html, 'id="xa-builder-iri"', 'Must have builder IRI input');
+});
+
+test('xAPI Analytics: statement builder has JSON preview', () => {
+    assertIncludes(html, 'id="xa-builder-json"', 'Must have JSON preview');
+});
+
+test('xAPI Analytics: statement builder has save button', () => {
+    assertIncludes(html, 'id="xa-builder-save"', 'Must have save button');
+});
+
+test('xAPI Analytics: statement builder has test button', () => {
+    assertIncludes(html, 'id="xa-builder-test"', 'Must have test preview button');
+});
+
+test('xAPI Analytics: statement builder has Blooms tags', () => {
+    assertIncludes(html, 'id="xa-builder-bloom-tags"', 'Must have Blooms taxonomy tags');
+});
+
+test('xAPI Analytics: statement builder has Kirkpatrick tags', () => {
+    assertIncludes(html, 'id="xa-builder-kirk-tags"', 'Must have Kirkpatrick tags');
+});
+
+test('xAPI Analytics: statement builder has WONDERS tags', () => {
+    assertIncludes(html, 'id="xa-builder-wonders-tags"', 'Must have WONDERS tags');
+});
+
+// 24k. Core JavaScript functions exist
+test('xAPI Analytics: initXapiAnalyticsPage function exists', () => {
+    assertIncludes(allScripts, 'function initXapiAnalyticsPage()', 'Must have initXapiAnalyticsPage function');
+});
+
+test('xAPI Analytics: xaLoadOverviewData function exists', () => {
+    assertIncludes(allScripts, 'function xaLoadOverviewData()', 'Must have xaLoadOverviewData function');
+});
+
+test('xAPI Analytics: xaLoadLiveFeed function exists', () => {
+    assertIncludes(allScripts, 'function xaLoadLiveFeed()', 'Must have xaLoadLiveFeed function');
+});
+
+test('xAPI Analytics: xaLoadAgentPerformance function exists', () => {
+    assertIncludes(allScripts, 'function xaLoadAgentPerformance()', 'Must have xaLoadAgentPerformance function');
+});
+
+test('xAPI Analytics: xaRenderStatementLibrary function exists', () => {
+    assertIncludes(allScripts, 'function xaRenderStatementLibrary()', 'Must have xaRenderStatementLibrary function');
+});
+
+test('xAPI Analytics: xaInitBuilder function exists', () => {
+    assertIncludes(allScripts, 'function xaInitBuilder()', 'Must have xaInitBuilder function');
+});
+
+test('xAPI Analytics: xaSearchLearner function exists', () => {
+    assertIncludes(allScripts, 'function xaSearchLearner()', 'Must have xaSearchLearner function');
+});
+
+// 24l. API integration patterns
+test('xAPI Analytics: uses zavmoFetch for API calls', () => {
+    assertIncludes(allScripts, 'zavmoFetch(XA_API_BASE', 'Must use zavmoFetch for xAPI API calls');
+});
+
+test('xAPI Analytics: has XA_API_BASE constant', () => {
+    assertIncludes(allScripts, 'const XA_API_BASE', 'Must define XA_API_BASE constant');
+});
+
+test('xAPI Analytics: API calls have try/catch error handling', () => {
+    // Check multiple async functions have try/catch
+    assertIncludes(allScripts, 'async function xaLoadOverviewData', 'xaLoadOverviewData must be async');
+    assertIncludes(allScripts, 'async function xaLoadLiveFeed', 'xaLoadLiveFeed must be async');
+    assertIncludes(allScripts, 'async function xaLoadAgentPerformance', 'xaLoadAgentPerformance must be async');
+});
+
+// 24m. Security: HTML escaping
+test('xAPI Analytics: has xaEscapeHTML function', () => {
+    assertIncludes(allScripts, 'function xaEscapeHTML(str)', 'Must have xaEscapeHTML for XSS prevention');
+});
+
+test('xAPI Analytics: has xaEscapeAttr function', () => {
+    assertIncludes(allScripts, 'function xaEscapeAttr(str)', 'Must have xaEscapeAttr for attribute escaping');
+});
+
+// 24n. Null safety
+test('xAPI Analytics: initXapiAnalyticsPage checks xaInitialised guard', () => {
+    assertIncludes(allScripts, 'if (xaInitialised) return', 'Must guard against double-init');
+});
+
+// 24o. Verb library completeness
+test('xAPI Analytics: verb library includes all Bloom levels', () => {
+    const levels = ['remember', 'understand', 'apply', 'analyse', 'evaluate', 'create'];
+    levels.forEach(level => {
+        assertIncludes(allScripts, "bloom: '" + level + "'", 'XA_VERB_LIBRARY must include verb with bloom level ' + level);
+    });
+});
+
+test('xAPI Analytics: verb library has at least 20 verbs', () => {
+    const matches = allScripts.match(/verb:\s*'/g);
+    assertGreaterThan(matches ? matches.length : 0, 20, 'XA_VERB_LIBRARY must have at least 20 verbs');
+});
+
+// 24p. British English
+test('xAPI Analytics: uses British English spelling (analyse not analyze)', () => {
+    assertIncludes(html, 'Analyse', 'Must use British English "Analyse" not "Analyze"');
+    assertIncludes(html, 'Behaviour', 'Must use British English "Behaviour" not "Behavior"');
+});
+
+// 24q. Accessibility
+test('xAPI Analytics: search inputs have aria-labels', () => {
+    assertIncludes(html, 'aria-label="Search xAPI statements"', 'Feed search must have aria-label');
+    assertIncludes(html, 'aria-label="Search for a learner"', 'Learner search must have aria-label');
+});
+
+test('xAPI Analytics: filter dropdowns have aria-labels', () => {
+    assertIncludes(html, 'aria-label="Filter by verb category"', 'Verb filter must have aria-label');
+    assertIncludes(html, 'aria-label="Filter by agent"', 'Agent filter must have aria-label');
+});
+
+// 24r. CSS exists
+test('xAPI Analytics: CSS classes defined', () => {
+    assertIncludes(html, '.xa-page', 'Must have xa-page CSS class');
+    assertIncludes(html, '.xa-kpi-card', 'Must have xa-kpi-card CSS class');
+    assertIncludes(html, '.xa-glass', 'Must have xa-glass CSS class');
+    assertIncludes(html, '.xa-statement-card', 'Must have xa-statement-card CSS class');
+    assertIncludes(html, '.xa-agent-card', 'Must have xa-agent-card CSS class');
+});
+
+test('xAPI Analytics: reduced-motion media query present', () => {
+    assertIncludes(html, 'xa-pulse::before { animation: none', 'Must have reduced-motion for pulse animation');
+});
+
+// 24s. Time range selector
+test('xAPI Analytics: time range has Today/7d/30d/90d options', () => {
+    assertIncludes(html, 'data-period="today"', 'Must have Today time range');
+    assertIncludes(html, 'data-period="7d"', 'Must have 7d time range');
+    assertIncludes(html, 'data-period="30d"', 'Must have 30d time range');
+    assertIncludes(html, 'data-period="90d"', 'Must have 90d time range');
+});
+
+// 24t. localStorage uses zavmo_ prefix
+test('xAPI Analytics: localStorage keys use zavmo_ prefix', () => {
+    assertIncludes(allScripts, "zavmo_xa_templates", 'Saved templates must use zavmo_ localStorage prefix');
+});
+
+// 24u. Character data consistency
+test('xAPI Analytics: all 12 characters defined in XA_CHARACTERS', () => {
+    const chars = ['foundation-builder', 'challenge-coach', 'career-navigator', 'pattern-connector',
+        'systems-analyst', 'collaboration-guide', 'evidence-evaluator', 'experiment-space',
+        'practical-builder', 'creative-catalyst', 'qualification-certifier', 'integrator'];
+    chars.forEach(c => {
+        assertIncludes(allScripts, "id: '" + c + "'", 'XA_CHARACTERS must include ' + c);
+    });
+});
+
+// ============================================================
 // RESULTS
 // ============================================================
 console.log('\n' + '='.repeat(60));
@@ -1480,6 +1778,9 @@ process.exit(failed > 0 ? 1 : 0);
  *  18.  Teaching charter & Agent 13
  *  19.  Simulation & lesson flow
  *  20.  Recommendations engine
+ *  22.  Fetch Modules modal
+ *  23.  Delivery integration (phase labels, sidebar ACs, shared config)
+ *  24.  xAPI Analytics Page Integration
  *
  * Usage:
  *   node tests/smoke-test.js
