@@ -2801,17 +2801,17 @@
         .xa-time-btn.active { background: rgba(0,217,192,0.15); color: #00d9c0; }
 
         /* Live Feed */
-        .xa-feed-container { max-height: 600px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(0,217,192,0.3) transparent; }
+        .xa-feed-container { width: 100%; max-height: 600px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(0,217,192,0.3) transparent; }
         .xa-feed-container::-webkit-scrollbar { width: 6px; }
         .xa-feed-container::-webkit-scrollbar-thumb { background: rgba(0,217,192,0.3); border-radius: 3px; }
-        .xa-statement-card { background: rgba(13,30,54,0.4); border: 1px solid rgba(26,58,92,0.3); border-radius: 12px; padding: 16px; margin-bottom: 8px; cursor: pointer; transition: all 0.3s ease; }
+        .xa-statement-card { width: 100%; background: rgba(13,30,54,0.4); border: 1px solid rgba(26,58,92,0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 8px; cursor: pointer; transition: all 0.3s ease; box-sizing: border-box; }
         .xa-statement-card:hover { border-color: rgba(0,217,192,0.3); background: rgba(13,30,54,0.6); }
         .xa-statement-card.expanded { border-color: rgba(0,217,192,0.4); background: rgba(13,30,54,0.7); }
-        .xa-statement-row { display: flex; align-items: center; gap: 12px; }
-        .xa-statement-actor { display: flex; align-items: center; gap: 8px; min-width: 140px; }
+        .xa-statement-row { display: flex; align-items: center; gap: 12px; width: 100%; }
+        .xa-statement-actor { display: flex; align-items: center; gap: 8px; min-width: 180px; }
         .xa-statement-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center; color: #00d9c0; font-size: 13px; font-weight: 600; flex-shrink: 0; }
         .xa-statement-name { color: #ffffff; font-size: 13px; font-weight: 500; }
-        .xa-statement-verb { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+        .xa-statement-verb { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; flex-shrink: 0; }
         .xa-verb-remember { background: rgba(74,85,104,0.4); color: #a0aec0; }
         .xa-verb-understand { background: rgba(45,125,154,0.3); color: #63b3ed; }
         .xa-verb-apply { background: rgba(0,217,192,0.2); color: #00d9c0; }
@@ -2819,20 +2819,30 @@
         .xa-verb-evaluate { background: rgba(0,119,182,0.3); color: #63b3ed; }
         .xa-verb-create { background: rgba(108,99,255,0.3); color: #a78bfa; }
         .xa-statement-object { color: #b8c5d6; font-size: 13px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .xa-statement-meta { display: flex; align-items: center; gap: 16px; color: #6b7c93; font-size: 12px; flex-shrink: 0; }
+        .xa-statement-meta { display: flex; align-items: center; gap: 16px; color: #6b7c93; font-size: 12px; flex-shrink: 0; margin-left: auto; }
         .xa-statement-agent { color: #00d9c0; font-size: 12px; }
-        .xa-statement-time { color: #6b7c93; font-size: 12px; }
+        .xa-statement-time { color: #6b7c93; font-size: 12px; min-width: 60px; text-align: right; }
         .xa-statement-detail { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(26,58,92,0.3); display: none; }
         .xa-statement-card.expanded .xa-statement-detail { display: block; }
         .xa-statement-json { background: rgba(10,22,40,0.8); border: 1px solid rgba(26,58,92,0.5); border-radius: 8px; padding: 12px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: #b8c5d6; overflow-x: auto; white-space: pre-wrap; max-height: 300px; overflow-y: auto; }
 
         /* Feed toolbar */
-        .xa-feed-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+        .xa-feed-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; width: 100%; }
         .xa-feed-filter { padding: 6px 12px; border: 1px solid rgba(26,58,92,0.5); background: rgba(13,30,54,0.6); color: #b8c5d6; font-size: 12px; border-radius: 6px; cursor: pointer; font-family: inherit; }
         .xa-feed-filter option { background: #0d1e36; color: #b8c5d6; }
         .xa-feed-search { padding: 8px 14px; border: 1px solid rgba(26,58,92,0.5); background: rgba(13,30,54,0.6); color: #ffffff; font-size: 13px; border-radius: 8px; flex: 1; min-width: 200px; outline: none; font-family: inherit; }
         .xa-feed-search:focus { border-color: rgba(0,217,192,0.4); }
         .xa-feed-search::placeholder { color: #6b7c93; }
+        .xa-feed-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 18px; padding: 0 6px; border-radius: 9px; background: rgba(0,217,192,0.2); color: #00d9c0; font-size: 10px; font-weight: 700; margin-left: 6px; vertical-align: middle; }
+        .xa-tab-btn.active .xa-feed-badge { background: rgba(0,217,192,0.3); }
+        .xa-feed-badge.pulse { animation: xaPulse 0.6s ease; }
+        @keyframes xaPulse { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        /* Summary stats bar for sub-tabs */
+        .xa-summary-bar { display: flex; gap: 24px; padding: 12px 20px; background: rgba(13,30,54,0.5); border: 1px solid rgba(26,58,92,0.3); border-radius: 10px; margin-bottom: 16px; }
+        .xa-summary-stat { display: flex; align-items: center; gap: 8px; }
+        .xa-summary-label { color: #6b7c93; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; }
+        .xa-summary-value { color: #00d9c0; font-size: 14px; font-weight: 700; }
+        .xa-summary-divider { width: 1px; background: rgba(26,58,92,0.5); }
         .xa-btn-teal { padding: 8px 16px; background: #00d9c0; color: #0a1628; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-family: inherit; }
         .xa-btn-teal:hover { background: #00ffeb; box-shadow: 0 0 20px rgba(0,217,192,0.4); }
         .xa-btn-outline { padding: 8px 16px; background: transparent; color: #b8c5d6; border: 1px solid rgba(26,58,92,0.5); border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; font-family: inherit; }
@@ -2870,7 +2880,7 @@
         .xa-radar-container { width: 200px; height: 200px; margin: 0 auto; }
 
         /* Learner Journeys */
-        .xa-learner-search { display: flex; gap: 12px; margin-bottom: 24px; }
+        .xa-learner-search { display: flex; gap: 12px; margin-bottom: 24px; width: 100%; }
         .xa-journey-timeline { position: relative; padding-left: 32px; }
         .xa-journey-line { position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: rgba(0,217,192,0.2); }
         .xa-journey-node { position: relative; margin-bottom: 16px; }
@@ -4094,7 +4104,7 @@
                         <!-- SUB-TAB NAVIGATION -->
                         <div class="xa-tabs" id="xa-tabs">
                             <button class="xa-tab-btn active" data-xa-tab="xa-overview">Overview</button>
-                            <button class="xa-tab-btn" data-xa-tab="xa-live-feed">Live Feed</button>
+                            <button class="xa-tab-btn" data-xa-tab="xa-live-feed">Live Feed <span class="xa-feed-badge" id="xa-feed-badge" aria-label="Statement count">0</span></button>
                             <button class="xa-tab-btn" data-xa-tab="xa-agent-perf">Agent Performance</button>
                             <button class="xa-tab-btn" data-xa-tab="xa-journeys">Learner Journeys</button>
                             <button class="xa-tab-btn" data-xa-tab="xa-library">Statement Library</button>
@@ -4190,6 +4200,17 @@
 
                         <!-- ===== SUB-TAB 2: LIVE FEED ===== -->
                         <div class="xa-tab-content" id="xa-live-feed">
+                            <div class="xa-summary-bar" id="xa-feed-summary">
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Statements</span><span class="xa-summary-value" id="xa-feed-total">0</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Unique Learners</span><span class="xa-summary-value" id="xa-feed-learners">0</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Active Agents</span><span class="xa-summary-value" id="xa-feed-agents">0</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Avg Score</span><span class="xa-summary-value" id="xa-feed-avg-score">—</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Top Verb</span><span class="xa-summary-value" id="xa-feed-top-verb">—</span></div>
+                            </div>
                             <div class="xa-feed-toolbar">
                                 <div style="display: flex; align-items: center; gap: 8px;">
                                     <span class="xa-pulse"></span>
@@ -4227,6 +4248,15 @@
 
                         <!-- ===== SUB-TAB 3: AGENT PERFORMANCE ===== -->
                         <div class="xa-tab-content" id="xa-agent-perf">
+                            <div class="xa-summary-bar" id="xa-agent-summary">
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Total Agents</span><span class="xa-summary-value">12</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Total Interactions</span><span class="xa-summary-value" id="xa-agent-total-int">—</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Avg Satisfaction</span><span class="xa-summary-value" id="xa-agent-avg-sat">—</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Avg Growth Mindset</span><span class="xa-summary-value" id="xa-agent-avg-growth">—</span></div>
+                            </div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                                 <div style="display: flex; gap: 8px;">
                                     <button class="xa-btn-outline active" id="xa-agent-view-grid" aria-label="Grid view">Grid View</button>
@@ -12281,11 +12311,59 @@ Agent 13 measures its own success by:
             });
 
             container.innerHTML = html;
+            // Update feed badge count
+            var badge = document.getElementById('xa-feed-badge');
+            if (badge) {
+                badge.textContent = xaFeedStatements.length;
+                badge.classList.remove('pulse');
+                void badge.offsetWidth;
+                badge.classList.add('pulse');
+            }
+            // Update summary stats
+            xaUpdateFeedSummary();
         }
 
         /**
          * Add a new simulated statement to the feed (for demo purposes).
          */
+        /**
+         * Update the live feed summary stats bar.
+         */
+        function xaUpdateFeedSummary() {
+            if (xaFeedStatements.length === 0) return;
+            var totalEl = document.getElementById('xa-feed-total');
+            var learnersEl = document.getElementById('xa-feed-learners');
+            var agentsEl = document.getElementById('xa-feed-agents');
+            var avgScoreEl = document.getElementById('xa-feed-avg-score');
+            var topVerbEl = document.getElementById('xa-feed-top-verb');
+            if (totalEl) totalEl.textContent = xaFeedStatements.length;
+            var uniqueLearners = {};
+            var uniqueAgents = {};
+            var verbCounts = {};
+            var scoreSum = 0;
+            var scoreCount = 0;
+            xaFeedStatements.forEach(function(s) {
+                if (s.actor && s.actor.name) uniqueLearners[s.actor.name] = true;
+                if (s.context && s.context.agent) uniqueAgents[s.context.agent] = true;
+                if (s.verb && s.verb.display) {
+                    verbCounts[s.verb.display] = (verbCounts[s.verb.display] || 0) + 1;
+                }
+                if (s.result && s.result.score && s.result.score.raw != null) {
+                    scoreSum += s.result.score.raw;
+                    scoreCount++;
+                }
+            });
+            if (learnersEl) learnersEl.textContent = Object.keys(uniqueLearners).length;
+            if (agentsEl) agentsEl.textContent = Object.keys(uniqueAgents).length;
+            if (avgScoreEl) avgScoreEl.textContent = scoreCount > 0 ? Math.round(scoreSum / scoreCount) + '%' : '—';
+            var topVerb = '';
+            var topCount = 0;
+            Object.keys(verbCounts).forEach(function(v) {
+                if (verbCounts[v] > topCount) { topCount = verbCounts[v]; topVerb = v; }
+            });
+            if (topVerbEl) topVerbEl.textContent = topVerb || '—';
+        }
+
         function xaAddNewStatementToFeed() {
             const newStatements = xaGenerateDemoStatements(1);
             if (newStatements.length > 0) {
@@ -12445,6 +12523,21 @@ Agent 13 measures its own success by:
             });
 
             container.innerHTML = html;
+            // Update agent summary stats
+            var totalInt = 0;
+            var satSum = 0;
+            var growthSum = 0;
+            agents.forEach(function(a) {
+                totalInt += (a.interactions || 0);
+                satSum += (a.satisfaction || 0);
+                growthSum += (a.growthMindset || 0);
+            });
+            var totalIntEl = document.getElementById('xa-agent-total-int');
+            var avgSatEl = document.getElementById('xa-agent-avg-sat');
+            var avgGrowthEl = document.getElementById('xa-agent-avg-growth');
+            if (totalIntEl) totalIntEl.textContent = totalInt.toLocaleString();
+            if (avgSatEl && agents.length > 0) avgSatEl.textContent = (satSum / agents.length).toFixed(1) + '/5';
+            if (avgGrowthEl && agents.length > 0) avgGrowthEl.textContent = Math.round(growthSum / agents.length) + '%';
         }
 
         /**
