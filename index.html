@@ -1169,6 +1169,15 @@
             text-align: right;
         }
 
+        
+        /* PHASE LABEL BADGES on character chat messages */
+        .lesson-phase-badge { display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .lesson-phase-badge.teach { background: rgba(0, 217, 192, 0.15); color: #00d9c0; border: 1px solid rgba(0, 217, 192, 0.3); }
+        .lesson-phase-badge.check { background: rgba(255, 140, 66, 0.15); color: #FF8C42; border: 1px solid rgba(255, 140, 66, 0.3); }
+        .lesson-phase-badge.assess { background: rgba(91, 155, 213, 0.15); color: #5B9BD5; border: 1px solid rgba(91, 155, 213, 0.3); }
+        .lesson-phase-badge.complete { background: rgba(76, 175, 80, 0.15); color: #4CAF50; border: 1px solid rgba(76, 175, 80, 0.3); }
+        .lesson-phase-badge.learn { background: rgba(184, 197, 214, 0.1); color: #8b9cb6; border: 1px solid rgba(184, 197, 214, 0.2); }
+
         /* HELPER TEXT */
         .lesson-helper-text {
             text-align: center;
@@ -3228,6 +3237,11 @@
                                         <div class="lesson-lo-title">Learning Objectives</div>
                                         <div id="lesson-sidebar-lo-list"></div>
                                     </div>
+                    <!-- Assessment Criteria -->
+                    <div class="lesson-learning-objectives" id="lesson-sidebar-ac-section" style="display: none;">
+                        <div class="lesson-lo-title" style="color: #5B9BD5;">Assessment Criteria</div>
+                        <div id="lesson-sidebar-ac-list"></div>
+                    </div>
 
                                     <!-- xAPI Feed -->
                                     <div style="flex: 1; overflow-y: auto; border-bottom: 1px solid rgba(26, 58, 92, 0.5);">
@@ -7109,8 +7123,9 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
 
         function populateSidebarLO(unit) {
             const loList = document.getElementById('lesson-sidebar-lo-list');
-            loList.innerHTML = '';
-            unit.learningOutcomes.slice(0, 3).forEach(lo => {
+            if (loList) {
+                loList.innerHTML = '';
+                unit.learningOutcomes.slice(0, 3).forEach(lo => {
                 loList.innerHTML += `
                     <div class="lesson-lo-item" id="sidebar-lo-${lo.id}">
                         <div class="lesson-lo-checkbox" id="sidebar-check-${lo.id}"></div>
@@ -7118,6 +7133,19 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
                     </div>
                 `;
             });
+        }
+
+        function populateSidebarAC(unit) {
+            const acSection = document.getElementById('lesson-sidebar-ac-section');
+            const acList = document.getElementById('lesson-sidebar-ac-list');
+            if (!acSection || !acList) return;
+            if (unit.assessmentCriteria && unit.assessmentCriteria.length > 0) {
+                acSection.style.display = 'block';
+                acList.innerHTML = '';
+                unit.assessmentCriteria.forEach(ac => {
+                    acList.innerHTML += '<div class="lesson-lo-item" id="sidebar-ac-' + ac.id + '"><div class="lesson-lo-checkbox" id="sidebar-ac-check-' + ac.id + '" style="border-color: #5B9BD5;"></div><span>' + ac.text + '</span></div>';
+                });
+            } else { acSection.style.display = 'none'; }
         }
 
         function updateSidebarLOs() {
@@ -7250,6 +7278,8 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
                     }
                 });
             }
+            populateSidebarAC(unit);
+        }
 
             if (phase.startsWith('CHECK')) {
                 // CHECK phase — all LOs are at least in-progress, most are met
@@ -7335,6 +7365,25 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             item.className = 'progress-item' + (status === 'in-progress' ? ' active' : '') + (status === 'met' ? ' met' : '');
         }
 
+        function updateSidebarACs() {
+            if (!conversationState.unit) return;
+            conversationState.unit.assessmentCriteria.forEach(ac => {
+                const checkbox = document.getElementById('sidebar-ac-check-' + ac.id);
+                const item = document.getElementById('sidebar-ac-' + ac.id);
+                if (!checkbox || !item) return;
+                const status = progressState.acStatuses[ac.id];
+                if (status === 'met') {
+                    checkbox.style.background = '#4CAF50'; checkbox.style.borderColor = '#4CAF50';
+                    checkbox.innerHTML = '<span style="color:#0d1e36;font-size:10px;display:flex;align-items:center;justify-content:center;height:100%;">\u2713</span>';
+                    if (item.querySelector('span')) item.querySelector('span').style.color = '#4CAF50';
+                } else if (status === 'in-progress') {
+                    checkbox.style.background = 'rgba(91,155,213,0.3)'; checkbox.style.borderColor = '#5B9BD5';
+                    checkbox.innerHTML = '';
+                    if (item.querySelector('span')) item.querySelector('span').style.color = '#b8c5d6';
+                }
+            });
+        }
+
         function updateProgressBar() {
             const loValues = Object.values(progressState.loStatuses);
             const acValues = Object.values(progressState.acStatuses);
@@ -7355,6 +7404,7 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
 
             // Also update sidebar LO checkboxes
             updateSidebarLOs();
+            updateSidebarACs();
         }
 
         function getProgressSummaryForChat() {
@@ -7838,10 +7888,15 @@ ${getTeachingCharter()}
             // Render markdown for character messages, plain text for learner
             const renderedContent = isLearner ? content.replace(/\n/g, '<br>') : renderMarkdown(content);
 
+            // Phase badge for character messages (not learner messages)
+            const phaseBase = phaseType ? phaseType.split('_')[0].toLowerCase() : 'teach';
+            const phaseBadgeHTML = !isLearner ? `<span class="lesson-phase-badge ${phaseBase}">${phaseBase}</span>` : '';
+
             bubble.innerHTML = `
                 <div class="lesson-character-avatar" id="msg-avatar">≋</div>
                 <div class="lesson-message-bubble">
-                    <div class="lesson-message-content">${renderedContent}</div>
+                    ${phaseBadgeHTML}
+                <div class="lesson-message-content">${renderedContent}</div>
                     <div class="lesson-message-timestamp">${timeString}</div>
                 </div>
             `;
