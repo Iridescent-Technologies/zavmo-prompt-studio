@@ -1,0 +1,164 @@
+{
+  "_description": "Shared character xAPI metadata for Zavmo. Used by both the Prompt Configuration Studio and the live delivery app. Single source of truth for character-specific verbs, Bloom's ranges, Kirkpatrick levels, 4D phases, Growth Mindset indicators, neurodiversity profiles, and Wonders Intelligence types.",
+  "_version": "1.0.0",
+  "_lastUpdated": "2026-02-26",
+  "_studioToZavmoMap": {
+    "foundation-builder": "builder",
+    "challenge-coach": "coach",
+    "career-navigator": "navigator",
+    "pattern-connector": "connector",
+    "systems-analyst": "analyst",
+    "collaboration-guide": "collaborator",
+    "evidence-evaluator": "challenger",
+    "experiment-space": null,
+    "practical-builder": null,
+    "creative-catalyst": null,
+    "qualification-certifier": null,
+    "integrator": null
+  },
+  "characters": {
+    "foundation-builder": {
+      "specName": "builder",
+      "verbs": ["experienced", "understood"],
+      "bloomsRange": ["Remember", "Understand"],
+      "kirkpatrick": [1, 2],
+      "kirkpatrickLabels": ["Reaction", "Learning"],
+      "phase4D": "Deliver",
+      "growthMindset": ["embraced_challenge"],
+      "neurodiversity": null,
+      "wondersIntelligence": null
+    },
+    "challenge-coach": {
+      "specName": "coach",
+      "verbs": ["applied", "analysed"],
+      "bloomsRange": ["Apply", "Analyse"],
+      "kirkpatrick": [2, 3],
+      "kirkpatrickLabels": ["Learning", "Behaviour"],
+      "phase4D": "Deliver",
+      "growthMindset": ["persisted_after_failure", "sought_feedback"],
+      "neurodiversity": null,
+      "wondersIntelligence": null
+    },
+    "career-navigator": {
+      "specName": "navigator",
+      "verbs": ["evaluated", "planned"],
+      "bloomsRange": ["Evaluate"],
+      "kirkpatrick": [4],
+      "kirkpatrickLabels": ["Results"],
+      "phase4D": "Deliver",
+      "growthMindset": ["set_challenging_career_goal"],
+      "neurodiversity": null,
+      "wondersIntelligence": null
+    },
+    "experiment-space": {
+      "specName": "explorer",
+      "verbs": ["created", "experimented"],
+      "bloomsRange": ["Apply", "Create"],
+      "kirkpatrick": [2, 3],
+      "kirkpatrickLabels": ["Learning", "Behaviour"],
+      "phase4D": "Deliver",
+      "growthMindset": ["viewed_failure_as_learning", "embraced_experimentation"],
+      "neurodiversity": null,
+      "wondersIntelligence": null
+    },
+    "pattern-connector": {
+      "specName": "connector",
+      "verbs": ["connected", "recognised"],
+      "bloomsRange": ["Analyse", "Evaluate"],
+      "kirkpatrick": [2],
+      "kirkpatrickLabels": ["Learning"],
+      "phase4D": "Deliver",
+      "growthMindset": ["welcomed_multiple_viewpoints", "embraced_cognitive_complexity"],
+      "neurodiversity": "ADHD",
+      "wondersIntelligence": "DRIFT"
+    },
+    "practical-builder": {
+      "specName": "practitioner",
+      "verbs": ["demonstrated", "built"],
+      "bloomsRange": ["Apply"],
+      "kirkpatrick": [3],
+      "kirkpatrickLabels": ["Behaviour"],
+      "phase4D": "Deliver",
+      "growthMindset": ["learned_through_iteration"],
+      "neurodiversity": "Dyslexia",
+      "wondersIntelligence": "ECHO"
+    },
+    "systems-analyst": {
+      "specName": "analyst",
+      "verbs": ["analysed", "systematised"],
+      "bloomsRange": ["Analyse"],
+      "kirkpatrick": [2],
+      "kirkpatrickLabels": ["Learning"],
+      "phase4D": "Deliver",
+      "growthMindset": ["sought_deeper_understanding", "refined_through_analysis"],
+      "neurodiversity": "Autism",
+      "wondersIntelligence": "SCAFFOLD"
+    },
+    "collaboration-guide": {
+      "specName": "collaborator",
+      "verbs": ["collaborated", "facilitated"],
+      "bloomsRange": ["Understand", "Analyse"],
+      "kirkpatrick": [3],
+      "kirkpatrickLabels": ["Behaviour"],
+      "phase4D": "Deliver",
+      "growthMindset": ["valued_diverse_perspectives", "embraced_feedback_from_peers"],
+      "neurodiversity": null,
+      "wondersIntelligence": "WEAVE"
+    },
+    "creative-catalyst": {
+      "specName": "catalyst",
+      "verbs": ["innovated", "transformed"],
+      "bloomsRange": ["Create"],
+      "kirkpatrick": [2, 3],
+      "kirkpatrickLabels": ["Learning", "Behaviour"],
+      "phase4D": "Deliver",
+      "growthMindset": ["viewed_constraints_as_opportunities", "celebrated_glitch_moment"],
+      "neurodiversity": null,
+      "wondersIntelligence": "RESONATE"
+    },
+    "evidence-evaluator": {
+      "specName": "evaluator",
+      "verbs": ["assessed", "evaluated"],
+      "bloomsRange": ["Evaluate"],
+      "kirkpatrick": [2],
+      "kirkpatrickLabels": ["Learning"],
+      "phase4D": "Demonstrate",
+      "growthMindset": ["embraced_constructive_feedback", "requested_detailed_feedback"],
+      "neurodiversity": null,
+      "wondersIntelligence": null
+    },
+    "qualification-certifier": {
+      "specName": "certifier",
+      "verbs": ["certified", "completed"],
+      "bloomsRange": ["N/A"],
+      "kirkpatrick": [4],
+      "kirkpatrickLabels": ["Results"],
+      "phase4D": "Demonstrate",
+      "growthMindset": ["set_next_learning_goal", "expressed_future_learning_ambition"],
+      "neurodiversity": null,
+      "wondersIntelligence": null
+    },
+    "integrator": {
+      "specName": "integrator",
+      "verbs": ["synthesised", "integrated"],
+      "bloomsRange": ["Meta-Synthesis"],
+      "kirkpatrick": [4],
+      "kirkpatrickLabels": ["Results"],
+      "phase4D": "Both",
+      "growthMindset": ["demonstrated_meta_cognitive_awareness", "reflected_on_learning_journey"],
+      "neurodiversity": null,
+      "wondersIntelligence": "WEAVE_meta"
+    },
+    "agent-13": {
+      "specName": "agent-13",
+      "verbs": ["monitored", "orchestrated"],
+      "bloomsRange": ["Meta-Orchestration"],
+      "kirkpatrick": [2, 3],
+      "kirkpatrickLabels": ["Learning", "Behaviour"],
+      "phase4D": "Deliver",
+      "growthMindset": [],
+      "neurodiversity": null,
+      "wondersIntelligence": null
+    }
+  }
+}
