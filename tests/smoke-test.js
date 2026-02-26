@@ -1145,7 +1145,7 @@ test('Fetch Modules: uses /api/deliver/modules/ endpoint', () => {
 
 test('Fetch Modules: checks authentication before fetching', () => {
     const fnStart = allScripts.indexOf('function searchAPIDatabase');
-    const fnBlock = allScripts.substring(fnStart, fnStart + 3000);
+    const fnBlock = allScripts.substring(fnStart, allScripts.indexOf('function displayAPIModules'));
     assertIncludes(fnBlock, 'getAccessToken()', 'searchAPIDatabase must check authentication via getAccessToken()');
 });
 // 22e. Loading state management
