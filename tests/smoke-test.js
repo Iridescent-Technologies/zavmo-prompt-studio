@@ -1146,9 +1146,9 @@ test('Fetch Modules: uses /api/deliver/modules/ endpoint', () => {
 test('Fetch Modules: checks authentication before fetching', () => {
     const fnStart = allScripts.indexOf('function searchAPIDatabase');
     assert(fnStart !== -1, 'function searchAPIDatabase must exist in source');
-    const authPos = allScripts.indexOf('zavmoFetch', fnStart);
+    const authPos = allScripts.indexOf('access_token', fnStart);
     const nextFn = allScripts.indexOf('function displayAPIModules', fnStart);
-    assert(authPos !== -1 && authPos < nextFn, 'searchAPIDatabase must use zavmoFetch for authenticated API calls');
+    assert(authPos !== -1 && authPos < nextFn, 'searchAPIDatabase must check access_token for authentication');
 });
 // 22e. Loading state management
 test('Fetch Modules: shows loading spinner during fetch', () => {
