@@ -3738,6 +3738,54 @@
             margin-right: 4px;
         }
 
+        /* Popularity/Usage Metrics */
+        .jd-pop-bar, .ls-pop-bar {
+            display: flex;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 12px;
+            gap: 2px;
+        }
+
+        .jd-pop-segment, .ls-pop-segment {
+            height: 100%;
+            border-radius: 3px;
+            flex-grow: 1;
+        }
+
+        .pop-completed {
+            background: #00d9c0;
+        }
+
+        .pop-in-progress {
+            background: #fbbf24;
+        }
+
+        .pop-allocated {
+            background: rgba(107, 124, 147, 0.4);
+        }
+
+        .jd-pop-stats, .ls-pop-stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            font-size: 11px;
+        }
+
+        .pop-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #6b7c93;
+        }
+
+        .pop-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
         /* Responsive */
         @media (max-width: 900px) {
             .jd-results-grid,
@@ -4382,7 +4430,7 @@
             <!-- LEARNING SPECIFICATIONS PAGE (hidden by default) -->
             <div id="learning-specs-page" style="display: none; width: 100%; overflow-y: auto;">
                 <div class="panel" style="width: 100%;">
-                    <div style="max-width: 1400px; margin: 0 auto; padding: 24px;">
+                    <div style="width: 100%; box-sizing: border-box; padding: 24px;">
 
                         <!-- HEADER -->
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
@@ -4408,7 +4456,13 @@
 
                             <!-- Filter row -->
                             <div class="jd-filter-row">
-                                <span class="jd-filter-label">Filter by:</span>
+                                <span class="jd-filter-label">Sort by:</span>
+                                <select id="ls-sort-dropdown" class="jd-filter-dropdown" aria-label="Sort learning specifications">
+                                    <option value="popular">Most Popular</option>
+                                    <option value="recent">Recently Updated</option>
+                                    <option value="alpha">Alphabetical (A-Z)</option>
+                                </select>
+                                <span class="jd-filter-label" style="margin-left: 24px;">Filter by:</span>
                                 <select id="ls-filter-country" class="jd-filter-dropdown" aria-label="Filter by country">
                                     <option value="">All Countries</option>
                                     <option value="uk">United Kingdom</option>
@@ -4508,7 +4562,7 @@
             <!-- JOB DESCRIPTIONS PAGE (hidden by default) -->
             <div id="job-descriptions-page" style="display: none; width: 100%; overflow-y: auto;">
                 <div class="panel" style="width: 100%;">
-                    <div style="max-width: 1400px; margin: 0 auto; padding: 24px;">
+                    <div style="width: 100%; box-sizing: border-box; padding: 24px;">
 
                         <!-- HEADER -->
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
@@ -4534,7 +4588,13 @@
 
                             <!-- Filter row -->
                             <div class="jd-filter-row">
-                                <span class="jd-filter-label">Filter by:</span>
+                                <span class="jd-filter-label">Sort by:</span>
+                                <select id="jd-sort-dropdown" class="jd-filter-dropdown" aria-label="Sort job descriptions">
+                                    <option value="popular">Most Popular</option>
+                                    <option value="recent">Recently Updated</option>
+                                    <option value="alpha">Alphabetical (A-Z)</option>
+                                </select>
+                                <span class="jd-filter-label" style="margin-left: 24px;">Filter by:</span>
                                 <select id="jd-filter-country" class="jd-filter-dropdown" aria-label="Filter by country">
                                     <option value="">All Countries</option>
                                     <option value="uk">United Kingdom</option>
@@ -11831,7 +11891,10 @@ Agent 13 measures its own success by:
             lastQuery: '',
             statsLoaded: false,
             initialised: false,
-            sectors: new Set()
+            sectors: new Set(),
+            currentSort: 'popular',
+            apiCards: null,
+            currentData: null
         };
 
         let lsSearchTimeout = null;
@@ -11861,6 +11924,15 @@ Agent 13 measures its own success by:
             const searchBtn = document.getElementById('ls-search-btn');
             if (searchBtn) {
                 searchBtn.addEventListener('click', executeLSSearch);
+            }
+
+            // Wire up sort dropdown
+            const sortDropdown = document.getElementById('ls-sort-dropdown');
+            if (sortDropdown) {
+                sortDropdown.addEventListener('change', function() {
+                    lsDataCache.currentSort = this.value;
+                    renderLSCards(lsData);
+                });
             }
 
             // Wire up filter dropdowns
@@ -11907,8 +11979,11 @@ Agent 13 measures its own success by:
             // Load initial stats
             loadLearningSpecsStats();
 
-            // Render initial cards
+            // Render demo cards initially as placeholder
             renderLSCards(lsData);
+
+            // Then try to fetch real data from UAT
+            loadRealLSData();
         }
 
         /**
@@ -11987,6 +12062,43 @@ Agent 13 measures its own success by:
                 }
 
                 displayLSResults(data, lsDataCache.activeTab);
+
+                // Also update card grid view
+                const cards = [];
+                data.ofqual.forEach(item => {
+                    cards.push({
+                        title: item.title || 'Untitled',
+                        body: 'OFQUAL',
+                        level: item.level ? 'Level ' + item.level : '',
+                        sector: item.sector_subject_area || '',
+                        type: item.qualification_type || 'Qualification',
+                        country: 'uk', language: 'en', status: 'Published',
+                        lastModified: 'From UAT', version: '', linkedJDs: 0,
+                        enrolled: 0, inProgress: 0, completed: 0,
+                        overview: item.description || item.overview || '',
+                        units: item.learning_outcomes || [],
+                        _source: 'api', _raw: item
+                    });
+                });
+                data.nos.forEach(item => {
+                    cards.push({
+                        title: item.title || 'Untitled',
+                        body: 'NOS',
+                        level: item.qualification_level || '',
+                        sector: item.industry || '',
+                        type: 'NOS Standard',
+                        country: 'uk', language: 'en', status: 'Published',
+                        lastModified: 'From UAT', version: '', linkedJDs: 0,
+                        enrolled: 0, inProgress: 0, completed: 0,
+                        overview: item.description || item.overview || '',
+                        units: item.performance_criteria || [],
+                        _source: 'api', _raw: item
+                    });
+                });
+                if (cards.length > 0) {
+                    lsDataCache.apiCards = cards;
+                    renderLSCards(cards);
+                }
             } catch (err) {
                 showToast('Search failed: ' + (err.message || 'Unknown error'), 'error');
                 showLSEmpty('Search failed. Please check your connection and try again.');
@@ -14381,6 +14493,9 @@ Agent 13 measures its own success by:
                 type: "Full-time",
                 updated: "Updated 3 days ago",
                 linkedQuals: 4,
+                allocated: 156,
+                inProgress: 42,
+                completed: 89,
                 overview: "Lead the design, development, and delivery of scalable software solutions within the digital transformation programme. This role requires deep technical expertise across the full stack, with a focus on cloud-native architectures, CI/CD pipelines, and mentoring junior developers.",
                 responsibilities: [
                     "Architect and implement scalable microservices using modern frameworks and cloud platforms",
@@ -14405,6 +14520,9 @@ Agent 13 measures its own success by:
                 type: "Apprenticeship",
                 updated: "Updated 1 week ago",
                 linkedQuals: 3,
+                allocated: 342,
+                inProgress: 128,
+                completed: 267,
                 overview: "Provide high-quality, compassionate care to patients across acute care settings. Working under the supervision of registered nurses, you will support patients with daily living activities, monitor vital signs, and ensure a safe and dignified care environment.",
                 responsibilities: [
                     "Assist patients with personal care, mobility, and nutritional needs",
@@ -14429,6 +14547,9 @@ Agent 13 measures its own success by:
                 type: "Management",
                 updated: "Updated 2 weeks ago",
                 linkedQuals: 5,
+                allocated: 89,
+                inProgress: 31,
+                completed: 54,
                 overview: "Manage the end-to-end delivery of construction projects from inception through to handover, ensuring they are completed safely, on time, within budget, and to the required quality standards.",
                 responsibilities: [
                     "Develop and maintain project plans, schedules, budgets, and risk registers",
@@ -14453,6 +14574,9 @@ Agent 13 measures its own success by:
                 type: "Graduate Programme",
                 updated: "Updated 5 days ago",
                 linkedQuals: 3,
+                allocated: 67,
+                inProgress: 23,
+                completed: 41,
                 overview: "Join the investment banking division as a graduate financial analyst, supporting senior colleagues in financial modelling, market analysis, and client advisory. You will gain exposure across M&A, equity capital markets, and debt financing.",
                 responsibilities: [
                     "Build and maintain financial models for valuation, forecasting, and scenario analysis",
@@ -14477,6 +14601,9 @@ Agent 13 measures its own success by:
                 type: "Apprenticeship",
                 updated: "Updated 1 day ago",
                 linkedQuals: 2,
+                allocated: 203,
+                inProgress: 87,
+                completed: 145,
                 overview: "Drive brand awareness and customer engagement through digital channels. You will manage social media campaigns, email marketing, content creation, and paid media, working closely with the wider marketing team.",
                 responsibilities: [
                     "Plan, create, and schedule engaging content across social media platforms",
@@ -14501,6 +14628,9 @@ Agent 13 measures its own success by:
                 type: "Management",
                 updated: "Updated 4 days ago",
                 linkedQuals: 4,
+                allocated: 112,
+                inProgress: 38,
+                completed: 76,
                 overview: "Oversee the daily operations of a busy distribution centre, ensuring efficient and cost-effective management of warehousing, transport, and fulfilment activities. You will lead a team of 40+ operatives and supervisors.",
                 responsibilities: [
                     "Manage day-to-day warehouse and distribution operations to meet service level agreements",
@@ -14519,8 +14649,157 @@ Agent 13 measures its own success by:
             }
         ];
 
+        // In-memory cache for JD data and state
+        const jdDataCache = {
+            initialised: false,
+            currentSort: 'popular',
+            currentData: null,
+            apiCards: null
+        };
+
         function initJobDescriptionsPage() {
+            if (jdDataCache.initialised) return;
+            jdDataCache.initialised = true;
+
+            // Render demo cards as placeholder
             renderJDCards(jdData);
+
+            // Wire up search
+            const searchInput = document.getElementById('jd-search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    if (jdSearchTimeout) clearTimeout(jdSearchTimeout);
+                    jdSearchTimeout = setTimeout(executeJDSearch, 400);
+                });
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (jdSearchTimeout) clearTimeout(jdSearchTimeout);
+                        executeJDSearch();
+                    }
+                });
+            }
+
+            // Wire up filters
+            ['jd-filter-country', 'jd-filter-language', 'jd-filter-industry', 'jd-filter-level'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('change', executeJDSearch);
+            });
+
+            // Wire up sort
+            const sortDropdown = document.getElementById('jd-sort-dropdown');
+            if (sortDropdown) {
+                sortDropdown.addEventListener('change', function() {
+                    jdDataCache.currentSort = this.value;
+                    renderJDCards(jdDataCache.currentData || jdData);
+                });
+            }
+
+            // Try to load real JD data from UAT
+            loadRealJDData();
+        }
+
+        let jdSearchTimeout = null;
+
+        /**
+         * Load real Job Descriptions data from UAT API.
+         * Falls back to demo data if API fails.
+         */
+        async function loadRealJDData() {
+            try {
+                const data = await searchLearningSpecs('role', { type: 'jd' });
+                if (data && data.job_descriptions && data.job_descriptions.length > 0) {
+                    const cards = data.job_descriptions.map(item => ({
+                        title: item.title || item.job_title || 'Untitled',
+                        org: item.industry || 'Organisation',
+                        industry: item.industry || '',
+                        level: item.ofqual_level_alignment ? 'Level ' + item.ofqual_level_alignment : '',
+                        type: item.experience_band || 'Full-time',
+                        updated: 'From UAT',
+                        linkedQuals: 0,
+                        allocated: 0,
+                        inProgress: 0,
+                        completed: 0,
+                        overview: item.description || '',
+                        responsibilities: [],
+                        qualifications: [],
+                        skills: [],
+                        experience: item.experience_band || '',
+                        _source: 'api',
+                        _raw: item
+                    }));
+                    if (cards.length > 0) {
+                        jdDataCache.apiCards = cards;
+                        jdDataCache.currentData = cards;
+                        renderJDCards(cards);
+                    }
+                }
+            } catch (err) {
+                console.warn('Could not load real JD data from UAT, using demo data:', err.message);
+            }
+        }
+
+        /**
+         * Execute Job Descriptions search against the API.
+         */
+        async function executeJDSearch() {
+            const searchInput = document.getElementById('jd-search-input');
+            const query = searchInput ? searchInput.value.trim() : '';
+
+            if (!query) {
+                // No search query — show all data (API data if available, otherwise demo)
+                const data = jdDataCache.apiCards || jdData;
+                jdDataCache.currentData = data;
+                renderJDCards(data);
+                return;
+            }
+
+            try {
+                const results = await searchLearningSpecs(query, { type: 'jd' });
+                if (results && results.job_descriptions && results.job_descriptions.length > 0) {
+                    const cards = results.job_descriptions.map(item => ({
+                        title: item.title || item.job_title || 'Untitled',
+                        org: item.industry || 'Organisation',
+                        industry: item.industry || '',
+                        level: item.ofqual_level_alignment ? 'Level ' + item.ofqual_level_alignment : '',
+                        type: item.experience_band || 'Full-time',
+                        updated: 'From UAT',
+                        linkedQuals: 0,
+                        allocated: 0,
+                        inProgress: 0,
+                        completed: 0,
+                        overview: item.description || '',
+                        responsibilities: [],
+                        qualifications: [],
+                        skills: [],
+                        experience: item.experience_band || '',
+                        _source: 'api',
+                        _raw: item
+                    }));
+                    jdDataCache.currentData = cards;
+                    renderJDCards(cards);
+                } else {
+                    // No API results — filter demo data client-side
+                    const filtered = jdData.filter(jd => {
+                        const q = query.toLowerCase();
+                        return (jd.title && jd.title.toLowerCase().includes(q)) ||
+                               (jd.industry && jd.industry.toLowerCase().includes(q)) ||
+                               (jd.org && jd.org.toLowerCase().includes(q));
+                    });
+                    jdDataCache.currentData = filtered;
+                    renderJDCards(filtered);
+                }
+            } catch (err) {
+                // API failed — filter demo data client-side
+                const filtered = jdData.filter(jd => {
+                    const q = query.toLowerCase();
+                    return (jd.title && jd.title.toLowerCase().includes(q)) ||
+                           (jd.industry && jd.industry.toLowerCase().includes(q)) ||
+                           (jd.org && jd.org.toLowerCase().includes(q));
+                });
+                jdDataCache.currentData = filtered;
+                renderJDCards(filtered);
+            }
         }
 
         function renderJDCards(data) {
@@ -14528,9 +14807,60 @@ Agent 13 measures its own success by:
             if (!grid) return;
             grid.innerHTML = '';
 
-            data.forEach((jd, index) => {
+            // Store current data for search re-filtering
+            jdDataCache.currentData = data;
+
+            // Sort based on selected option
+            const sortMode = jdDataCache.currentSort || 'popular';
+            const sortedData = [...data].sort((a, b) => {
+                if (sortMode === 'popular') {
+                    const totalA = (a.allocated || 0) + (a.inProgress || 0) + (a.completed || 0);
+                    const totalB = (b.allocated || 0) + (b.inProgress || 0) + (b.completed || 0);
+                    return totalB - totalA;
+                } else if (sortMode === 'recent') {
+                    // Keep original order for "recently updated"
+                    return 0;
+                } else if (sortMode === 'alpha') {
+                    return (a.title || '').localeCompare(b.title || '');
+                }
+                return 0;
+            });
+
+            sortedData.forEach((jd, index) => {
                 const card = document.createElement('div');
                 card.className = 'jd-card';
+
+                // Build popularity bar HTML
+                let popHTML = '';
+                if (jd.allocated || jd.inProgress || jd.completed) {
+                    const total = (jd.allocated || 0) + (jd.inProgress || 0) + (jd.completed || 0);
+                    const completedPct = total > 0 ? ((jd.completed || 0) / total * 100).toFixed(1) : 0;
+                    const inProgressPct = total > 0 ? ((jd.inProgress || 0) / total * 100).toFixed(1) : 0;
+                    const allocatedPct = total > 0 ? ((jd.allocated || 0) / total * 100).toFixed(1) : 0;
+
+                    popHTML = `
+                        <div class="jd-pop-bar">
+                            <div class="jd-pop-segment pop-completed" style="width: ${completedPct}%; min-width: ${completedPct > 0 ? '2px' : '0'};"></div>
+                            <div class="jd-pop-segment pop-in-progress" style="width: ${inProgressPct}%; min-width: ${inProgressPct > 0 ? '2px' : '0'};"></div>
+                            <div class="jd-pop-segment pop-allocated" style="width: ${allocatedPct}%; min-width: ${allocatedPct > 0 ? '2px' : '0'};"></div>
+                        </div>
+                        <div class="jd-pop-stats">
+                            <div class="pop-stat">
+                                <div class="pop-dot pop-completed"></div>
+                                <span>${jd.completed || 0} Completed</span>
+                            </div>
+                            <div class="pop-stat">
+                                <div class="pop-dot pop-in-progress"></div>
+                                <span>${jd.inProgress || 0} In Progress</span>
+                            </div>
+                            <div class="pop-stat">
+                                <div class="pop-dot pop-allocated"></div>
+                                <span>${jd.allocated || 0} Allocated</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
                 card.innerHTML = `
                     <div class="jd-card-header">
                         <div>
@@ -14543,6 +14873,7 @@ Agent 13 measures its own success by:
                         <span class="jd-tag level">${escapeHTML(jd.level)}</span>
                         <span class="jd-tag type">${escapeHTML(jd.type)}</span>
                     </div>
+                    ${popHTML}
                     <div class="jd-card-meta">
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
@@ -14672,6 +15003,9 @@ Agent 13 measures its own success by:
                 lastModified: "2 weeks ago",
                 version: "v2.1",
                 linkedJDs: 5,
+                enrolled: 1247,
+                inProgress: 534,
+                completed: 892,
                 overview: "Comprehensive computing qualification covering systems and services, digital networks, and software development. Designed to develop knowledge and practical skills in contemporary computing.",
                 units: ["Systems and Services", "Digital Networks", "IT Security for Users", "Software Development"]
             },
@@ -14687,6 +15021,9 @@ Agent 13 measures its own success by:
                 lastModified: "1 month ago",
                 version: "v1.8",
                 linkedJDs: 3,
+                enrolled: 2156,
+                inProgress: 867,
+                completed: 1543,
                 overview: "Work-based qualification in health and social care settings. Develops practical competences in care provision, communication, and safeguarding.",
                 units: ["Care values and person-centred practice", "Effective communication", "Health, safety and security"]
             },
@@ -14702,6 +15039,9 @@ Agent 13 measures its own success by:
                 lastModified: "3 days ago",
                 version: "v3.2",
                 linkedJDs: 7,
+                enrolled: 678,
+                inProgress: 234,
+                completed: 412,
                 overview: "Specialist management and leadership qualification. Covers strategic thinking, managing teams, and organisational change.",
                 units: ["Managing people and performance", "Strategic management", "Organisational change"]
             },
@@ -14717,6 +15057,9 @@ Agent 13 measures its own success by:
                 lastModified: "1 week ago",
                 version: "v1.5",
                 linkedJDs: 4,
+                enrolled: 945,
+                inProgress: 389,
+                completed: 623,
                 overview: "Practical electrotechnical qualification covering installation, testing, and maintenance of electrical systems.",
                 units: ["Electrical installation", "Testing and commissioning", "Health and safety"]
             },
@@ -14732,6 +15075,9 @@ Agent 13 measures its own success by:
                 lastModified: "2 days ago",
                 version: "v2.3",
                 linkedJDs: 6,
+                enrolled: 1534,
+                inProgress: 612,
+                completed: 987,
                 overview: "Advanced accounting qualification covering financial reporting, management accounting, and audit principles.",
                 units: ["Financial statements", "Management accounting", "Audit and assurance"]
             },
@@ -14747,19 +15093,140 @@ Agent 13 measures its own success by:
                 lastModified: "5 days ago",
                 version: "v2.0",
                 linkedJDs: 8,
+                enrolled: 823,
+                inProgress: 298,
+                completed: 567,
                 overview: "Professional HR qualification covering people strategy, employee relations, and talent management.",
                 units: ["People resourcing and talent planning", "Employee relations", "Learning and development"]
             }
         ];
+
+        /**
+         * Load real Learning Specs data from UAT API.
+         * Falls back to demo data if API fails.
+         */
+        async function loadRealLSData() {
+            try {
+                // Search for a broad set of qualifications
+                const data = await searchLearningSpecs('qualification', {});
+                if (data && (data.ofqual.length > 0 || data.nos.length > 0 || data.job_descriptions.length > 0)) {
+                    // Convert API results to card format
+                    const cards = [];
+                    data.ofqual.forEach(item => {
+                        cards.push({
+                            title: item.title || 'Untitled',
+                            body: 'OFQUAL',
+                            level: item.level ? 'Level ' + item.level : '',
+                            sector: item.sector_subject_area || '',
+                            type: item.qualification_type || 'Qualification',
+                            country: 'uk',
+                            language: 'en',
+                            status: 'Published',
+                            lastModified: 'From UAT',
+                            version: '',
+                            linkedJDs: 0,
+                            enrolled: 0,
+                            inProgress: 0,
+                            completed: 0,
+                            overview: item.description || item.overview || '',
+                            units: item.learning_outcomes || [],
+                            _source: 'api',
+                            _raw: item
+                        });
+                    });
+                    data.nos.forEach(item => {
+                        cards.push({
+                            title: item.title || 'Untitled',
+                            body: 'NOS',
+                            level: item.qualification_level || '',
+                            sector: item.industry || '',
+                            type: 'NOS Standard',
+                            country: 'uk',
+                            language: 'en',
+                            status: 'Published',
+                            lastModified: 'From UAT',
+                            version: '',
+                            linkedJDs: 0,
+                            enrolled: 0,
+                            inProgress: 0,
+                            completed: 0,
+                            overview: item.description || item.overview || '',
+                            units: item.performance_criteria || [],
+                            _source: 'api',
+                            _raw: item
+                        });
+                    });
+                    if (cards.length > 0) {
+                        lsDataCache.apiCards = cards;
+                        lsDataCache.currentData = cards;
+                        renderLSCards(cards);
+                    }
+                }
+            } catch (err) {
+                console.warn('Could not load real LS data from UAT, using demo data:', err.message);
+                // Demo data already rendered, no action needed
+            }
+        }
 
         function renderLSCards(data) {
             const grid = document.getElementById('ls-results-grid');
             if (!grid) return;
             grid.innerHTML = '';
 
-            data.forEach((ls, index) => {
+            // Store current data for search re-filtering
+            lsDataCache.currentData = data;
+
+            // Sort based on selected option
+            const sortMode = lsDataCache.currentSort || 'popular';
+            const sortedData = [...data].sort((a, b) => {
+                if (sortMode === 'popular') {
+                    const totalA = (a.enrolled || 0) + (a.inProgress || 0) + (a.completed || 0);
+                    const totalB = (b.enrolled || 0) + (b.inProgress || 0) + (b.completed || 0);
+                    return totalB - totalA;
+                } else if (sortMode === 'recent') {
+                    // Parse "X days ago" format — for demo, just compare title length or use fixed order
+                    return 0; // Keep original order for "recently updated"
+                } else if (sortMode === 'alpha') {
+                    return (a.title || '').localeCompare(b.title || '');
+                }
+                return 0;
+            });
+
+            sortedData.forEach((ls, index) => {
                 const card = document.createElement('div');
                 card.className = 'ls-card';
+
+                // Build popularity bar HTML
+                let popHTML = '';
+                if (ls.enrolled || ls.inProgress || ls.completed) {
+                    const total = (ls.enrolled || 0) + (ls.inProgress || 0) + (ls.completed || 0);
+                    const completedPct = total > 0 ? ((ls.completed || 0) / total * 100).toFixed(1) : 0;
+                    const inProgressPct = total > 0 ? ((ls.inProgress || 0) / total * 100).toFixed(1) : 0;
+                    const enrolledPct = total > 0 ? ((ls.enrolled || 0) / total * 100).toFixed(1) : 0;
+
+                    popHTML = `
+                        <div class="ls-pop-bar">
+                            <div class="ls-pop-segment pop-completed" style="width: ${completedPct}%; min-width: ${completedPct > 0 ? '2px' : '0'};"></div>
+                            <div class="ls-pop-segment pop-in-progress" style="width: ${inProgressPct}%; min-width: ${inProgressPct > 0 ? '2px' : '0'};"></div>
+                            <div class="ls-pop-segment pop-allocated" style="width: ${enrolledPct}%; min-width: ${enrolledPct > 0 ? '2px' : '0'};"></div>
+                        </div>
+                        <div class="ls-pop-stats">
+                            <div class="pop-stat">
+                                <div class="pop-dot pop-completed"></div>
+                                <span>${ls.completed || 0} Completed</span>
+                            </div>
+                            <div class="pop-stat">
+                                <div class="pop-dot pop-in-progress"></div>
+                                <span>${ls.inProgress || 0} In Progress</span>
+                            </div>
+                            <div class="pop-stat">
+                                <div class="pop-dot pop-allocated"></div>
+                                <span>${ls.enrolled || 0} Enrolled</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
                 card.innerHTML = `
                     <div class="ls-card-header">
                         <div>
@@ -14771,6 +15238,7 @@ Agent 13 measures its own success by:
                         <span class="ls-tag">${escapeHTML(ls.level)}</span>
                         <span class="ls-tag">${escapeHTML(ls.sector)}</span>
                     </div>
+                    ${popHTML}
                     <div class="ls-card-meta">
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
