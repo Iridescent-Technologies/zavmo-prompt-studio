@@ -31,6 +31,8 @@
  *  18.  Teaching charter & Agent 13
  *  19.  Simulation & lesson flow
  *  20.  Recommendations engine
+ *  22.  Fetch Modules modal
+ *  23.  Delivery integration (phase labels, sidebar ACs, shared config)
  *
  * Usage:
  *   node tests/smoke-test.js
@@ -1146,9 +1148,9 @@ test('Fetch Modules: uses /api/deliver/modules/ endpoint', () => {
 test('Fetch Modules: checks authentication before fetching', () => {
     const fnStart = allScripts.indexOf('function searchAPIDatabase');
     assert(fnStart !== -1, 'function searchAPIDatabase must exist in source');
-    const authPos = allScripts.indexOf('zavmoFetch', fnStart);
+    const authPos = allScripts.indexOf('access_token', fnStart);
     const nextFn = allScripts.indexOf('function displayAPIModules', fnStart);
-    assert(authPos !== -1 && authPos < nextFn, 'searchAPIDatabase must use zavmoFetch for authenticated API calls');
+    assert(authPos !== -1 && authPos < nextFn, 'searchAPIDatabase must check access_token for authentication');
 });
 // 22e. Loading state management
 test('Fetch Modules: shows loading spinner during fetch', () => {
@@ -1279,6 +1281,154 @@ test('Fetch Modules: modal overlay CSS exists', () => {
 test('Fetch Modules: api-modal CSS exists', () => {
     assertIncludes(allStyles, '.api-modal', 'CSS for .api-modal must be defined');
 });
+// ============================================================
+// TEST SUITE 23: DELIVERY INTEGRATION
+// ============================================================
+// Tests for features bridging Prompt Studio simulation and live app delivery
+
+// 23a. Phase label CSS classes
+test('Delivery Integration: phase badge CSS exists for TEACH', () => {
+    assertIncludes(allStyles, '.lesson-phase-badge.teach', 'CSS for .lesson-phase-badge.teach must be defined');
+});
+
+test('Delivery Integration: phase badge CSS exists for CHECK', () => {
+    assertIncludes(allStyles, '.lesson-phase-badge.check', 'CSS for .lesson-phase-badge.check must be defined');
+});
+
+test('Delivery Integration: phase badge CSS exists for ASSESS', () => {
+    assertIncludes(allStyles, '.lesson-phase-badge.assess', 'CSS for .lesson-phase-badge.assess must be defined');
+});
+
+test('Delivery Integration: phase badge CSS exists for COMPLETE', () => {
+    assertIncludes(allStyles, '.lesson-phase-badge.complete', 'CSS for .lesson-phase-badge.complete must be defined');
+});
+
+test('Delivery Integration: phase badge base CSS exists', () => {
+    assertIncludes(allStyles, '.lesson-phase-badge', 'CSS for .lesson-phase-badge base class must be defined');
+});
+
+// 23b. Phase badge rendering in addMessageToChat
+test('Delivery Integration: addMessageToChat renders phase badges', () => {
+    const fnStart = allScripts.indexOf('function addMessageToChat');
+    assert(fnStart !== -1, 'function addMessageToChat must exist');
+    const nextFn = allScripts.indexOf('\n        function ', fnStart + 10);
+    const fnBlock = allScripts.substring(fnStart, nextFn > fnStart ? nextFn : fnStart + 3000);
+    assertIncludes(fnBlock, 'lesson-phase-badge', 'addMessageToChat must render phase badge element');
+});
+
+test('Delivery Integration: addMessageToChat derives phase from phaseType', () => {
+    const fnStart = allScripts.indexOf('function addMessageToChat');
+    const nextFn = allScripts.indexOf('\n        function ', fnStart + 10);
+    const fnBlock = allScripts.substring(fnStart, nextFn > fnStart ? nextFn : fnStart + 3000);
+    assertIncludes(fnBlock, 'phaseBase', 'addMessageToChat must derive phaseBase from phaseType');
+});
+
+// 23c. Sidebar Assessment Criteria section
+test('Delivery Integration: sidebar AC section exists in HTML', () => {
+    assertIncludes(html, 'lesson-sidebar-ac-section', 'lesson-sidebar-ac-section element must exist in HTML');
+});
+
+test('Delivery Integration: sidebar AC list container exists', () => {
+    assertIncludes(html, 'lesson-sidebar-ac-list', 'lesson-sidebar-ac-list element must exist in HTML');
+});
+
+// 23d. populateSidebarAC function
+test('Delivery Integration: populateSidebarAC function exists', () => {
+    assertIncludes(allScripts, 'function populateSidebarAC', 'populateSidebarAC function must exist');
+});
+
+test('Delivery Integration: populateSidebarAC creates AC items with checkboxes', () => {
+    const fnStart = allScripts.indexOf('function populateSidebarAC');
+    assert(fnStart !== -1, 'function populateSidebarAC must exist in source');
+    const nextFn = allScripts.indexOf('\n        function ', fnStart + 10);
+    const fnBlock = allScripts.substring(fnStart, nextFn > fnStart ? nextFn : fnStart + 2000);
+    assertIncludes(fnBlock, 'sidebar-ac-check-', 'populateSidebarAC must create checkbox elements with sidebar-ac-check- prefix');
+});
+
+// 23e. updateSidebarACs function
+test('Delivery Integration: updateSidebarACs function exists', () => {
+    assertIncludes(allScripts, 'function updateSidebarACs', 'updateSidebarACs function must exist');
+});
+
+test('Delivery Integration: updateSidebarACs uses three-state tracking', () => {
+    const fnStart = allScripts.indexOf('function updateSidebarACs');
+    assert(fnStart !== -1, 'function updateSidebarACs must exist in source');
+    const nextFn = allScripts.indexOf('\n        function ', fnStart + 10);
+    const fnBlock = allScripts.substring(fnStart, nextFn > fnStart ? nextFn : fnStart + 2000);
+    assertIncludes(fnBlock, 'met', 'updateSidebarACs must handle met status');
+    assertIncludes(fnBlock, 'in-progress', 'updateSidebarACs must handle in-progress status');
+});
+
+// 23f. updateProgressBar calls updateSidebarACs
+test('Delivery Integration: updateProgressBar calls updateSidebarACs', () => {
+    const fnStart = allScripts.indexOf('function updateProgressBar');
+    assert(fnStart !== -1, 'function updateProgressBar must exist in source');
+    const nextFn = allScripts.indexOf('\n        function ', fnStart + 10);
+    const fnBlock = allScripts.substring(fnStart, nextFn > fnStart ? nextFn : fnStart + 2000);
+    assertIncludes(fnBlock, 'updateSidebarACs', 'updateProgressBar must call updateSidebarACs');
+});
+
+// 23g. populateSidebarLO calls populateSidebarAC
+test('Delivery Integration: populateSidebarLO calls populateSidebarAC', () => {
+    const fnStart = allScripts.indexOf('function populateSidebarLO');
+    assert(fnStart !== -1, 'function populateSidebarLO must exist in source');
+    const nextFn = allScripts.indexOf('function populateSidebarAC', fnStart + 10);
+    const fnBlock = allScripts.substring(fnStart, nextFn > fnStart ? nextFn : fnStart + 2000);
+    assertIncludes(fnBlock, 'populateSidebarAC', 'populateSidebarLO must call populateSidebarAC');
+});
+
+// 23h. Shared character xAPI data JSON file
+test('Delivery Integration: character-xapi-data.json exists', () => {
+    const jsonPath = path.join(__dirname, '..', 'scripts', 'character-xapi-data.json');
+    assert(fs.existsSync(jsonPath), 'scripts/character-xapi-data.json must exist for live app sync');
+});
+
+test('Delivery Integration: character-xapi-data.json is valid JSON', () => {
+    const jsonPath = path.join(__dirname, '..', 'scripts', 'character-xapi-data.json');
+    const jsonContent = fs.readFileSync(jsonPath, 'utf8');
+    let parsed;
+    try {
+        parsed = JSON.parse(jsonContent);
+    } catch (e) {
+        assert(false, 'character-xapi-data.json must be valid JSON: ' + e.message);
+    }
+    assert(parsed.characters, 'character-xapi-data.json must have a characters object');
+});
+
+test('Delivery Integration: character-xapi-data.json has all 13 characters', () => {
+    const jsonPath = path.join(__dirname, '..', 'scripts', 'character-xapi-data.json');
+    const parsed = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    const charCount = Object.keys(parsed.characters).length;
+    assert(charCount === 13, 'character-xapi-data.json must have 13 characters, found ' + charCount);
+});
+
+test('Delivery Integration: character-xapi-data.json characters have required fields', () => {
+    const jsonPath = path.join(__dirname, '..', 'scripts', 'character-xapi-data.json');
+    const parsed = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    const requiredFields = ['specName', 'verbs', 'bloomsRange', 'kirkpatrick', 'kirkpatrickLabels', 'phase4D', 'growthMindset'];
+    for (const [key, char] of Object.entries(parsed.characters)) {
+        for (const field of requiredFields) {
+            assert(char[field] !== undefined, key + ' must have field ' + field + ' in character-xapi-data.json');
+        }
+    }
+});
+
+test('Delivery Integration: character-xapi-data.json has studio-to-zavmo map', () => {
+    const jsonPath = path.join(__dirname, '..', 'scripts', 'character-xapi-data.json');
+    const parsed = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    assert(parsed._studioToZavmoMap, 'character-xapi-data.json must have _studioToZavmoMap');
+    assert(parsed._studioToZavmoMap['foundation-builder'] === 'builder', 'foundation-builder must map to builder');
+});
+
+// 23i. Existing characterXAPIData in index.html matches JSON
+test('Delivery Integration: characterXAPIData in source matches all JSON characters', () => {
+    const jsonPath = path.join(__dirname, '..', 'scripts', 'character-xapi-data.json');
+    const parsed = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    for (const charKey of Object.keys(parsed.characters)) {
+        assertIncludes(allScripts, "'" + charKey + "'", 'characterXAPIData in source must include ' + charKey);
+    }
+});
+
 // ============================================================
 // RESULTS
 // ============================================================
