@@ -1,5 +1,5 @@
 /**
- * Zavmo Prompt Configuration Studio — Automated Smoke Tests v2
+ * Zavmo Prompt Configuration Studio â Automated Smoke Tests v2
  * =============================================================
  * Runs on every push/PR via GitHub Actions AND as a pre-commit hook.
  *
@@ -8,7 +8,7 @@
  * Tests 11-14 use regex to dynamically discover qualification constants,
  * country registrations, unit definitions, and function definitions directly
  * from the source code. When new modules, countries, or functions are added,
- * they are automatically picked up — no manual test updates needed.
+ * they are automatically picked up â no manual test updates needed.
  *
  * Test suites:
  *   1.  Valid HTML structure
@@ -54,11 +54,11 @@ function test(name, fn) {
   try {
     fn();
     passed++;
-    console.log(`  \x1b[32m✓\x1b[0m ${name}`);
+    console.log(`  \x1b[32mâ\x1b[0m ${name}`);
   } catch (e) {
     failed++;
     failures.push({ name, error: e.message });
-    console.log(`  \x1b[31m✗\x1b[0m ${name}`);
+    console.log(`  \x1b[31mâ\x1b[0m ${name}`);
     console.log(`    \x1b[31m${e.message}\x1b[0m`);
   }
 }
@@ -143,7 +143,7 @@ function discoverCountryRegistrations() {
   }
   const cqBlock = allScripts.substring(cqStart, cqEnd);
 
-  // Match country entries — handles varied indentation
+  // Match country entries â handles varied indentation
   const countryPattern = /['"](\w+)['"]\s*:\s*\{[^}]*?label:\s*['"]([^'"]+)['"]/g;
   const countries = [];
   let m;
@@ -651,7 +651,7 @@ for (const country of discoveredCountries) {
 
   // Verify each qualification key references an existing constant
   for (const qual of country.qualifications) {
-    test(`  ${country.code}/${qual.key} → ${qual.constName} exists as a const`, () => {
+    test(`  ${country.code}/${qual.key} â ${qual.constName} exists as a const`, () => {
       const constPattern = new RegExp(`const\\s+${qual.constName}\\s*=`);
       assert(
         constPattern.test(allScripts),
@@ -1084,6 +1084,199 @@ test('LS null safety on DOM queries', () => {
 });
 
 
+
+// ============================================================
+// TEST SUITE 22: FETCH MODULES MODAL
+// ============================================================
+console.log('\n\x1b[1m22. Fetch Modules Modal\x1b[0m');
+
+// 22a. DOM elements
+const fetchModalIds = [
+    'api-modal-overlay',
+    'api-url',
+    'api-search-query',
+    'api-search-btn',
+    'api-search-btn-text',
+    'api-search-spinner',
+    'api-results-container',
+    'api-lesson-detail',
+    'api-lesson-summary',
+    'import-selected-btn',
+    'modal-close-btn',
+    'modal-cancel-btn',
+];
+
+for (const id of fetchModalIds) {
+    test(`Fetch Modules: #${id} exists in HTML`, () => {
+        const regex = new RegExp(`id=["']${id}["']`);
+        assert(regex.test(html), `Missing element with id="${id}" in Fetch Modules modal`);
+    });
+}
+// 22b. Required functions
+const fetchModalFunctions = [
+    'openAPIModal',
+    'closeAPIModal',
+    'searchAPIDatabase',
+    'displayAPIModules',
+    'selectAPILesson',
+    'importSelectedUnits',
+];
+
+for (const fn of fetchModalFunctions) {
+    test(`Fetch Modules: function ${fn}() is defined`, () => {
+        const regex = new RegExp(`function\\s+${fn}\\s*\\(`);
+        assert(regex.test(allScripts), `Function ${fn}() not found`);
+    });
+}
+
+// 22c. Modal open/close logic
+test('Fetch Modules: openAPIModal adds active class', () => {
+    assertIncludes(allScripts, "classList.add('active')", 'openAPIModal should add active class to overlay');
+});
+
+test('Fetch Modules: closeAPIModal removes active class', () => {
+    assertIncludes(allScripts, "classList.remove('active')", 'closeAPIModal should remove active class from overlay');
+});
+
+// 22d. API endpoint and auth
+test('Fetch Modules: uses /api/deliver/modules/ endpoint', () => {
+    assertIncludes(allScripts, '/api/deliver/modules/', 'Fetch Modules should call /api/deliver/modules/ endpoint');
+});
+
+test('Fetch Modules: checks authentication before fetching', () => {
+    const fnStart = allScripts.indexOf('function searchAPIDatabase');
+    const fnBlock = allScripts.substring(fnStart, fnStart + 600);
+    assertIncludes(fnBlock, 'getAccessToken()', 'searchAPIDatabase must check authentication via getAccessToken()');
+});
+// 22e. Loading state management
+test('Fetch Modules: shows loading spinner during fetch', () => {
+    assertIncludes(allScripts, 'api-search-spinner', 'Should reference loading spinner element');
+    assertIncludes(allScripts, "'Fetching...'", 'Should update button text to Fetching...');
+});
+
+test('Fetch Modules: disables search button during fetch', () => {
+    const fnStart = allScripts.indexOf('function searchAPIDatabase');
+    const fnBlock = allScripts.substring(fnStart, fnStart + 1200);
+    assertIncludes(fnBlock, 'disabled = true', 'Search button should be disabled during fetch');
+});
+
+test('Fetch Modules: restores button state in finally block', () => {
+    const fnStart = allScripts.indexOf('function searchAPIDatabase');
+    const fnEnd = allScripts.indexOf('function displayAPIModules');
+    const fnBlock = allScripts.substring(fnStart, fnEnd);
+    assertIncludes(fnBlock, 'finally', 'searchAPIDatabase must use a finally block to restore UI state');
+    assertIncludes(fnBlock, "'Fetch Modules'", 'finally block should reset button text to Fetch Modules');
+    assertIncludes(fnBlock, 'disabled = false', 'finally block should re-enable the search button');
+});
+
+// 22f. API response validation
+test('Fetch Modules: validates API response structure', () => {
+    assertIncludes(allScripts, 'data.data.modules', 'searchAPIDatabase must validate data.data.modules exists');
+    assertIncludes(allScripts, 'Unexpected API response format', 'Should throw on unexpected response format');
+});
+
+test('Fetch Modules: handles 401/403 auth errors', () => {
+    const fnStart = allScripts.indexOf('function searchAPIDatabase');
+    const fnBlock = allScripts.substring(fnStart, fnStart + 1200);
+    assertIncludes(fnBlock, '401', 'searchAPIDatabase should handle 401 status');
+    assertIncludes(fnBlock, '403', 'searchAPIDatabase should handle 403 status');
+});
+
+// 22g. Error handling
+test('Fetch Modules: searchAPIDatabase has try/catch', () => {
+    const fnStart = allScripts.indexOf('function searchAPIDatabase');
+    const fnBlock = allScripts.substring(fnStart, fnStart + 2000);
+    assertIncludes(fnBlock, 'try {', 'searchAPIDatabase must have try block');
+    assertIncludes(fnBlock, 'catch (error)', 'searchAPIDatabase must have catch block');
+});
+
+test('Fetch Modules: errors shown via showToast', () => {
+    const fnStart = allScripts.indexOf('function searchAPIDatabase');
+    const fnBlock = allScripts.substring(fnStart, fnStart + 2000);
+    assertIncludes(fnBlock, 'showToast(', 'Errors should be shown to user via showToast');
+});
+// 22h. Module display
+test('Fetch Modules: displayAPIModules handles empty results', () => {
+    assertIncludes(allScripts, 'No modules found', 'displayAPIModules should show message when no modules match filter');
+});
+
+test('Fetch Modules: displayAPIModules shows result count', () => {
+    const fnStart = allScripts.indexOf('function displayAPIModules');
+    const fnBlock = allScripts.substring(fnStart, fnStart + 3000);
+    assertIncludes(fnBlock, 'filtered.length', 'displayAPIModules should reference filtered count');
+});
+
+// 22i. Lesson selection and import
+test('Fetch Modules: selectAPILesson populates detail panel', () => {
+    assertIncludes(allScripts, 'api-lesson-detail', 'selectAPILesson should show lesson detail panel');
+    assertIncludes(allScripts, 'api-lesson-summary', 'selectAPILesson should populate lesson summary');
+});
+
+test('Fetch Modules: importSelectedUnits guards against null selection', () => {
+    const fnStart = allScripts.indexOf('function importSelectedUnits');
+    const fnBlock = allScripts.substring(fnStart, fnStart + 400);
+    assertIncludes(fnBlock, 'apiSelectedLesson', 'importSelectedUnits must check apiSelectedLesson exists');
+});
+
+test('Fetch Modules: importSelectedUnits calls populateQualificationDisplay', () => {
+    const fnStart = allScripts.indexOf('function importSelectedUnits');
+    const fnBlock = allScripts.substring(fnStart, fnStart + 1500);
+    assertIncludes(fnBlock, 'populateQualificationDisplay', 'importSelectedUnits must call populateQualificationDisplay');
+});
+
+test('Fetch Modules: importSelectedUnits closes modal after import', () => {
+    const fnStart = allScripts.indexOf('function importSelectedUnits');
+    const fnBlock = allScripts.substring(fnStart, fnStart + 1500);
+    assertIncludes(fnBlock, 'closeAPIModal()', 'importSelectedUnits must close the modal after importing');
+});
+
+// 22j. Bloom's mapping in import
+test("Fetch Modules: importSelectedUnits maps Bloom's levels correctly", () => {
+    const fnStart = allScripts.indexOf('function importSelectedUnits');
+    const fnBlock = allScripts.substring(fnStart, fnStart + 1500);
+    assertIncludes(fnBlock, 'bloomMap', "importSelectedUnits should define Bloom's level mapping");
+    assertIncludes(fnBlock, "'Analyse'", "Bloom's mapping should use British English (Analyse not Analyze)");
+});
+// 22k. Null safety in modal functions
+test('Fetch Modules: openAPIModal accesses required DOM elements', () => {
+    const fnStart = allScripts.indexOf('function openAPIModal');
+    const fnEnd = allScripts.indexOf('function closeAPIModal');
+    const fnBlock = allScripts.substring(fnStart, fnEnd);
+    const getElementCalls = (fnBlock.match(/getElementById/g) || []).length;
+    assert(getElementCalls >= 3, `openAPIModal should access at least 3 DOM elements, found ${getElementCalls}`);
+});
+
+// 22l. State variables
+test('Fetch Modules: apiModulesCache is initialised', () => {
+    assertIncludes(allScripts, 'apiModulesCache', 'apiModulesCache variable must exist');
+});
+
+test('Fetch Modules: apiSelectedLesson is initialised', () => {
+    assertIncludes(allScripts, 'apiSelectedLesson', 'apiSelectedLesson variable must exist');
+});
+
+test('Fetch Modules: apiSelectedLesson reset on modal open', () => {
+    const fnStart = allScripts.indexOf('function openAPIModal');
+    const fnEnd = allScripts.indexOf('function closeAPIModal');
+    const fnBlock = allScripts.substring(fnStart, fnEnd);
+    assertIncludes(fnBlock, 'apiSelectedLesson = null', 'openAPIModal must reset apiSelectedLesson to null');
+});
+
+test('Fetch Modules: apiSelectedLesson reset on modal close', () => {
+    const fnStart = allScripts.indexOf('function closeAPIModal');
+    const fnEnd = allScripts.indexOf('function searchAPIDatabase');
+    const fnBlock = allScripts.substring(fnStart, fnEnd);
+    assertIncludes(fnBlock, 'apiSelectedLesson = null', 'closeAPIModal must reset apiSelectedLesson to null');
+});
+
+// 22m. Modal CSS
+test('Fetch Modules: modal overlay CSS exists', () => {
+    assertIncludes(allStyles, '.modal-overlay', 'CSS for .modal-overlay must be defined');
+});
+
+test('Fetch Modules: api-modal CSS exists', () => {
+    assertIncludes(allStyles, '.api-modal', 'CSS for .api-modal must be defined');
+});
 // ============================================================
 // RESULTS
 // ============================================================
@@ -1095,7 +1288,7 @@ console.log(`\x1b[36mAuto-discovered: ${discoveredConstants.length} quals, ${dis
 if (failures.length > 0) {
   console.log('\n\x1b[31mFailures:\x1b[0m');
   for (const f of failures) {
-    console.log(`  \x1b[31m✗ ${f.name}\x1b[0m`);
+    console.log(`  \x1b[31mâ ${f.name}\x1b[0m`);
     console.log(`    ${f.error}`);
   }
 }
