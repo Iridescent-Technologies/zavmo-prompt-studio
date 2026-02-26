@@ -4026,14 +4026,16 @@
             <!-- CHARACTERS PAGE (full-width, mirrors Agent 13 layout) -->
             <div id="characters-page" style="width: 100%; overflow-y: auto;">
                 <div class="panel" style="width: 100%;">
-                    <div style="max-width: 1200px; margin: 0 auto; padding: 24px;">
+                    <div style="width: 100%; box-sizing: border-box; padding: 24px;">
 
                         <!-- HEADER — Character Selector + Metadata -->
-                        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
-                            <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #00d9c0;" id="colour-swatch">12</div>
-                            <div style="flex: 1;">
-                                <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Teaching Characters</h2>
-                                <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">12 pedagogical characters · Bloom's taxonomy progression · Personalised learning paths</p>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #00d9c0;" id="colour-swatch">12</div>
+                                <div>
+                                    <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Teaching Characters</h2>
+                                    <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">12 pedagogical characters · Bloom's taxonomy progression · Personalised learning paths</p>
+                                </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 12px;">
                                 <select id="character-select" style="background: rgba(0,217,192,0.1); border: 1px solid rgba(0,217,192,0.3); color: #ffffff; padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; min-width: 240px;">
@@ -4128,6 +4130,21 @@
 
             <!-- SIM & COMPARE PAGE (hidden by default) -->
             <div id="sim-compare-page" style="display: none; width: 100%; gap: 0; height: 100%; flex-direction: column;">
+
+                <!-- HEADER -->
+                <div style="width: 100%; box-sizing: border-box; padding: 24px 32px 0 32px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d9c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19V6l12-3v13"/><circle cx="6" cy="19" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                            </div>
+                            <div>
+                                <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Simulation &amp; Comparison</h2>
+                                <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">Configure units, simulate character responses, and compare outputs side by side</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- UNIT CONFIGURATION BAR (at top of sim-compare page) -->
                 <div style="width: 100%; background: rgba(0,217,192,0.03); border-bottom: 1px solid rgba(0,217,192,0.15); padding: 16px 32px;">
@@ -4754,14 +4771,16 @@
             <div id="agent13-page" style="display: none; width: 100%; overflow-y: auto;">
                 <div class="panel" style="width: 100%;">
                     <div class="tab-content active" id="agent13-tab" style="padding: 0;">
-                        <div style="max-width: 1200px; margin: 0 auto; padding: 24px;">
+                        <div style="width: 100%; box-sizing: border-box; padding: 24px;">
 
                             <!-- HEADER -->
-                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
-                                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #00d9c0;">13</div>
-                                <div>
-                                    <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Agent 13 — Flow State Orchestrator</h2>
-                                    <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">Invisible meta-orchestration layer · Csíkszentmihályi's flow theory · Continuous improvement engine</p>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
+                                <div style="display: flex; align-items: center; gap: 16px;">
+                                    <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #00d9c0;">13</div>
+                                    <div>
+                                        <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Agent 13 — Flow State Orchestrator</h2>
+                                        <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">Invisible meta-orchestration layer · Csíkszentmihályi's flow theory · Continuous improvement engine</p>
+                                    </div>
                                 </div>
                             </div>
 
@@ -5122,14 +5141,14 @@
                     <div class="xa-page">
 
                         <!-- HEADER -->
-                        <div class="xa-header">
-                            <div class="xa-header-left">
-                                <div class="xa-header-icon">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center;">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d9c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/><ellipse cx="12" cy="5" rx="9" ry="3"/></svg>
                                 </div>
                                 <div>
-                                    <h2>xAPI Analytics</h2>
-                                    <p>Real-time learning activity, agent performance, and xAPI statement intelligence</p>
+                                    <h2 style="color: #ffffff; font-size: 22px; margin: 0;">xAPI Analytics</h2>
+                                    <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">Real-time learning activity, agent performance, and xAPI statement intelligence</p>
                                 </div>
                             </div>
                             <div class="xa-time-range" id="xa-time-range">
@@ -14493,9 +14512,9 @@ Agent 13 measures its own success by:
                 type: "Full-time",
                 updated: "Updated 3 days ago",
                 linkedQuals: 4,
-                allocated: 156,
-                inProgress: 42,
-                completed: 89,
+                allocated: 0,
+                inProgress: 0,
+                completed: 0,
                 overview: "Lead the design, development, and delivery of scalable software solutions within the digital transformation programme. This role requires deep technical expertise across the full stack, with a focus on cloud-native architectures, CI/CD pipelines, and mentoring junior developers.",
                 responsibilities: [
                     "Architect and implement scalable microservices using modern frameworks and cloud platforms",
@@ -14520,9 +14539,9 @@ Agent 13 measures its own success by:
                 type: "Apprenticeship",
                 updated: "Updated 1 week ago",
                 linkedQuals: 3,
-                allocated: 342,
-                inProgress: 128,
-                completed: 267,
+                allocated: 0,
+                inProgress: 0,
+                completed: 0,
                 overview: "Provide high-quality, compassionate care to patients across acute care settings. Working under the supervision of registered nurses, you will support patients with daily living activities, monitor vital signs, and ensure a safe and dignified care environment.",
                 responsibilities: [
                     "Assist patients with personal care, mobility, and nutritional needs",
@@ -14547,9 +14566,9 @@ Agent 13 measures its own success by:
                 type: "Management",
                 updated: "Updated 2 weeks ago",
                 linkedQuals: 5,
-                allocated: 89,
-                inProgress: 31,
-                completed: 54,
+                allocated: 0,
+                inProgress: 0,
+                completed: 0,
                 overview: "Manage the end-to-end delivery of construction projects from inception through to handover, ensuring they are completed safely, on time, within budget, and to the required quality standards.",
                 responsibilities: [
                     "Develop and maintain project plans, schedules, budgets, and risk registers",
@@ -14574,9 +14593,9 @@ Agent 13 measures its own success by:
                 type: "Graduate Programme",
                 updated: "Updated 5 days ago",
                 linkedQuals: 3,
-                allocated: 67,
-                inProgress: 23,
-                completed: 41,
+                allocated: 0,
+                inProgress: 0,
+                completed: 0,
                 overview: "Join the investment banking division as a graduate financial analyst, supporting senior colleagues in financial modelling, market analysis, and client advisory. You will gain exposure across M&A, equity capital markets, and debt financing.",
                 responsibilities: [
                     "Build and maintain financial models for valuation, forecasting, and scenario analysis",
@@ -14601,9 +14620,9 @@ Agent 13 measures its own success by:
                 type: "Apprenticeship",
                 updated: "Updated 1 day ago",
                 linkedQuals: 2,
-                allocated: 203,
-                inProgress: 87,
-                completed: 145,
+                allocated: 0,
+                inProgress: 0,
+                completed: 0,
                 overview: "Drive brand awareness and customer engagement through digital channels. You will manage social media campaigns, email marketing, content creation, and paid media, working closely with the wider marketing team.",
                 responsibilities: [
                     "Plan, create, and schedule engaging content across social media platforms",
@@ -14628,9 +14647,9 @@ Agent 13 measures its own success by:
                 type: "Management",
                 updated: "Updated 4 days ago",
                 linkedQuals: 4,
-                allocated: 112,
-                inProgress: 38,
-                completed: 76,
+                allocated: 0,
+                inProgress: 0,
+                completed: 0,
                 overview: "Oversee the daily operations of a busy distribution centre, ensuring efficient and cost-effective management of warehousing, transport, and fulfilment activities. You will lead a team of 40+ operatives and supervisors.",
                 responsibilities: [
                     "Manage day-to-day warehouse and distribution operations to meet service level agreements",
@@ -14830,32 +14849,25 @@ Agent 13 measures its own success by:
                 const card = document.createElement('div');
                 card.className = 'jd-card';
 
-                // Build popularity bar HTML
+                // Build popularity bar HTML — real data requires API ticket ZAV-API-002
                 let popHTML = '';
-                if (jd.allocated || jd.inProgress || jd.completed) {
-                    const total = (jd.allocated || 0) + (jd.inProgress || 0) + (jd.completed || 0);
-                    const completedPct = total > 0 ? ((jd.completed || 0) / total * 100).toFixed(1) : 0;
-                    const inProgressPct = total > 0 ? ((jd.inProgress || 0) / total * 100).toFixed(1) : 0;
-                    const allocatedPct = total > 0 ? ((jd.allocated || 0) / total * 100).toFixed(1) : 0;
-
+                const isApiData = jd._source === 'api';
+                if (!isApiData && (jd.allocated || jd.inProgress || jd.completed)) {
                     popHTML = `
-                        <div class="jd-pop-bar">
-                            <div class="jd-pop-segment pop-completed" style="width: ${completedPct}%; min-width: ${completedPct > 0 ? '2px' : '0'};"></div>
-                            <div class="jd-pop-segment pop-in-progress" style="width: ${inProgressPct}%; min-width: ${inProgressPct > 0 ? '2px' : '0'};"></div>
-                            <div class="jd-pop-segment pop-allocated" style="width: ${allocatedPct}%; min-width: ${allocatedPct > 0 ? '2px' : '0'};"></div>
+                        <div class="jd-coming-soon-bar">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 8px 12px; background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); border-radius: 8px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                <span style="color: #fbbf24; font-size: 11px; font-weight: 500;">Usage Analytics — Coming Soon</span>
+                                <span style="color: #6b7c93; font-size: 11px; margin-left: auto;">Allocated / In Progress / Completed</span>
+                            </div>
                         </div>
-                        <div class="jd-pop-stats">
-                            <div class="pop-stat">
-                                <div class="pop-dot pop-completed"></div>
-                                <span>${jd.completed || 0} Completed</span>
-                            </div>
-                            <div class="pop-stat">
-                                <div class="pop-dot pop-in-progress"></div>
-                                <span>${jd.inProgress || 0} In Progress</span>
-                            </div>
-                            <div class="pop-stat">
-                                <div class="pop-dot pop-allocated"></div>
-                                <span>${jd.allocated || 0} Allocated</span>
+                    `;
+                } else if (isApiData) {
+                    popHTML = `
+                        <div class="jd-coming-soon-bar">
+                            <div style="display: flex; align-items: center; gap: 6px; margin-top: 12px;">
+                                <span style="background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px;">LIVE</span>
+                                <span style="color: #6b7c93; font-size: 11px;">From UAT Neo4j</span>
                             </div>
                         </div>
                     `;
@@ -15003,9 +15015,9 @@ Agent 13 measures its own success by:
                 lastModified: "2 weeks ago",
                 version: "v2.1",
                 linkedJDs: 5,
-                enrolled: 1247,
-                inProgress: 534,
-                completed: 892,
+                enrolled: 0,
+                inProgress: 0,
+                completed: 0,
                 overview: "Comprehensive computing qualification covering systems and services, digital networks, and software development. Designed to develop knowledge and practical skills in contemporary computing.",
                 units: ["Systems and Services", "Digital Networks", "IT Security for Users", "Software Development"]
             },
@@ -15021,9 +15033,9 @@ Agent 13 measures its own success by:
                 lastModified: "1 month ago",
                 version: "v1.8",
                 linkedJDs: 3,
-                enrolled: 2156,
-                inProgress: 867,
-                completed: 1543,
+                enrolled: 0,
+                inProgress: 0,
+                completed: 0,
                 overview: "Work-based qualification in health and social care settings. Develops practical competences in care provision, communication, and safeguarding.",
                 units: ["Care values and person-centred practice", "Effective communication", "Health, safety and security"]
             },
@@ -15039,9 +15051,9 @@ Agent 13 measures its own success by:
                 lastModified: "3 days ago",
                 version: "v3.2",
                 linkedJDs: 7,
-                enrolled: 678,
-                inProgress: 234,
-                completed: 412,
+                enrolled: 0,
+                inProgress: 0,
+                completed: 0,
                 overview: "Specialist management and leadership qualification. Covers strategic thinking, managing teams, and organisational change.",
                 units: ["Managing people and performance", "Strategic management", "Organisational change"]
             },
@@ -15057,9 +15069,9 @@ Agent 13 measures its own success by:
                 lastModified: "1 week ago",
                 version: "v1.5",
                 linkedJDs: 4,
-                enrolled: 945,
-                inProgress: 389,
-                completed: 623,
+                enrolled: 0,
+                inProgress: 0,
+                completed: 0,
                 overview: "Practical electrotechnical qualification covering installation, testing, and maintenance of electrical systems.",
                 units: ["Electrical installation", "Testing and commissioning", "Health and safety"]
             },
@@ -15075,9 +15087,9 @@ Agent 13 measures its own success by:
                 lastModified: "2 days ago",
                 version: "v2.3",
                 linkedJDs: 6,
-                enrolled: 1534,
-                inProgress: 612,
-                completed: 987,
+                enrolled: 0,
+                inProgress: 0,
+                completed: 0,
                 overview: "Advanced accounting qualification covering financial reporting, management accounting, and audit principles.",
                 units: ["Financial statements", "Management accounting", "Audit and assurance"]
             },
@@ -15093,9 +15105,9 @@ Agent 13 measures its own success by:
                 lastModified: "5 days ago",
                 version: "v2.0",
                 linkedJDs: 8,
-                enrolled: 823,
-                inProgress: 298,
-                completed: 567,
+                enrolled: 0,
+                inProgress: 0,
+                completed: 0,
                 overview: "Professional HR qualification covering people strategy, employee relations, and talent management.",
                 units: ["People resourcing and talent planning", "Employee relations", "Learning and development"]
             }
@@ -15196,33 +15208,22 @@ Agent 13 measures its own success by:
                 const card = document.createElement('div');
                 card.className = 'ls-card';
 
-                // Build popularity bar HTML
+                // Build popularity bar HTML — real data requires API ticket ZAV-API-001
                 let popHTML = '';
-                if (ls.enrolled || ls.inProgress || ls.completed) {
-                    const total = (ls.enrolled || 0) + (ls.inProgress || 0) + (ls.completed || 0);
-                    const completedPct = total > 0 ? ((ls.completed || 0) / total * 100).toFixed(1) : 0;
-                    const inProgressPct = total > 0 ? ((ls.inProgress || 0) / total * 100).toFixed(1) : 0;
-                    const enrolledPct = total > 0 ? ((ls.enrolled || 0) / total * 100).toFixed(1) : 0;
-
+                const isApiData = ls._source === 'api';
+                if (!isApiData) {
                     popHTML = `
-                        <div class="ls-pop-bar">
-                            <div class="ls-pop-segment pop-completed" style="width: ${completedPct}%; min-width: ${completedPct > 0 ? '2px' : '0'};"></div>
-                            <div class="ls-pop-segment pop-in-progress" style="width: ${inProgressPct}%; min-width: ${inProgressPct > 0 ? '2px' : '0'};"></div>
-                            <div class="ls-pop-segment pop-allocated" style="width: ${enrolledPct}%; min-width: ${enrolledPct > 0 ? '2px' : '0'};"></div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 8px 12px; background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); border-radius: 8px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span style="color: #fbbf24; font-size: 11px; font-weight: 500;">Usage Analytics — Coming Soon</span>
+                            <span style="color: #6b7c93; font-size: 11px; margin-left: auto;">Enrolled / In Progress / Completed</span>
                         </div>
-                        <div class="ls-pop-stats">
-                            <div class="pop-stat">
-                                <div class="pop-dot pop-completed"></div>
-                                <span>${ls.completed || 0} Completed</span>
-                            </div>
-                            <div class="pop-stat">
-                                <div class="pop-dot pop-in-progress"></div>
-                                <span>${ls.inProgress || 0} In Progress</span>
-                            </div>
-                            <div class="pop-stat">
-                                <div class="pop-dot pop-allocated"></div>
-                                <span>${ls.enrolled || 0} Enrolled</span>
-                            </div>
+                    `;
+                } else {
+                    popHTML = `
+                        <div style="display: flex; align-items: center; gap: 6px; margin-top: 12px;">
+                            <span style="background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px;">LIVE</span>
+                            <span style="color: #6b7c93; font-size: 11px;">From UAT Neo4j</span>
                         </div>
                     `;
                 }
