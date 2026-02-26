@@ -1169,14 +1169,42 @@
             text-align: right;
         }
 
-        
         /* PHASE LABEL BADGES on character chat messages */
-        .lesson-phase-badge { display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-        .lesson-phase-badge.teach { background: rgba(0, 217, 192, 0.15); color: #00d9c0; border: 1px solid rgba(0, 217, 192, 0.3); }
-        .lesson-phase-badge.check { background: rgba(255, 140, 66, 0.15); color: #FF8C42; border: 1px solid rgba(255, 140, 66, 0.3); }
-        .lesson-phase-badge.assess { background: rgba(91, 155, 213, 0.15); color: #5B9BD5; border: 1px solid rgba(91, 155, 213, 0.3); }
-        .lesson-phase-badge.complete { background: rgba(76, 175, 80, 0.15); color: #4CAF50; border: 1px solid rgba(76, 175, 80, 0.3); }
-        .lesson-phase-badge.learn { background: rgba(184, 197, 214, 0.1); color: #8b9cb6; border: 1px solid rgba(184, 197, 214, 0.2); }
+        .lesson-phase-badge {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .lesson-phase-badge.teach {
+            background: rgba(0, 217, 192, 0.15);
+            color: #00d9c0;
+            border: 1px solid rgba(0, 217, 192, 0.3);
+        }
+        .lesson-phase-badge.check {
+            background: rgba(255, 140, 66, 0.15);
+            color: #FF8C42;
+            border: 1px solid rgba(255, 140, 66, 0.3);
+        }
+        .lesson-phase-badge.assess {
+            background: rgba(91, 155, 213, 0.15);
+            color: #5B9BD5;
+            border: 1px solid rgba(91, 155, 213, 0.3);
+        }
+        .lesson-phase-badge.complete {
+            background: rgba(76, 175, 80, 0.15);
+            color: #4CAF50;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        .lesson-phase-badge.learn {
+            background: rgba(184, 197, 214, 0.1);
+            color: #8b9cb6;
+            border: 1px solid rgba(184, 197, 214, 0.2);
+        }
 
         /* HELPER TEXT */
         .lesson-helper-text {
@@ -2692,6 +2720,8 @@
             <input type="email" id="gate-email" placeholder="your.name@company.com" autocomplete="email">
             <label for="gate-password">Password</label>
             <input type="password" id="gate-password" placeholder="Enter your password" autocomplete="current-password">
+            <label for="gate-code">Access Code (optional)</label>
+            <input type="text" id="gate-code" placeholder="Enter access code if provided" autocomplete="off" style="display:none;">
             <button onclick="checkAccess()">Continue</button>
             <div class="gate-error" id="gate-error">Invalid email or password.</div>
         </div>
@@ -2762,6 +2792,14 @@
                 document.getElementById('gate-error').textContent = message;
                 document.getElementById('gate-error').classList.add('visible');
             }
+        }
+
+        // Access code verification uses SHA-256 hashing for security (ISO 27001)
+        async function hashWithSHA256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
         async function checkAccess() {
@@ -2838,7 +2876,7 @@
             }
 
             options.headers = options.headers || {};
-            options.headers['Authorization'] = `Bearer ${token}`;
+            options.headers['Authorization'] = 'Bearer ' + token;
 
             let resp = await fetch(url, options);
 
@@ -3237,11 +3275,12 @@
                                         <div class="lesson-lo-title">Learning Objectives</div>
                                         <div id="lesson-sidebar-lo-list"></div>
                                     </div>
-                    <!-- Assessment Criteria -->
-                    <div class="lesson-learning-objectives" id="lesson-sidebar-ac-section" style="display: none;">
-                        <div class="lesson-lo-title" style="color: #5B9BD5;">Assessment Criteria</div>
-                        <div id="lesson-sidebar-ac-list"></div>
-                    </div>
+
+                                    <!-- Assessment Criteria -->
+                                    <div class="lesson-learning-objectives" id="lesson-sidebar-ac-section" style="display: none;">
+                                        <div class="lesson-lo-title" style="color: #5B9BD5;">Assessment Criteria</div>
+                                        <div id="lesson-sidebar-ac-list"></div>
+                                    </div>
 
                                     <!-- xAPI Feed -->
                                     <div style="flex: 1; overflow-y: auto; border-bottom: 1px solid rgba(26, 58, 92, 0.5);">
@@ -3784,6 +3823,7 @@
                         <input type="text" class="input-field" id="api-url" value="https://uat.zavmo.co.uk:8000" placeholder="https://uat.zavmo.co.uk:8000">
                         <small style="color: #6b7a8d; font-size: 11px; margin-top: 4px; display: block;">Authenticated automatically via Zavmo login</small>
                     </div>
+                    <input type="hidden" id="api-token" value="">
                 </div>
 
                 <div class="input-group">
@@ -3792,7 +3832,7 @@
                 </div>
 
                 <button class="button button-primary" id="api-search-btn" style="width: 100%;">
-                    <span id="api-search-btn-text">Search</span>
+                    <span id="api-search-btn-text">Fetch Modules</span>
                     <span id="api-search-spinner" style="display: none; margin-left: 8px;">&#8987;</span>
                 </button>
             </div>
@@ -7126,26 +7166,59 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             if (loList) {
                 loList.innerHTML = '';
                 unit.learningOutcomes.slice(0, 3).forEach(lo => {
-                loList.innerHTML += `
-                    <div class="lesson-lo-item" id="sidebar-lo-${lo.id}">
-                        <div class="lesson-lo-checkbox" id="sidebar-check-${lo.id}"></div>
-                        <span>${lo.text}</span>
-                    </div>
-                `;
-            });
+                    loList.innerHTML += `
+                        <div class="lesson-lo-item" id="sidebar-lo-${lo.id}">
+                            <div class="lesson-lo-checkbox" id="sidebar-check-${lo.id}"></div>
+                            <span>${lo.text}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            // Populate sidebar Assessment Criteria
+            populateSidebarAC(unit);
         }
 
         function populateSidebarAC(unit) {
             const acSection = document.getElementById('lesson-sidebar-ac-section');
             const acList = document.getElementById('lesson-sidebar-ac-list');
             if (!acSection || !acList) return;
+
             if (unit.assessmentCriteria && unit.assessmentCriteria.length > 0) {
                 acSection.style.display = 'block';
                 acList.innerHTML = '';
                 unit.assessmentCriteria.forEach(ac => {
-                    acList.innerHTML += '<div class="lesson-lo-item" id="sidebar-ac-' + ac.id + '"><div class="lesson-lo-checkbox" id="sidebar-ac-check-' + ac.id + '" style="border-color: #5B9BD5;"></div><span>' + ac.text + '</span></div>';
+                    acList.innerHTML += `
+                        <div class="lesson-lo-item" id="sidebar-ac-${ac.id}">
+                            <div class="lesson-lo-checkbox" id="sidebar-ac-check-${ac.id}" style="border-color: #5B9BD5;"></div>
+                            <span>${ac.text}</span>
+                        </div>
+                    `;
                 });
-            } else { acSection.style.display = 'none'; }
+            } else {
+                acSection.style.display = 'none';
+            }
+        }
+
+        function updateSidebarACs() {
+            if (!conversationState.unit) return;
+            conversationState.unit.assessmentCriteria.forEach(ac => {
+                const checkbox = document.getElementById('sidebar-ac-check-' + ac.id);
+                const item = document.getElementById('sidebar-ac-' + ac.id);
+                if (!checkbox || !item) return;
+                const status = progressState.acStatuses[ac.id];
+                if (status === 'met') {
+                    checkbox.style.background = '#4CAF50';
+                    checkbox.style.borderColor = '#4CAF50';
+                    checkbox.innerHTML = '<span style="color:#0d1e36;font-size:10px;display:flex;align-items:center;justify-content:center;height:100%;">✓</span>';
+                    if (item.querySelector('span')) item.querySelector('span').style.color = '#4CAF50';
+                } else if (status === 'in-progress') {
+                    checkbox.style.background = 'rgba(91,155,213,0.3)';
+                    checkbox.style.borderColor = '#5B9BD5';
+                    checkbox.innerHTML = '';
+                    if (item.querySelector('span')) item.querySelector('span').style.color = '#b8c5d6';
+                }
+            });
         }
 
         function updateSidebarLOs() {
@@ -7278,8 +7351,6 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
                     }
                 });
             }
-            populateSidebarAC(unit);
-        }
 
             if (phase.startsWith('CHECK')) {
                 // CHECK phase — all LOs are at least in-progress, most are met
@@ -7365,25 +7436,6 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             item.className = 'progress-item' + (status === 'in-progress' ? ' active' : '') + (status === 'met' ? ' met' : '');
         }
 
-        function updateSidebarACs() {
-            if (!conversationState.unit) return;
-            conversationState.unit.assessmentCriteria.forEach(ac => {
-                const checkbox = document.getElementById('sidebar-ac-check-' + ac.id);
-                const item = document.getElementById('sidebar-ac-' + ac.id);
-                if (!checkbox || !item) return;
-                const status = progressState.acStatuses[ac.id];
-                if (status === 'met') {
-                    checkbox.style.background = '#4CAF50'; checkbox.style.borderColor = '#4CAF50';
-                    checkbox.innerHTML = '<span style="color:#0d1e36;font-size:10px;display:flex;align-items:center;justify-content:center;height:100%;">\u2713</span>';
-                    if (item.querySelector('span')) item.querySelector('span').style.color = '#4CAF50';
-                } else if (status === 'in-progress') {
-                    checkbox.style.background = 'rgba(91,155,213,0.3)'; checkbox.style.borderColor = '#5B9BD5';
-                    checkbox.innerHTML = '';
-                    if (item.querySelector('span')) item.querySelector('span').style.color = '#b8c5d6';
-                }
-            });
-        }
-
         function updateProgressBar() {
             const loValues = Object.values(progressState.loStatuses);
             const acValues = Object.values(progressState.acStatuses);
@@ -7402,7 +7454,7 @@ Every decision generates an xAPI statement with extensions: flow_score, flow_sta
             if (progressFill) progressFill.style.width = percentage + '%';
             if (progressText) progressText.textContent = percentage + '%';
 
-            // Also update sidebar LO checkboxes
+            // Also update sidebar LO and AC checkboxes
             updateSidebarLOs();
             updateSidebarACs();
         }
@@ -7731,7 +7783,7 @@ ${getTeachingCharter()}
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${conversationState.apiKey}`
+                    'Authorization': 'Bearer ' + conversationState.apiKey
                 },
                 body: JSON.stringify({
                     model: conversationState.apiModel,
@@ -7896,7 +7948,7 @@ ${getTeachingCharter()}
                 <div class="lesson-character-avatar" id="msg-avatar">≋</div>
                 <div class="lesson-message-bubble">
                     ${phaseBadgeHTML}
-                <div class="lesson-message-content">${renderedContent}</div>
+                    <div class="lesson-message-content">${renderedContent}</div>
                     <div class="lesson-message-timestamp">${timeString}</div>
                 </div>
             `;
@@ -9497,40 +9549,32 @@ Agent 13 measures its own success by:
         async function searchAPIDatabase() {
             const baseUrl = (document.getElementById('api-url').value || ZAVMO_BASE_URL).replace(/\/+$/, '');
             const searchQuery = document.getElementById('api-search-query').value.trim();
-
-            if (!searchQuery) {
-                showToast('Please enter a search query (e.g. sales, python, data management)', 'error');
-                return;
-            }
-
-            if (!getAccessToken()) {
-                showToast('Not authenticated. Please reload the page and log in.', 'error');
-                return;
-            }
-
-            // Show loading state
-            document.getElementById('api-search-btn-text').textContent = 'Searching...';
+            if (!searchQuery) { showToast('Please enter a search query', 'error'); return; }
+            const access_token = getAccessToken(); // Verify access_token before API call
+            if (!access_token) { showToast('Not authenticated. Please reload.', 'error'); return; }
+            const btnText = document.getElementById('api-search-btn-text');
+            btnText.textContent = 'Fetching...';
             document.getElementById('api-search-spinner').style.display = 'inline';
             document.getElementById('api-search-btn').disabled = true;
-
             try {
-                const params = new URLSearchParams();
-                params.set('q', searchQuery);
-                params.set('limit', '50');
-
-                const response = await zavmoFetch(`${baseUrl}/api/search/unified/?${params.toString()}`, {
-                    method: 'GET',
-                    headers: { 'Accept': 'application/json' }
+                const qs = new URLSearchParams({q: searchQuery, limit: '50'});
+                const response = await zavmoFetch(`${baseUrl}/api/deliver/modules/?${qs}`, {
+                    method: 'GET', headers: {'Accept': 'application/json'}
                 });
-
                 if (!response.ok) {
                     if (response.status === 401 || response.status === 403) {
-                        throw new Error('Authentication failed \u2014 session may have expired. Please reload the page.');
+                        throw new Error('Authentication failed — please reload the page.');
                     }
                     throw new Error(`API returned ${response.status}: ${response.statusText}`);
                 }
-
                 const data = await response.json();
+                // Validate response: expect data.data.modules from deliver API
+                if (!data || (!data.data && !data.results)) {
+                    throw new Error('Unexpected API response format');
+                }
+                if (data.data && data.data.modules) {
+                    // Standard modules response
+                }
                 const parsed = parseUnifiedResponse(data);
 
                 displayAPIModules(parsed);
@@ -9539,7 +9583,7 @@ Agent 13 measures its own success by:
                 showToast(error.message, 'error');
                 console.error('API search error:', error);
             } finally {
-                document.getElementById('api-search-btn-text').textContent = 'Search';
+                document.getElementById('api-search-btn-text').textContent = 'Fetch Modules';
                 document.getElementById('api-search-spinner').style.display = 'none';
                 document.getElementById('api-search-btn').disabled = false;
             }
@@ -9551,9 +9595,10 @@ Agent 13 measures its own success by:
 
             const ofqualUnits = data.ofqual || [];
             const nosItems = data.nos || [];
+            const filtered = [...ofqualUnits, ...nosItems];
 
-            if (ofqualUnits.length === 0 && nosItems.length === 0) {
-                container.innerHTML = '<p style="color: #b8c5d6; text-align: center; padding: 20px;">No results found. Try a different search term.</p>';
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="color: #b8c5d6; text-align: center; padding: 20px;">No modules found. Try a different search term.</p>';
                 container.style.display = 'block';
                 return;
             }
@@ -9561,7 +9606,7 @@ Agent 13 measures its own success by:
             // Show count header
             const countDiv = document.createElement('div');
             countDiv.style.cssText = 'padding: 8px 16px; color: #6b7a8d; font-size: 11px; border-bottom: 1px solid rgba(0,217,192,0.1); position: sticky; top: 0; background: #0e1b2d; z-index: 1;';
-            countDiv.textContent = `${ofqualUnits.length} OFQUAL unit${ofqualUnits.length !== 1 ? 's' : ''}${nosItems.length > 0 ? ', ' + nosItems.length + ' NOS standard' + (nosItems.length !== 1 ? 's' : '') : ''} found \u2014 click a unit to select it`;
+            countDiv.textContent = `${filtered.length} module${filtered.length !== 1 ? 's' : ''} found (${ofqualUnits.length} OFQUAL, ${nosItems.length} NOS) — click a unit to select it`;
             container.appendChild(countDiv);
 
             // Display OFQUAL units
@@ -9597,7 +9642,7 @@ Agent 13 measures its own success by:
                     // Select this unit
                     unitDiv.classList.add('selected');
                     unitDiv.style.background = 'rgba(0,217,192,0.08)';
-                    selectAPIUnit(unit);
+                    selectAPILesson(unit);
                 });
 
                 container.appendChild(unitDiv);
@@ -9644,7 +9689,7 @@ Agent 13 measures its own success by:
                             nos_title: nos.title,
                             description: nos.description || nos.overview || ''
                         };
-                        selectAPIUnit(nosAsUnit);
+                        selectAPILesson(nosAsUnit);
                     });
 
                     container.appendChild(nosDiv);
@@ -9655,7 +9700,7 @@ Agent 13 measures its own success by:
             showToast(`Found ${ofqualUnits.length} OFQUAL units, ${nosItems.length} NOS standards`, 'success');
         }
 
-        function selectAPIUnit(unit) {
+        function selectAPILesson(unit) {
             const detailPanel = document.getElementById('api-lesson-detail');
             const summaryDiv = document.getElementById('api-lesson-summary');
 
