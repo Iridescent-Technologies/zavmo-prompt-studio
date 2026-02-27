@@ -3412,6 +3412,134 @@ input[type="range"]::-moz-range-thumb:hover {
     color: #ffffff;
 }
 
+/* Detail modal: meta grid (Department, Reports to) */
+.jd-detail-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+.jd-detail-meta-pair {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 14px;
+    background: rgba(13, 30, 54, 0.5);
+    border: 1px solid rgba(26, 58, 92, 0.4);
+    border-radius: 8px;
+}
+.jd-meta-label {
+    font-size: 11px;
+    color: #6b7c93;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+.jd-meta-value {
+    font-size: 14px;
+    color: #e0e8f0;
+}
+
+/* Detail modal: skill cards with name + description */
+.jd-detail-skills-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+}
+.jd-detail-skill-card {
+    padding: 12px 14px;
+    background: rgba(13, 30, 54, 0.5);
+    border: 1px solid rgba(26, 58, 92, 0.4);
+    border-radius: 8px;
+    transition: border-color 0.2s ease;
+}
+.jd-detail-skill-card:hover {
+    border-color: rgba(0, 217, 192, 0.3);
+}
+.jd-detail-skill-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #00d9c0;
+    margin-bottom: 4px;
+}
+.jd-detail-skill-desc {
+    font-size: 12px;
+    color: #8899aa;
+    line-height: 1.5;
+}
+
+/* Detail modal: tech stack */
+.jd-detail-tech-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 8px;
+}
+.jd-detail-tech-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: rgba(13, 30, 54, 0.5);
+    border: 1px solid rgba(26, 58, 92, 0.4);
+    border-radius: 8px;
+}
+.jd-detail-tech-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #e0e8f0;
+}
+.jd-detail-tech-prof {
+    font-size: 11px;
+    color: #6b7c93;
+    max-width: 50%;
+    text-align: right;
+}
+
+/* Detail modal: responsibility level grouping */
+.jd-resp-level-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #00d9c0;
+    margin: 12px 0 6px 0;
+    padding: 4px 10px;
+    background: rgba(0, 217, 192, 0.08);
+    border-radius: 4px;
+    display: inline-block;
+}
+
+/* Detail modal: sub-labels */
+.jd-detail-sub-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #8899aa;
+    margin: 14px 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Detail modal: career progression cards */
+.jd-detail-progression-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+}
+.jd-detail-progression-card {
+    padding: 12px 14px;
+    background: rgba(13, 30, 54, 0.5);
+    border: 1px solid rgba(26, 58, 92, 0.4);
+    border-radius: 8px;
+}
+.jd-detail-progression-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #e0e8f0;
+    margin-bottom: 6px;
+}
+.jd-detail-progression-skills {
+    font-size: 12px;
+    color: #8899aa;
+    line-height: 1.5;
+}
+
 /* Export dropdown */
 .jd-export-menu {
     position: relative;

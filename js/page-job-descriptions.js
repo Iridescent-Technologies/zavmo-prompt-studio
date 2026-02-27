@@ -220,19 +220,27 @@ function initJobDescriptionsPage() {
 let jdSearchTimeout = null;
 
 /**
+ * Parse a JSON-encoded array from the API.
+ * Accepts a JSON string or an actual array/object. Returns the parsed value or [].
+ */
+function parseJDJSON(raw) {
+    if (!raw) return [];
+    if (typeof raw !== 'string') return Array.isArray(raw) ? raw : [];
+    try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+/**
  * Parse a JSON-encoded skills array from the API.
  * Accepts a string like '[{"description":"..."},...]' or an actual array.
  * Returns an array of description strings.
  */
 function parseJDSkills(raw) {
-    if (!raw) return [];
-    try {
-        const arr = typeof raw === 'string' ? JSON.parse(raw) : raw;
-        if (!Array.isArray(arr)) return [];
-        return arr.map(s => s.description || s.name || '').filter(Boolean);
-    } catch (e) {
-        return [];
-    }
+    return parseJDJSON(raw).map(s => s.description || s.name || s.skill || '').filter(Boolean);
 }
 
 /**
@@ -242,6 +250,7 @@ function mapAPIJobToCard(item) {
     const funcSkills = parseJDSkills(item.functional_skills);
     const softSkills = parseJDSkills(item.soft_skills);
     return {
+        job_id: item.job_id || '',
         title: item.title || item.job_title || 'Untitled',
         org: item.industry || 'Organisation',
         industry: item.industry || '',
@@ -252,7 +261,7 @@ function mapAPIJobToCard(item) {
         allocated: 0,
         inProgress: 0,
         completed: 0,
-        overview: item.description || '',
+        overview: item.role_summary || item.description || '',
         responsibilities: funcSkills,
         qualifications: softSkills.map(s => ({ text: s, type: 'desirable' })),
         skills: [].concat(funcSkills, softSkills),
@@ -411,60 +420,284 @@ function renderJDCards(data) {
     if (resultCount) resultCount.textContent = data.length;
 }
 
+/**
+ * Build the detail modal HTML from a data object.
+ * Works for both demo data (with arrays) and full API data (with JSON strings).
+ */
+function buildJDDetailHTML(d) {
+    let html = '';
+
+    // --- Role Summary / Overview ---
+    const summary = d.role_summary || d.overview || '';
+    if (summary) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg> Role Summary</div>';
+        html += '<p class="jd-detail-text">' + escapeHTML(summary) + '</p>';
+        html += '</div>';
+    }
+
+    // --- Department & Reporting ---
+    if (d.department || d.reports_to) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Department & Reporting</div>';
+        html += '<div class="jd-detail-meta-grid">';
+        if (d.department) html += '<div class="jd-detail-meta-pair"><span class="jd-meta-label">Department</span><span class="jd-meta-value">' + escapeHTML(d.department) + '</span></div>';
+        if (d.reports_to) html += '<div class="jd-detail-meta-pair"><span class="jd-meta-label">Reports to</span><span class="jd-meta-value">' + escapeHTML(d.reports_to) + '</span></div>';
+        html += '</div></div>';
+    }
+
+    // --- Responsibilities (API: JSON array of {level, responsibilities}) ---
+    const responsibilities = parseJDJSON(d.responsibilities);
+    // Also support demo data where responsibilities is an array of strings
+    if (responsibilities.length > 0) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Key Responsibilities</div>';
+        if (typeof responsibilities[0] === 'string') {
+            // Demo data: simple string array
+            html += '<ul class="jd-qual-list">';
+            responsibilities.forEach(function(r) {
+                html += '<li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/></svg>' + escapeHTML(r) + '</li>';
+            });
+            html += '</ul>';
+        } else {
+            // API data: objects with {level, responsibilities}
+            responsibilities.forEach(function(group) {
+                if (group.level) {
+                    html += '<div class="jd-resp-level-label">' + escapeHTML(group.level) + '</div>';
+                }
+                const items = (group.responsibilities || '').split('. ').filter(Boolean);
+                if (items.length > 0) {
+                    html += '<ul class="jd-qual-list">';
+                    items.forEach(function(item) {
+                        const text = item.endsWith('.') ? item : item + '.';
+                        html += '<li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/></svg>' + escapeHTML(text) + '</li>';
+                    });
+                    html += '</ul>';
+                }
+            });
+        }
+        html += '</div>';
+    }
+
+    // --- Domain / Functional Skills (JSON array of {skill, description}) ---
+    const domainSkills = parseJDJSON(d.functional_skills);
+    if (domainSkills.length > 0 && domainSkills[0].skill) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Domain Skills</div>';
+        html += '<div class="jd-detail-skills-list">';
+        domainSkills.forEach(function(s) {
+            html += '<div class="jd-detail-skill-card">';
+            html += '<div class="jd-detail-skill-name">' + escapeHTML(s.skill || s.name || '') + '</div>';
+            if (s.description) html += '<div class="jd-detail-skill-desc">' + escapeHTML(s.description) + '</div>';
+            html += '</div>';
+        });
+        html += '</div></div>';
+    }
+
+    // --- Soft Skills (JSON array of {skill, description}) ---
+    const softSkills = parseJDJSON(d.soft_skills);
+    if (softSkills.length > 0 && softSkills[0].skill) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Soft Skills</div>';
+        html += '<div class="jd-detail-skills-list">';
+        softSkills.forEach(function(s) {
+            html += '<div class="jd-detail-skill-card">';
+            html += '<div class="jd-detail-skill-name">' + escapeHTML(s.skill || s.name || '') + '</div>';
+            if (s.description) html += '<div class="jd-detail-skill-desc">' + escapeHTML(s.description) + '</div>';
+            html += '</div>';
+        });
+        html += '</div></div>';
+    }
+
+    // --- Fallback: simple skills tags (demo data) ---
+    if (d.skills && Array.isArray(d.skills) && d.skills.length > 0 && typeof d.skills[0] === 'string') {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Key Skills</div>';
+        html += '<div class="jd-skill-tags">';
+        d.skills.forEach(function(s) { html += '<span class="jd-skill-tag">' + escapeHTML(s) + '</span>'; });
+        html += '</div></div>';
+    }
+
+    // --- Tech Stack ---
+    const techStack = parseJDJSON(d.tech_stack);
+    if (techStack.length > 0) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg> Tech Stack</div>';
+        html += '<div class="jd-detail-tech-list">';
+        techStack.forEach(function(t) {
+            html += '<div class="jd-detail-tech-item">';
+            html += '<span class="jd-detail-tech-name">' + escapeHTML(t.name || '') + '</span>';
+            if (t.proficiency) html += '<span class="jd-detail-tech-prof">' + escapeHTML(t.proficiency) + '</span>';
+            html += '</div>';
+        });
+        html += '</div></div>';
+    }
+
+    // --- Education & Experience ---
+    if (d.education || d.experience_requirement || d.experience) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Education & Experience</div>';
+        if (d.education) html += '<p class="jd-detail-text"><strong>Education:</strong> ' + escapeHTML(d.education) + '</p>';
+        if (d.experience_requirement) html += '<p class="jd-detail-text"><strong>Experience:</strong> ' + escapeHTML(d.experience_requirement) + '</p>';
+        else if (d.experience) html += '<p class="jd-detail-text"><strong>Experience:</strong> ' + escapeHTML(d.experience) + '</p>';
+        if (d.prerequisite_competencies) html += '<p class="jd-detail-text"><strong>Prerequisites:</strong> ' + escapeHTML(d.prerequisite_competencies) + '</p>';
+        html += '</div>';
+    }
+
+    // --- Qualifications (demo data: array of {text, type}) ---
+    if (d.qualifications && Array.isArray(d.qualifications) && d.qualifications.length > 0 && d.qualifications[0].text) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg> Aligned Qualifications</div>';
+        html += '<ul class="jd-qual-list">';
+        d.qualifications.forEach(function(q) {
+            var cls = q.type === 'required' ? 'required' : 'desirable';
+            var label = q.type === 'required' ? 'Essential' : 'Desirable';
+            html += '<li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>' + escapeHTML(q.text) + '</span><span class="jd-qual-essential ' + cls + '">' + label + '</span></li>';
+        });
+        html += '</ul></div>';
+    }
+
+    // --- Career Progression ---
+    const progression = parseJDJSON(d.progression_from_this_role);
+    const entryPaths = parseJDJSON(d.common_entry_paths);
+    const careerVision = parseJDJSON(d.long_term_career_vision);
+    if (progression.length > 0 || entryPaths.length > 0 || careerVision.length > 0) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg> Career Progression</div>';
+        if (entryPaths.length > 0) {
+            html += '<p class="jd-detail-sub-label">Common Entry Paths</p>';
+            html += '<div class="jd-skill-tags">';
+            entryPaths.forEach(function(p) { html += '<span class="jd-skill-tag">' + escapeHTML(typeof p === 'string' ? p : (p.pathway || p.name || '')) + '</span>'; });
+            html += '</div>';
+        }
+        if (progression.length > 0) {
+            html += '<p class="jd-detail-sub-label">Progression from This Role</p>';
+            html += '<div class="jd-detail-progression-list">';
+            progression.forEach(function(p) {
+                html += '<div class="jd-detail-progression-card">';
+                html += '<div class="jd-detail-progression-title">' + escapeHTML(p.pathway || '') + '</div>';
+                if (p.new_skills_needed) html += '<div class="jd-detail-progression-skills">' + escapeHTML(p.new_skills_needed) + '</div>';
+                html += '</div>';
+            });
+            html += '</div>';
+        }
+        if (careerVision.length > 0) {
+            html += '<p class="jd-detail-sub-label">Long-term Career Vision</p>';
+            html += '<div class="jd-skill-tags">';
+            careerVision.forEach(function(v) { html += '<span class="jd-skill-tag">' + escapeHTML(typeof v === 'string' ? v : (v.pathway || v.name || '')) + '</span>'; });
+            html += '</div>';
+        }
+        html += '</div>';
+    }
+
+    // --- Performance Metrics ---
+    const qualMetrics = parseJDJSON(d.qualitative_metrics);
+    const quantMetrics = parseJDJSON(d.quantitative_metrics);
+    if (qualMetrics.length > 0 || quantMetrics.length > 0) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg> Performance Metrics</div>';
+        if (quantMetrics.length > 0) {
+            html += '<p class="jd-detail-sub-label">Quantitative</p>';
+            html += '<ul class="jd-qual-list">';
+            quantMetrics.forEach(function(m) { html += '<li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/></svg>' + escapeHTML(typeof m === 'string' ? m : (m.description || m.name || '')) + '</li>'; });
+            html += '</ul>';
+        }
+        if (qualMetrics.length > 0) {
+            html += '<p class="jd-detail-sub-label">Qualitative</p>';
+            html += '<ul class="jd-qual-list">';
+            qualMetrics.forEach(function(m) { html += '<li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/></svg>' + escapeHTML(typeof m === 'string' ? m : (m.description || m.name || '')) + '</li>'; });
+            html += '</ul>';
+        }
+        html += '</div>';
+    }
+
+    // --- Decision Making & Stakeholders ---
+    const stakeholders = parseJDJSON(d.key_stakeholders);
+    if (d.decision_making_authority || stakeholders.length > 0) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Decision Making & Stakeholders</div>';
+        if (d.decision_making_authority) html += '<p class="jd-detail-text">' + escapeHTML(d.decision_making_authority) + '</p>';
+        if (stakeholders.length > 0) {
+            html += '<p class="jd-detail-sub-label">Key Stakeholders</p>';
+            html += '<div class="jd-skill-tags">';
+            stakeholders.forEach(function(s) { html += '<span class="jd-skill-tag">' + escapeHTML(typeof s === 'string' ? s : (s.name || '')) + '</span>'; });
+            html += '</div>';
+        }
+        html += '</div>';
+    }
+
+    // --- Emerging & Advancing Skills ---
+    if (d.advancing_technical_skills || d.emerging_skills) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Emerging & Advancing Skills</div>';
+        if (d.advancing_technical_skills) html += '<p class="jd-detail-text"><strong>Advancing:</strong> ' + escapeHTML(d.advancing_technical_skills) + '</p>';
+        if (d.emerging_skills) html += '<p class="jd-detail-text"><strong>Emerging:</strong> ' + escapeHTML(d.emerging_skills) + '</p>';
+        html += '</div>';
+    }
+
+    // --- Alternative Titles ---
+    const altTitles = parseJDJSON(d.alternative_titles);
+    if (altTitles.length > 0) {
+        html += '<div class="jd-detail-section">';
+        html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/></svg> Alternative Titles</div>';
+        html += '<div class="jd-skill-tags">';
+        altTitles.forEach(function(t) { html += '<span class="jd-skill-tag">' + escapeHTML(typeof t === 'string' ? t : (t.name || '')) + '</span>'; });
+        html += '</div></div>';
+    }
+
+    return html;
+}
+
+/**
+ * Fetch full JD details from the API for a given job_id.
+ */
+async function fetchJDFullDetails(jobId) {
+    if (!jobId) return null;
+    try {
+        const url = ZAVMO_BASE_URL + '/api/discover/jd/' + encodeURIComponent(jobId) + '/';
+        const response = await zavmoFetch(url, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) return null;
+        const data = await response.json();
+        return data.data || data;
+    } catch (err) {
+        console.warn('Failed to fetch full JD details:', err.message);
+        return null;
+    }
+}
+
 function openJDDetail(jd) {
     if (!jd) return;
 
-    document.getElementById('jd-detail-title').textContent = jd.title;
-    document.getElementById('jd-detail-industry').textContent = jd.industry;
-    document.getElementById('jd-detail-level').textContent = jd.level;
-    document.getElementById('jd-detail-updated').textContent = jd.updated;
+    const titleEl = document.getElementById('jd-detail-title');
+    const industryEl = document.getElementById('jd-detail-industry');
+    const levelEl = document.getElementById('jd-detail-level');
+    const updatedEl = document.getElementById('jd-detail-updated');
+    const bodyEl = document.getElementById('jd-detail-body');
+    const overlayEl = document.getElementById('jd-detail-overlay');
 
-    let html = '';
+    if (titleEl) titleEl.textContent = jd.title;
+    if (industryEl) industryEl.textContent = jd.industry;
+    if (levelEl) levelEl.textContent = jd.level;
+    if (updatedEl) updatedEl.textContent = jd.updated;
 
-    // Overview
-    html += '<div class="jd-detail-section">';
-    html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg> Role Overview</div>';
-    html += '<p class="jd-detail-text">' + escapeHTML(jd.overview) + '</p>';
-    html += '</div>';
-
-    // Responsibilities
-    html += '<div class="jd-detail-section">';
-    html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Key Responsibilities</div>';
-    html += '<ul class="jd-qual-list">';
-    jd.responsibilities.forEach(r => {
-        html += '<li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/></svg>' + escapeHTML(r) + '</li>';
-    });
-    html += '</ul></div>';
-
-    // Qualifications
-    html += '<div class="jd-detail-section">';
-    html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg> Aligned Qualifications</div>';
-    html += '<ul class="jd-qual-list">';
-    jd.qualifications.forEach(q => {
-        const cls = q.type === 'required' ? 'required' : 'desirable';
-        const label = q.type === 'required' ? 'Essential' : 'Desirable';
-        html += '<li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>' + escapeHTML(q.text) + '</span><span class="jd-qual-essential ' + cls + '">' + label + '</span></li>';
-    });
-    html += '</ul></div>';
-
-    // Skills
-    html += '<div class="jd-detail-section">';
-    html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Key Skills</div>';
-    html += '<div class="jd-skill-tags">';
-    jd.skills.forEach(s => {
-        html += '<span class="jd-skill-tag">' + escapeHTML(s) + '</span>';
-    });
-    html += '</div></div>';
-
-    // Experience
-    html += '<div class="jd-detail-section">';
-    html += '<div class="jd-detail-section-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Experience Required</div>';
-    html += '<p class="jd-detail-text">' + escapeHTML(jd.experience) + '</p>';
-    html += '</div>';
-
-    document.getElementById('jd-detail-body').innerHTML = html;
-    document.getElementById('jd-detail-overlay').classList.add('open');
+    // Render with basic data first
+    if (bodyEl) bodyEl.innerHTML = buildJDDetailHTML(jd);
+    if (overlayEl) overlayEl.classList.add('open');
     document.body.style.overflow = 'hidden';
+
+    // If this is API data, fetch full details and re-render
+    if (jd._source === 'api' && jd.job_id) {
+        fetchJDFullDetails(jd.job_id).then(function(fullData) {
+            if (fullData && bodyEl) {
+                bodyEl.innerHTML = buildJDDetailHTML(fullData);
+            }
+        }).catch(function() {
+            // Keep the basic view already rendered
+        });
+    }
 }
 
 function closeJDDetailIfBackdrop(event, el) {
