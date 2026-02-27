@@ -439,11 +439,12 @@ test('addEventListener calls reference existing IDs', () => {
   const listenerRegex = /getElementById\(['"]([^'"]+)['"]\)\.addEventListener/g;
   const missing = [];
   let match;
+  const allSource = html + '\n' + allScripts;
 
   while ((match = listenerRegex.exec(allScripts)) !== null) {
     const id = match[1];
-    const idInHtml = new RegExp(`id=["']${id}["']`);
-    if (!idInHtml.test(html)) {
+    const idInSource = new RegExp(`id=["']${id}["']`);
+    if (!idInSource.test(allSource)) {
       missing.push(id);
     }
   }
@@ -744,9 +745,10 @@ test(`Discovered at least 50 function definitions`, () => {
 // Check that all JS-referenced DOM IDs exist in the HTML
 test('All getElementById references point to existing elements', () => {
   const missing = [];
+  const allSource = html + '\n' + allScripts;
   for (const id of discoveredReferencedIds) {
-    const idInHtml = new RegExp(`id=["']${id}["']`);
-    if (!idInHtml.test(html)) {
+    const idInSource = new RegExp(`id=["']${id}["']`);
+    if (!idInSource.test(allSource)) {
       missing.push(id);
     }
   }
@@ -1078,11 +1080,11 @@ test('LS search has debounce pattern', () => {
 });
 
 test('LS CSS classes defined', () => {
-  assertIncludes(html, '.ls-stat-card');
-  assertIncludes(html, '.ls-accordion-item');
-  assertIncludes(html, '.ls-search-input');
-  assertIncludes(html, '.ls-modal-backdrop');
-  assertIncludes(html, '.ls-badge');
+  assertIncludes(allStyles, '.ls-stat-card');
+  assertIncludes(allStyles, '.ls-accordion-item');
+  assertIncludes(allStyles, '.ls-search-input');
+  assertIncludes(allStyles, '.ls-modal-backdrop');
+  assertIncludes(allStyles, '.ls-badge');
 });
 
 test('LS null safety on DOM queries', () => {
@@ -1700,15 +1702,15 @@ test('xAPI Analytics: filter dropdowns have aria-labels', () => {
 
 // 24r. CSS exists
 test('xAPI Analytics: CSS classes defined', () => {
-    assertIncludes(html, '.xa-page', 'Must have xa-page CSS class');
-    assertIncludes(html, '.xa-kpi-card', 'Must have xa-kpi-card CSS class');
-    assertIncludes(html, '.xa-glass', 'Must have xa-glass CSS class');
-    assertIncludes(html, '.xa-statement-card', 'Must have xa-statement-card CSS class');
-    assertIncludes(html, '.xa-agent-card', 'Must have xa-agent-card CSS class');
+    assertIncludes(allStyles, '.xa-page', 'Must have xa-page CSS class');
+    assertIncludes(allStyles, '.xa-kpi-card', 'Must have xa-kpi-card CSS class');
+    assertIncludes(allStyles, '.xa-glass', 'Must have xa-glass CSS class');
+    assertIncludes(allStyles, '.xa-statement-card', 'Must have xa-statement-card CSS class');
+    assertIncludes(allStyles, '.xa-agent-card', 'Must have xa-agent-card CSS class');
 });
 
 test('xAPI Analytics: reduced-motion media query present', () => {
-    assertIncludes(html, 'xa-pulse::before { animation: none', 'Must have reduced-motion for pulse animation');
+    assertIncludes(allStyles, 'xa-pulse::before { animation: none', 'Must have reduced-motion for pulse animation');
 });
 
 // 24s. Time range selector
@@ -1775,16 +1777,16 @@ test('xAPI Enhancements: cohort comparison has department buttons', () => {
 
 // 25e. Cohort Comparison CSS
 test('xAPI Enhancements: cohort comparison CSS exists', () => {
-    assertIncludes(html, '.xa-cohort-btn', 'Must have cohort button CSS');
-    assertIncludes(html, '.xa-cohort-card', 'Must have cohort card CSS');
-    assertIncludes(html, '.xa-cohort-bloom-bar', 'Must have Bloom bar CSS');
+    assertIncludes(allStyles, '.xa-cohort-btn', 'Must have cohort button CSS');
+    assertIncludes(allStyles, '.xa-cohort-card', 'Must have cohort card CSS');
+    assertIncludes(allStyles, '.xa-cohort-bloom-bar', 'Must have Bloom bar CSS');
 });
 
 // 25f. WONDERS Intelligence Radar
 test('xAPI Enhancements: WONDERS radar CSS exists', () => {
-    assertIncludes(html, '.xa-wonders-radar', 'Must have WONDERS radar CSS');
-    assertIncludes(html, '.xa-wonders-polygon', 'Must have WONDERS polygon CSS');
-    assertIncludes(html, '.xa-wonders-label', 'Must have WONDERS label CSS');
+    assertIncludes(allStyles, '.xa-wonders-radar', 'Must have WONDERS radar CSS');
+    assertIncludes(allStyles, '.xa-wonders-polygon', 'Must have WONDERS polygon CSS');
+    assertIncludes(allStyles, '.xa-wonders-label', 'Must have WONDERS label CSS');
 });
 
 test('xAPI Enhancements: WONDERS radar render function exists', () => {
@@ -1803,7 +1805,7 @@ test('xAPI Enhancements: PDF export function exists', () => {
 
 // 25h. Print styles for PDF
 test('xAPI Enhancements: print media query for PDF exists', () => {
-    assertIncludes(html, '@media print', 'Must have print media query for PDF export');
+    assertIncludes(allStyles, '@media print', 'Must have print media query for PDF export');
 });
 
 // 25i. Engagement row layout
@@ -1888,9 +1890,9 @@ test('Job Descriptions: switchNavTab handles job-descriptions tab', () => {
 
 // 26i. CSS classes
 test('Job Descriptions: CSS classes defined', () => {
-    assertIncludes(html, '.jd-card', 'Must have jd-card CSS class');
-    assertIncludes(html, '.jd-results-grid', 'Must have jd-results-grid CSS class');
-    assertIncludes(html, '.jd-filter-dropdown', 'Must have jd-filter-dropdown CSS class');
+    assertIncludes(allStyles, '.jd-card', 'Must have jd-card CSS class');
+    assertIncludes(allStyles, '.jd-results-grid', 'Must have jd-results-grid CSS class');
+    assertIncludes(allStyles, '.jd-filter-dropdown', 'Must have jd-filter-dropdown CSS class');
 });
 
 // 26j. Learning Specs consistency
