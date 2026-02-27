@@ -11486,15 +11486,16 @@ Agent 13 measures its own success by:
                         container.querySelectorAll('.selected').forEach(el => { el.classList.remove('selected'); el.style.borderColor = 'transparent'; el.style.background = 'transparent'; });
                         jdDiv.classList.add('selected');
                         jdDiv.style.background = 'rgba(0,217,192,0.08)';
+                        const loAc = parseJDSkillsToLOAC(jd.functional_skills, jd.soft_skills);
                         const jdAsUnit = {
                             title: title,
                             unit_id: jd.job_id || jd.id,
                             ofqual_id: '',
                             nos_id: '',
-                            level: (jd.ofqual_level_alignment || []).join(', ') || '',
+                            level: (typeof jd.ofqual_level_alignment === 'string' ? jd.ofqual_level_alignment : (jd.ofqual_level_alignment || []).join(', ')) || '',
                             credits: 0,
-                            learning_outcomes: [],
-                            assessment_criteria: [],
+                            learning_outcomes: loAc.learning_outcomes,
+                            assessment_criteria: loAc.assessment_criteria,
                             description: jd.description || ''
                         };
                         selectAPILesson(jdAsUnit);
@@ -12302,6 +12303,36 @@ Agent 13 measures its own success by:
                 return val.split('\n').map(s => s.trim()).filter(Boolean);
             }
             return [];
+        }
+
+        /**
+         * Parse JD functional_skills and soft_skills (JSON string or array) into learning_outcomes and assessment_criteria arrays.
+         * Handles [{"description": "..."}, ...] and plain string formats so the Fetch Modules detail panel shows full LO/AC.
+         */
+        function parseJDSkillsToLOAC(functionalSkills, softSkills) {
+            const los = [];
+            const acs = [];
+            function extractDescriptions(val, out) {
+                if (!val) return;
+                let arr = [];
+                if (typeof val === 'string') {
+                    try {
+                        const parsed = JSON.parse(val);
+                        arr = Array.isArray(parsed) ? parsed : (parsed && typeof parsed === 'object' ? Object.values(parsed) : []);
+                    } catch (_) {
+                        val.split(/[,;\n]/).forEach(s => { if (s.trim()) out.push(s.trim()); });
+                        return;
+                    }
+                } else if (Array.isArray(val)) arr = val;
+                else if (val && typeof val === 'object') arr = Object.values(val);
+                arr.forEach(item => {
+                    if (typeof item === 'string') out.push(item);
+                    else if (item && typeof item === 'object' && (item.description || item.text || item.name)) out.push(item.description || item.text || item.name);
+                });
+            }
+            extractDescriptions(functionalSkills, los);
+            extractDescriptions(softSkills, acs);
+            return { learning_outcomes: los, assessment_criteria: acs };
         }
 
         /**
