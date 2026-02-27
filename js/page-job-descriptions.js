@@ -220,6 +220,49 @@ function initJobDescriptionsPage() {
 let jdSearchTimeout = null;
 
 /**
+ * Parse a JSON-encoded skills array from the API.
+ * Accepts a string like '[{"description":"..."},...]' or an actual array.
+ * Returns an array of description strings.
+ */
+function parseJDSkills(raw) {
+    if (!raw) return [];
+    try {
+        const arr = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        if (!Array.isArray(arr)) return [];
+        return arr.map(s => s.description || s.name || '').filter(Boolean);
+    } catch (e) {
+        return [];
+    }
+}
+
+/**
+ * Map a raw API job description item to the card format used by the UI.
+ */
+function mapAPIJobToCard(item) {
+    const funcSkills = parseJDSkills(item.functional_skills);
+    const softSkills = parseJDSkills(item.soft_skills);
+    return {
+        title: item.title || item.job_title || 'Untitled',
+        org: item.industry || 'Organisation',
+        industry: item.industry || '',
+        level: item.ofqual_level_alignment ? 'Level ' + item.ofqual_level_alignment : '',
+        type: item.experience_band || 'Full-time',
+        updated: 'From UAT',
+        linkedQuals: 0,
+        allocated: 0,
+        inProgress: 0,
+        completed: 0,
+        overview: item.description || '',
+        responsibilities: funcSkills,
+        qualifications: softSkills.map(s => ({ text: s, type: 'desirable' })),
+        skills: [].concat(funcSkills, softSkills),
+        experience: item.experience_band || '',
+        _source: 'api',
+        _raw: item
+    };
+}
+
+/**
  * Load real Job Descriptions data from UAT API.
  * Falls back to demo data if API fails.
  */
@@ -227,25 +270,7 @@ async function loadRealJDData() {
     try {
         const data = await searchLearningSpecs('role', { type: 'jd' });
         if (data && data.job_descriptions && data.job_descriptions.length > 0) {
-            const cards = data.job_descriptions.map(item => ({
-                title: item.title || item.job_title || 'Untitled',
-                org: item.industry || 'Organisation',
-                industry: item.industry || '',
-                level: item.ofqual_level_alignment ? 'Level ' + item.ofqual_level_alignment : '',
-                type: item.experience_band || 'Full-time',
-                updated: 'From UAT',
-                linkedQuals: 0,
-                allocated: 0,
-                inProgress: 0,
-                completed: 0,
-                overview: item.description || '',
-                responsibilities: [],
-                qualifications: [],
-                skills: [],
-                experience: item.experience_band || '',
-                _source: 'api',
-                _raw: item
-            }));
+            const cards = data.job_descriptions.map(mapAPIJobToCard);
             if (cards.length > 0) {
                 jdDataCache.apiCards = cards;
                 jdDataCache.currentData = cards;
@@ -275,25 +300,7 @@ async function executeJDSearch() {
     try {
         const results = await searchLearningSpecs(query, { type: 'jd' });
         if (results && results.job_descriptions && results.job_descriptions.length > 0) {
-            const cards = results.job_descriptions.map(item => ({
-                title: item.title || item.job_title || 'Untitled',
-                org: item.industry || 'Organisation',
-                industry: item.industry || '',
-                level: item.ofqual_level_alignment ? 'Level ' + item.ofqual_level_alignment : '',
-                type: item.experience_band || 'Full-time',
-                updated: 'From UAT',
-                linkedQuals: 0,
-                allocated: 0,
-                inProgress: 0,
-                completed: 0,
-                overview: item.description || '',
-                responsibilities: [],
-                qualifications: [],
-                skills: [],
-                experience: item.experience_band || '',
-                _source: 'api',
-                _raw: item
-            }));
+            const cards = results.job_descriptions.map(mapAPIJobToCard);
             jdDataCache.currentData = cards;
             renderJDCards(cards);
         } else {
