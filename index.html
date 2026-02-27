@@ -11409,8 +11409,8 @@ Agent 13 measures its own success by:
             document.getElementById('api-search-spinner').style.display = 'inline';
             document.getElementById('api-search-btn').disabled = true;
             try {
-                const qs = new URLSearchParams({q: searchQuery, limit: '50'});
-                const response = await zavmoFetch(`${baseUrl}/api/deliver/modules/?${qs}`, {
+                const qs = new URLSearchParams({q: searchQuery, limit: '50', type: 'jd'});
+                const response = await zavmoFetch(`${baseUrl}/api/search/unified/?${qs}`, {
                     method: 'GET', headers: {'Accept': 'application/json'}
                 });
                 if (!response.ok) {
@@ -11420,16 +11420,12 @@ Agent 13 measures its own success by:
                     throw new Error(`API returned ${response.status}: ${response.statusText}`);
                 }
                 const data = await response.json();
-                // Validate response: expect data.data.modules from deliver API
-                if (!data || (!data.data && !data.results)) {
+                if (!data) {
                     throw new Error('Unexpected API response format');
-                }
-                if (data.data && data.data.modules) {
-                    // Standard modules response
                 }
                 const parsed = parseUnifiedResponse(data);
 
-                displayAPIModules(parsed);
+                displayAPIModules(parsed, true);
 
             } catch (error) {
                 showToast(error.message, 'error');
@@ -11441,16 +11437,17 @@ Agent 13 measures its own success by:
             }
         }
 
-        function displayAPIModules(data) {
+        function displayAPIModules(data, jdOnly) {
             const container = document.getElementById('api-results-container');
             container.innerHTML = '';
 
             const ofqualUnits = data.ofqual || [];
             const nosItems = data.nos || [];
-            const filtered = [...ofqualUnits, ...nosItems];
+            const jobDescriptions = data.job_descriptions || [];
+            const filtered = jdOnly ? jobDescriptions : [...ofqualUnits, ...nosItems];
 
             if (filtered.length === 0) {
-                container.innerHTML = '<p style="color: #b8c5d6; text-align: center; padding: 20px;">No modules found. Try a different search term.</p>';
+                container.innerHTML = '<p style="color: #b8c5d6; text-align: center; padding: 20px;">No ' + (jdOnly ? 'job descriptions' : 'modules') + ' found. Try a different search term.</p>';
                 container.style.display = 'block';
                 return;
             }
@@ -11458,8 +11455,49 @@ Agent 13 measures its own success by:
             // Show count header
             const countDiv = document.createElement('div');
             countDiv.style.cssText = 'padding: 8px 16px; color: #6b7a8d; font-size: 11px; border-bottom: 1px solid rgba(0,217,192,0.1); position: sticky; top: 0; background: #0e1b2d; z-index: 1;';
-            countDiv.textContent = `${filtered.length} module${filtered.length !== 1 ? 's' : ''} found (${ofqualUnits.length} OFQUAL, ${nosItems.length} NOS) — click a unit to select it`;
+            if (jdOnly) {
+                countDiv.textContent = `${jobDescriptions.length} job description${jobDescriptions.length !== 1 ? 's' : ''} found — click to select`;
+            } else {
+                countDiv.textContent = `${filtered.length} module${filtered.length !== 1 ? 's' : ''} found (${ofqualUnits.length} OFQUAL, ${nosItems.length} NOS) — click a unit to select it`;
+            }
             container.appendChild(countDiv);
+
+            if (jdOnly && jobDescriptions.length > 0) {
+                jobDescriptions.forEach(jd => {
+                    const jdDiv = document.createElement('div');
+                    jdDiv.style.cssText = 'padding: 12px 16px; border-bottom: 1px solid rgba(0,217,192,0.1); cursor: pointer; transition: background 0.2s;';
+                    jdDiv.onmouseenter = () => { if (!jdDiv.classList.contains('selected')) jdDiv.style.background = 'rgba(0,217,192,0.05)'; };
+                    jdDiv.onmouseleave = () => { if (!jdDiv.classList.contains('selected')) jdDiv.style.background = 'transparent'; };
+                    const title = jd.title || jd.job_title || 'Untitled';
+                    const industry = jd.industry || '';
+                    jdDiv.innerHTML = `
+                        <div style="color: #e8ecf1; font-size: 13px; font-weight: 600;">${title}</div>
+                        <div style="color: #6b7a8d; font-size: 11px; margin-top: 3px;">${industry ? 'Industry: ' + industry : ''}</div>
+                        ${(jd.description || '').substring(0, 150) ? `<div style="color: #8a97a8; font-size: 11px; margin-top: 4px;">${(jd.description || '').substring(0, 150)}...</div>` : ''}
+                    `;
+                    jdDiv.addEventListener('click', () => {
+                        container.querySelectorAll('.selected').forEach(el => { el.classList.remove('selected'); el.style.borderColor = 'transparent'; el.style.background = 'transparent'; });
+                        jdDiv.classList.add('selected');
+                        jdDiv.style.background = 'rgba(0,217,192,0.08)';
+                        const jdAsUnit = {
+                            title: title,
+                            unit_id: jd.job_id || jd.id,
+                            ofqual_id: '',
+                            nos_id: '',
+                            level: (jd.ofqual_level_alignment || []).join(', ') || '',
+                            credits: 0,
+                            learning_outcomes: [],
+                            assessment_criteria: [],
+                            description: jd.description || ''
+                        };
+                        selectAPILesson(jdAsUnit);
+                    });
+                    container.appendChild(jdDiv);
+                });
+                container.style.display = 'block';
+                showToast(`Found ${jobDescriptions.length} job description${jobDescriptions.length !== 1 ? 's' : ''}`, 'success');
+                return;
+            }
 
             // Display OFQUAL units
             ofqualUnits.forEach(unit => {
@@ -12062,7 +12100,9 @@ Agent 13 measures its own success by:
             const filterType = document.getElementById('ls-filter-type');
 
             const level = filterLevel ? filterLevel.value : '';
-            const typeFilter = filterType ? filterType.value : '';
+            let typeFilter = filterType ? filterType.value : '';
+            // Learning Specs: default to NOS and OFQUAL only (no JD unless user selects "Job Descriptions Only")
+            if (!typeFilter) typeFilter = 'ofqual,nos';
 
             try {
                 showLSLoading();
@@ -12188,6 +12228,7 @@ Agent 13 measures its own success by:
                 level: item.level || '',
                 credits: item.credits || 0,
                 description: item.description || '',
+                learning_objective: item.learning_objective || '',
                 learning_outcomes: ensureArray(item.learning_outcomes),
                 assessment_criteria: ensureArray(item.assessment_criteria),
                 nos_id: item.nos_id || '',
@@ -12234,7 +12275,14 @@ Agent 13 measures its own success by:
                 score: item.score || 0,
                 industry: item.industry || '',
                 experience_band: item.experience_band || '',
-                ofqual_level_alignment: item.ofqual_level_alignment || ''
+                ofqual_level_alignment: item.ofqual_level_alignment || '',
+                role_overview: item.role_overview || '',
+                key_responsibilities: item.key_responsibilities || '',
+                aligned_qualifications: item.aligned_qualifications || '',
+                role_purpose: item.role_purpose || '',
+                department: item.department || '',
+                functional_skills: item.functional_skills || '',
+                soft_skills: item.soft_skills || ''
             };
         }
 
@@ -12679,8 +12727,9 @@ Agent 13 measures its own success by:
 
         /**
          * Open the detail modal for a specification.
+         * For JD, fetches full details from GET /api/discover/jd/<id>/ then renders.
          */
-        function openLSDetailModal(item, type) {
+        async function openLSDetailModal(item, type) {
             const modal = document.getElementById('ls-detail-modal');
             const titleEl = document.getElementById('ls-modal-title');
             const subtitleEl = document.getElementById('ls-modal-subtitle');
@@ -12709,6 +12758,26 @@ Agent 13 measures its own success by:
 
             // Build body content
             bodyEl.innerHTML = '';
+
+            // For JD, fetch full details from API then render
+            if (type === 'jd' && (item.job_id || item.id)) {
+                bodyEl.innerHTML = '<p style="color: #8a97a8; padding: 16px;">Loading full job description…</p>';
+                modal.classList.add('open');
+                const baseUrl = (typeof LS_API_BASE !== 'undefined' ? LS_API_BASE : ZAVMO_BASE_URL).replace(/\/+$/, '');
+                const jobId = (item.job_id || item.id).toString().trim();
+                try {
+                    const url = `${baseUrl.replace(/\/+$/, '')}/api/discover/jd/${encodeURIComponent(jobId)}/`;
+                    const response = await zavmoFetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
+                    if (response.ok) {
+                        const json = await response.json();
+                        const data = (json.data || json) || item;
+                        item = normaliseJD(data);
+                    }
+                } catch (e) {
+                    console.warn('Failed to load full JD, using list data:', e);
+                }
+                bodyEl.innerHTML = '';
+            }
 
             // Overview / Description
             if (item.overview || item.description) {
@@ -12739,6 +12808,12 @@ Agent 13 measures its own success by:
                         metaSection.appendChild(p);
                     });
                     bodyEl.appendChild(metaSection);
+                }
+
+                // Learning Objective
+                if (item.learning_objective && item.learning_objective.trim()) {
+                    const loSection = createModalSection('Learning Objective', item.learning_objective);
+                    bodyEl.appendChild(loSection);
                 }
 
                 // Learning Outcomes
@@ -12792,17 +12867,41 @@ Agent 13 measures its own success by:
                     const pcSection = createModalListSection('Performance Criteria', item.performance_criteria, 'PC');
                     bodyEl.appendChild(pcSection);
                 }
-                if (item.relevant_roles.length > 0) {
+                if (item.relevant_roles && item.relevant_roles.length > 0) {
                     const rolesSection = createModalSection('Relevant Roles', item.relevant_roles.join(', '));
                     bodyEl.appendChild(rolesSection);
                 }
 
             } else if (type === 'jd') {
+                if (item.role_overview && item.role_overview.trim()) {
+                    bodyEl.appendChild(createModalSection('Role Overview', item.role_overview));
+                }
+                if (item.role_purpose && item.role_purpose.trim()) {
+                    bodyEl.appendChild(createModalSection('Role Purpose', item.role_purpose));
+                }
+                if (item.key_responsibilities && item.key_responsibilities.trim()) {
+                    const text = item.key_responsibilities.trim();
+                    const list = parseListLikeText(text);
+                    if (list.length > 0) {
+                        bodyEl.appendChild(createModalListSection('Key Responsibilities', list, ''));
+                    } else {
+                        bodyEl.appendChild(createModalSection('Key Responsibilities', text));
+                    }
+                }
+                if (item.aligned_qualifications && item.aligned_qualifications.trim()) {
+                    const text = item.aligned_qualifications.trim();
+                    const list = parseListLikeText(text);
+                    if (list.length > 0) {
+                        bodyEl.appendChild(createModalListSection('Aligned Qualifications', list, ''));
+                    } else {
+                        bodyEl.appendChild(createModalSection('Aligned Qualifications', text));
+                    }
+                }
                 const metaLines = [];
-                if (item.job_title) metaLines.push(`Job Title: ${item.job_title}`);
+                if (item.department) metaLines.push(`Department: ${item.department}`);
                 if (item.industry) metaLines.push(`Industry: ${item.industry}`);
                 if (item.experience_band) metaLines.push(`Experience Band: ${item.experience_band}`);
-                if (item.ofqual_level_alignment) metaLines.push(`OFQUAL Level Alignment: Level ${item.ofqual_level_alignment}`);
+                if (item.ofqual_level_alignment) metaLines.push(`OFQUAL Level: ${item.ofqual_level_alignment}`);
 
                 if (metaLines.length > 0) {
                     const metaSection = document.createElement('div');
@@ -12819,9 +12918,61 @@ Agent 13 measures its own success by:
                     });
                     bodyEl.appendChild(metaSection);
                 }
+
+                const skills = parseSkillsForDisplay(item.functional_skills, item.soft_skills);
+                if (skills.length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'ls-modal-section';
+                    const titleEl = document.createElement('div');
+                    titleEl.className = 'ls-modal-section-title';
+                    titleEl.textContent = 'Key Skills';
+                    section.appendChild(titleEl);
+                    const tagContainer = document.createElement('div');
+                    tagContainer.style.cssText = 'display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;';
+                    skills.forEach(s => {
+                        const span = document.createElement('span');
+                        span.style.cssText = 'background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 12px; padding: 4px 10px; border-radius: 6px;';
+                        span.textContent = s;
+                        tagContainer.appendChild(span);
+                    });
+                    section.appendChild(tagContainer);
+                    bodyEl.appendChild(section);
+                }
             }
 
             modal.classList.add('open');
+        }
+
+        /**
+         * Parse text that may be newline- or bullet-separated list into array of items.
+         */
+        function parseListLikeText(text) {
+            if (!text || typeof text !== 'string') return [];
+            return text.split(/\n|•|▪|–|-/).map(s => s.replace(/^\s*\d+[.)]\s*/, '').trim()).filter(Boolean);
+        }
+
+        /**
+         * Parse functional_skills and soft_skills (JSON array or plain text) into array of skill strings.
+         */
+        function parseSkillsForDisplay(functionalSkills, softSkills) {
+            const out = [];
+            function add(val) {
+                if (!val) return;
+                if (typeof val === 'string') {
+                    try {
+                        const parsed = JSON.parse(val);
+                        if (Array.isArray(parsed)) parsed.forEach(s => { if (s && typeof s === 'string') out.push(s); });
+                        else if (typeof parsed === 'object') Object.values(parsed).forEach(add);
+                        else out.push(val.trim());
+                    } catch (_) {
+                        val.split(/[,;\n]/).forEach(s => { if (s.trim()) out.push(s.trim()); });
+                    }
+                } else if (Array.isArray(val)) val.forEach(add);
+                else if (val && typeof val === 'object') Object.values(val).forEach(add);
+            }
+            add(functionalSkills);
+            add(softSkills);
+            return [...new Set(out)].slice(0, 50);
         }
 
         /**

@@ -838,8 +838,7 @@ if (section(10, 'NEO4J / API CONNECTIVITY & DATA FLOW', 'api')) {
         { path: '/api/auth/login/', method: 'POST', purpose: 'User authentication', status: 'implemented' },
         { path: '/api/auth/refresh/', method: 'POST', purpose: 'Token refresh', status: 'implemented' },
         { path: '/api/llm/chat/', method: 'POST', purpose: 'LLM proxy (simulation)', status: 'implemented' },
-        { path: '/api/deliver/modules/', method: 'GET', purpose: 'Fetch learning modules', status: 'implemented' },
-        { path: '/api/search/unified/', method: 'GET', purpose: 'Unified search (OFQUAL, NOS, JD)', status: 'implemented' },
+        { path: '/api/search/unified/', method: 'GET', purpose: 'Unified search (OFQUAL, NOS, JD); Deliver uses ?type=jd', status: 'implemented' },
         { path: '/api/deliver/characters/', method: 'PUT', purpose: 'Save character prompts', status: 'not-built', search: '/api/deliver/characters/' },
         { path: '/api/deliver/teaching-charter/', method: 'PUT', purpose: 'Save teaching charter', status: 'not-built', search: '/api/deliver/teaching-charter/' },
         { path: '/api/xapi/stats/overview', method: 'GET', purpose: 'xAPI overview KPIs', status: 'not-built', search: '/stats/overview' },
@@ -1067,7 +1066,7 @@ if (section(13, 'COMING SOON / FALLBACK DETECTION', 'fallback')) {
     console.log(`  ${COLOURS.green}✓ PULLING FROM NEO4J:${COLOURS.reset}`);
     console.log(`    - Learning Specs search results (OFQUAL, NOS data via /api/search/unified/)`);
     console.log(`    - Job Descriptions search results (via /api/search/unified/?type=jd)`);
-    console.log(`    - Learning modules (via /api/deliver/modules/)`);
+    console.log(`    - Deliver phase: job descriptions (via /api/search/unified/?type=jd)`);
     console.log(`    - LLM simulations (via /api/llm/chat/)`);
     console.log(`  ${COLOURS.yellow}⚠ USING DEMO/FALLBACK DATA:${COLOURS.reset}`);
     console.log(`    - Usage analytics (allocated/in-progress/completed) — "Coming Soon"`);
@@ -1296,7 +1295,7 @@ console.log(`${COLOURS.green}LIVE from Neo4j database:${COLOURS.reset}`);
 console.log(`  ✓ POST /api/auth/login/              — Authentication`);
 console.log(`  ✓ POST /api/auth/refresh/             — Token refresh`);
 console.log(`  ✓ POST /api/llm/chat/                 — LLM simulation proxy`);
-console.log(`  ✓ GET  /api/deliver/modules/           — Learning modules`);
+console.log(`  ✓ GET  /api/search/unified/?type=jd   — Deliver: job descriptions`);
 console.log(`  ✓ GET  /api/search/unified/            — OFQUAL, NOS & JD search`);
 console.log(`${COLOURS.yellow}NOT YET BUILT (using demo/fallback data):${COLOURS.reset}`);
 console.log(`  ⚠ PUT  /api/deliver/characters/{id}/prompt/  — Save character prompts (404)`);

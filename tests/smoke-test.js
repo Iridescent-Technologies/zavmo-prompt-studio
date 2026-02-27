@@ -1142,8 +1142,9 @@ test('Fetch Modules: closeAPIModal removes active class', () => {
 });
 
 // 22d. API endpoint and auth
-test('Fetch Modules: uses /api/deliver/modules/ endpoint', () => {
-    assertIncludes(allScripts, '/api/deliver/modules/', 'Fetch Modules should call /api/deliver/modules/ endpoint');
+test('Fetch Modules: uses /api/search/unified/ with type=jd for deliver phase', () => {
+    assertIncludes(allScripts, '/api/search/unified/', 'Fetch Modules should call /api/search/unified/ endpoint');
+    assertIncludes(allScripts, "type: 'jd'", 'Deliver phase should request type=jd');
 });
 
 test('Fetch Modules: checks authentication before fetching', () => {
