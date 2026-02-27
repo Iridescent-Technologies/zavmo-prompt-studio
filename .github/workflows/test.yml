@@ -23,26 +23,34 @@ jobs:
       - name: Run smoke tests
         run: node tests/smoke-test.js
 
-      - name: Check file size
+      - name: Check total project size
         run: |
-          SIZE=$(stat --printf="%s" index.html)
-          SIZE_KB=$((SIZE / 1024))
-          echo "index.html is ${SIZE_KB}KB"
-          if [ "$SIZE_KB" -gt 1024 ]; then
-            echo "::warning::index.html is ${SIZE_KB}KB — consider splitting into modules"
+          TOTAL=0
+          for f in index.html css/*.css js/*.js; do
+            if [ -f "$f" ]; then
+              S=$(stat --printf="%s" "$f")
+              TOTAL=$((TOTAL + S))
+            fi
+          done
+          TOTAL_KB=$((TOTAL / 1024))
+          echo "Total project size: ${TOTAL_KB}KB (index.html + css/ + js/)"
+          if [ "$TOTAL_KB" -gt 1024 ]; then
+            echo "::notice::Total source is ${TOTAL_KB}KB"
           fi
 
       - name: Check for common issues
         run: |
           echo "Checking for console.log statements..."
-          COUNT=$(grep -c "console\.log" index.html || true)
-          if [ "$COUNT" -gt 20 ]; then
-            echo "::warning::Found $COUNT console.log statements — consider removing debug logs"
+          COUNT=$(grep -rc "console\.log" index.html js/ || true)
+          TOTAL=$(echo "$COUNT" | awk -F: '{s+=$NF} END{print s+0}')
+          if [ "$TOTAL" -gt 20 ]; then
+            echo "::warning::Found $TOTAL console.log statements — consider removing debug logs"
           fi
 
           echo "Checking for TODO/FIXME comments..."
-          TODOS=$(grep -ci "TODO\|FIXME\|HACK\|XXX" index.html || true)
-          if [ "$TODOS" -gt 0 ]; then
-            echo "::notice::Found $TODOS TODO/FIXME comments"
-            grep -n "TODO\|FIXME\|HACK\|XXX" index.html || true
+          TODOS=$(grep -rci "TODO\|FIXME\|HACK\|XXX" index.html js/ || true)
+          TOTAL=$(echo "$TODOS" | awk -F: '{s+=$NF} END{print s+0}')
+          if [ "$TOTAL" -gt 0 ]; then
+            echo "::notice::Found $TOTAL TODO/FIXME comments"
+            grep -rn "TODO\|FIXME\|HACK\|XXX" index.html js/ || true
           fi

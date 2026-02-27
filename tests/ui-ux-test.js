@@ -140,13 +140,19 @@ try {
     process.exit(1);
 }
 
-// Extract all <script> content
+// Extract JavaScript — read external JS files + any remaining inline scripts
+const jsDir = path.join(__dirname, '..', 'js');
+const jsFiles = fs.existsSync(jsDir) ? fs.readdirSync(jsDir).filter(f => f.endsWith('.js')).sort() : [];
+let allScripts = jsFiles.map(f => fs.readFileSync(path.join(jsDir, f), 'utf8')).join('\n');
 const scriptMatches = html.match(/<script[^>]*>([\s\S]*?)<\/script>/gi) || [];
-const allScripts = scriptMatches.map(s => s.replace(/<\/?script[^>]*>/gi, '')).join('\n');
+if (scriptMatches.length) allScripts += '\n' + scriptMatches.map(s => s.replace(/<\/?script[^>]*>/gi, '')).join('\n');
 
-// Extract all <style> content
+// Extract CSS — read external CSS files + any remaining inline styles
+const cssDir = path.join(__dirname, '..', 'css');
+const cssFiles = fs.existsSync(cssDir) ? fs.readdirSync(cssDir).filter(f => f.endsWith('.css')).sort() : [];
+let allStyles = cssFiles.map(f => fs.readFileSync(path.join(cssDir, f), 'utf8')).join('\n');
 const styleMatches = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi) || [];
-const allStyles = styleMatches.map(s => s.replace(/<\/?style[^>]*>/gi, '')).join('\n');
+if (styleMatches.length) allStyles += '\n' + styleMatches.map(s => s.replace(/<\/?style[^>]*>/gi, '')).join('\n');
 
 
 // ============================================================

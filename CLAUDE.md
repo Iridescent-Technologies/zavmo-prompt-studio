@@ -4,7 +4,20 @@ These standards apply to ALL code written for this project. Follow them without 
 
 ## Project Overview
 
-Single-file HTML/CSS/JS application (~8200 lines) for configuring and testing Zavmo AI teaching character prompts. Deployed on GitHub Pages. Backend is Django REST Framework at uat.zavmo.co.uk:8000 with JWT authentication.
+Multi-file static HTML/CSS/JS application for configuring and testing Zavmo AI teaching character prompts. No build tools — all files are loaded directly by the browser. Deployed on GitHub Pages. Backend is Django REST Framework at uat.zavmo.co.uk:8000 with JWT authentication.
+
+File structure:
+- `index.html` — HTML structure only (no inline CSS or JS)
+- `css/styles.css` — All styles
+- `js/auth.js` — Authentication and API wrapper
+- `js/data-qualifications.js` — Qualification data (UK, AU, DE)
+- `js/data-characters.js` — Character definitions and xAPI metadata
+- `js/app-core.js` — Core application logic, state, simulation, chat, Agent 13, tabs
+- `js/page-learning-specs.js` — Learning Specifications page
+- `js/page-xapi-analytics.js` — xAPI Analytics dashboard
+- `js/page-job-descriptions.js` — Job Descriptions page
+
+Load order matters: auth.js must load first, then data files, then app-core, then page modules. Do not reorder `<script>` tags in index.html.
 
 ## ISO Compliance
 
