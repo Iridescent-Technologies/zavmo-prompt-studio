@@ -1,0 +1,13 @@
+# Virtual environments
+zavmo/
+venv/
+.venv/
+env/
+.env/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (if you add Node tooling later)
+node_modules/

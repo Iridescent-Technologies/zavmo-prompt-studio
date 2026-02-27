@@ -11423,7 +11423,13 @@ Agent 13 measures its own success by:
                 if (!data) {
                     throw new Error('Unexpected API response format');
                 }
-                const parsed = parseUnifiedResponse(data);
+                if (data.data != null && !Array.isArray(data.data.modules)) {
+                    throw new Error('Unexpected API response format');
+                }
+                const payload = data.data && Array.isArray(data.data.modules)
+                    ? { job_descriptions: data.data.modules, ofqual: data.data.ofqual || [], nos: data.data.nos || [] }
+                    : data;
+                const parsed = parseUnifiedResponse(payload);
 
                 displayAPIModules(parsed, true);
 
@@ -11447,7 +11453,8 @@ Agent 13 measures its own success by:
             const filtered = jdOnly ? jobDescriptions : [...ofqualUnits, ...nosItems];
 
             if (filtered.length === 0) {
-                container.innerHTML = '<p style="color: #b8c5d6; text-align: center; padding: 20px;">No ' + (jdOnly ? 'job descriptions' : 'modules') + ' found. Try a different search term.</p>';
+                const emptyMsg = jdOnly ? 'No job descriptions found' : 'No modules found';
+                container.innerHTML = '<p style="color: #b8c5d6; text-align: center; padding: 20px;">' + emptyMsg + '. Try a different search term.</p>';
                 container.style.display = 'block';
                 return;
             }
