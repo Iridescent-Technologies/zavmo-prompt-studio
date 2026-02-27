@@ -1,6 +1,6 @@
 // Shared utility — used by multiple page modules
 function escapeHTML(text) {
-    if (\!text) return '';
+    if (!text) return '';
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;

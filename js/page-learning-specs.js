@@ -1158,8 +1158,7 @@ const lsData = [
     {
         title: "BTEC Level 3 National Diploma in Computing",
         body: "OFQUAL",
-        level: "L
-        evel 3",
+        level: "Level 3",
         sector: "Technology",
         type: "BTEC",
         country: "uk",
