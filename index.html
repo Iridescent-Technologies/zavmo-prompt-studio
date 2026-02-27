@@ -12824,13 +12824,14 @@ Agent 13 measures its own success by:
             }
 
             if (type === 'ofqual') {
-                // IDs and metadata
+                // IDs and metadata: ofqual_id, unit_id, nos_id, sector_subject_area, qualification_type, glh, assessment_criteria
                 const metaLines = [];
                 if (item.ofqual_id) metaLines.push(`OFQUAL ID: ${item.ofqual_id}`);
                 if (item.unit_id) metaLines.push(`Unit ID: ${item.unit_id}`);
-                if (item.nos_id) metaLines.push(`Linked NOS: ${item.nos_id} — ${item.nos_title || ''}`);
+                if (item.nos_id) metaLines.push(`Linked NOS: ${item.nos_id}${item.nos_title ? ' — ' + item.nos_title : ''}`);
                 if (item.sector_subject_area) metaLines.push(`Sector: ${item.sector_subject_area}`);
-                if (item.glh) metaLines.push(`Guided Learning Hours: ${item.glh}`);
+                if (item.qualification_type) metaLines.push(`Qualification type: ${item.qualification_type}`);
+                if (item.glh != null && item.glh !== '') metaLines.push(`Guided Learning Hours: ${Number(item.glh)}`);
 
                 if (metaLines.length > 0) {
                     const metaSection = document.createElement('div');
@@ -12848,10 +12849,17 @@ Agent 13 measures its own success by:
                     bodyEl.appendChild(metaSection);
                 }
 
-                // Learning Objective
-                if (item.learning_objective && item.learning_objective.trim()) {
-                    const loSection = createModalSection('Learning Objective', item.learning_objective);
-                    bodyEl.appendChild(loSection);
+                // Learning Objective (always show for OFQUAL; support multi-line as numbered list)
+                const loObjRaw = (item.learning_objective != null && typeof item.learning_objective === 'string') ? item.learning_objective.trim() : '';
+                if (loObjRaw) {
+                    const loObjLines = parseListLikeText(loObjRaw);
+                    if (loObjLines.length > 1) {
+                        bodyEl.appendChild(createModalListSection('Learning Objective', loObjLines, ''));
+                    } else {
+                        bodyEl.appendChild(createModalSection('Learning Objective', loObjRaw));
+                    }
+                } else {
+                    bodyEl.appendChild(createModalSection('Learning Objective', 'Not provided'));
                 }
 
                 // Learning Outcomes
