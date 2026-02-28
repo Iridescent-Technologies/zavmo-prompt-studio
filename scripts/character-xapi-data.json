@@ -1,7 +1,14 @@
 {
   "_description": "Shared character xAPI metadata for Zavmo. Used by both the Prompt Configuration Studio and the live delivery app. Single source of truth for character-specific verbs, Bloom's ranges, Kirkpatrick levels, 4D phases, Growth Mindset indicators, neurodiversity profiles, and Wonders Intelligence types.",
-  "_version": "1.0.0",
-  "_lastUpdated": "2026-02-26",
+  "_version": "1.1.0",
+  "_lastUpdated": "2026-02-28",
+  "_platformVerbs": {
+    "switched-character": {
+      "id": "http://zavmo.ai/verbs/switched-character",
+      "description": "Emitted when a learner switches teaching character mid-lesson. Context extensions include previous_character and new_character specNames for analytics.",
+      "triggeredBy": "Character selection change during active lesson"
+    }
+  },
   "_studioToZavmoMap": {
     "foundation-builder": "builder",
     "challenge-coach": "coach",

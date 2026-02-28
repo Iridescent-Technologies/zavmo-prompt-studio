@@ -103,6 +103,39 @@ function setupEventListeners() {
             const character = characters[currentCharacter];
             const prevChar = characters[previousCharacter];
 
+            // Emit dedicated xAPI statement for character switch (ISO 42001: AI decision traceability)
+            // Data classification: INTERNAL — agent interaction logging
+            const prevXapiData = characterXAPIData[previousCharacter] || characterXAPIData['foundation-builder'];
+            const newXapiData = characterXAPIData[currentCharacter] || characterXAPIData['foundation-builder'];
+            const switchStatement = {
+                actor: { mbox: 'mailto:learner@example.com', name: 'Learner' },
+                verb: {
+                    id: 'http://zavmo.ai/verbs/switched-character',
+                    display: { 'en-US': 'switched-character' }
+                },
+                object: {
+                    id: `https://zavmo.com/lesson/${conversationState.unit.title.toLowerCase().replace(/\s+/g, '-')}`,
+                    definition: {
+                        name: { 'en-US': conversationState.unit.title },
+                        description: { 'en-US': `Switched from ${prevChar.name} to ${character.name}` }
+                    }
+                },
+                context: {
+                    instructor: { name: character.name },
+                    extensions: {
+                        'http://zavmo.ai/extensions/previous_character': prevXapiData.specName,
+                        'http://zavmo.ai/extensions/new_character': newXapiData.specName,
+                        'http://zavmo.ai/extensions/virtual_team_member': newXapiData.specName,
+                        'http://zavmo.ai/extensions/4d_phase': newXapiData.phase4D.toLowerCase(),
+                        'http://zavmo.ai/extensions/bloom_level': newXapiData.bloomsRange[0]?.toLowerCase() || 'understand',
+                        'http://zavmo.ai/extensions/current_lesson_phase': conversationState.phase,
+                        'http://zavmo.ai/extensions/exchange_count': conversationState.exchangeCount
+                    }
+                },
+                timestamp: new Date().toISOString()
+            };
+            addXAPIFeedItem(switchStatement);
+
             // Add a handover message
             addMessageToChat(
                 prevChar.name,
@@ -112,11 +145,16 @@ function setupEventListeners() {
             );
 
             // Update lesson header with new character
-            document.getElementById('lesson-character-name').textContent = character.name;
-            document.getElementById('lesson-character-subtitle').textContent = character.subtitle || 'Expert';
-            document.getElementById('lesson-character-icon').style.color = character.colour;
-            document.getElementById('lesson-sidebar-character').textContent = character.name.toLowerCase().replace(/\s/g, '');
-            document.getElementById('bloom-badge').textContent = `Bloom: ${character.blooms || 'Level 2'} — Understand`;
+            const lessonCharName = document.getElementById('lesson-character-name');
+            const lessonCharSubtitle = document.getElementById('lesson-character-subtitle');
+            const lessonCharIcon = document.getElementById('lesson-character-icon');
+            const lessonSidebarChar = document.getElementById('lesson-sidebar-character');
+            const bloomBadge = document.getElementById('bloom-badge');
+            if (lessonCharName) lessonCharName.textContent = character.name;
+            if (lessonCharSubtitle) lessonCharSubtitle.textContent = character.subtitle || 'Expert';
+            if (lessonCharIcon) lessonCharIcon.style.color = character.colour;
+            if (lessonSidebarChar) lessonSidebarChar.textContent = character.name.toLowerCase().replace(/\s/g, '');
+            if (bloomBadge) bloomBadge.textContent = `Bloom: ${character.blooms || 'Level 2'} — Understand`;
 
             // New character introduces themselves with a phase-appropriate response
             setTimeout(() => {
@@ -1148,17 +1186,24 @@ function updateSidebarACs() {
         const checkbox = document.getElementById('sidebar-ac-check-' + ac.id);
         const item = document.getElementById('sidebar-ac-' + ac.id);
         if (!checkbox || !item) return;
+        const labelSpan = item.querySelector('span');
         const status = progressState.acStatuses[ac.id];
         if (status === 'met') {
             checkbox.style.background = '#4CAF50';
             checkbox.style.borderColor = '#4CAF50';
             checkbox.innerHTML = '<span style="color:#0d1e36;font-size:10px;display:flex;align-items:center;justify-content:center;height:100%;">✓</span>';
-            if (item.querySelector('span')) item.querySelector('span').style.color = '#4CAF50';
+            if (labelSpan) labelSpan.style.color = '#4CAF50';
         } else if (status === 'in-progress') {
             checkbox.style.background = 'rgba(91,155,213,0.3)';
             checkbox.style.borderColor = '#5B9BD5';
             checkbox.innerHTML = '';
-            if (item.querySelector('span')) item.querySelector('span').style.color = '#b8c5d6';
+            if (labelSpan) labelSpan.style.color = '#b8c5d6';
+        } else {
+            // Reset to not-started state
+            checkbox.style.background = 'transparent';
+            checkbox.style.borderColor = '#5B9BD5';
+            checkbox.innerHTML = '';
+            if (labelSpan) labelSpan.style.color = '#8899aa';
         }
     });
 }
@@ -1169,17 +1214,24 @@ function updateSidebarLOs() {
         const checkbox = document.getElementById('sidebar-check-' + lo.id);
         const item = document.getElementById('sidebar-lo-' + lo.id);
         if (!checkbox || !item) return;
+        const labelSpan = item.querySelector('span');
         const status = progressState.loStatuses[lo.id];
         if (status === 'met') {
             checkbox.style.background = '#00d9c0';
             checkbox.style.borderColor = '#00d9c0';
             checkbox.innerHTML = '<span style="color:#0d1e36;font-size:10px;display:flex;align-items:center;justify-content:center;height:100%;">✓</span>';
-            item.querySelector('span').style.color = '#00d9c0';
+            if (labelSpan) labelSpan.style.color = '#00d9c0';
         } else if (status === 'in-progress') {
             checkbox.style.background = 'rgba(255,140,66,0.3)';
             checkbox.style.borderColor = '#FF8C42';
             checkbox.innerHTML = '';
-            item.querySelector('span').style.color = '#b8c5d6';
+            if (labelSpan) labelSpan.style.color = '#b8c5d6';
+        } else {
+            // Reset to not-started state
+            checkbox.style.background = 'transparent';
+            checkbox.style.borderColor = '#3a4a5c';
+            checkbox.innerHTML = '';
+            if (labelSpan) labelSpan.style.color = '#8899aa';
         }
     });
 }
