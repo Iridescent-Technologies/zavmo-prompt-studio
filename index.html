@@ -246,12 +246,17 @@
                 </div>
                 <!-- END UNIT CONFIGURATION BAR -->
 
-                <!-- SIMULATION + COMPARISON SIDE-BY-SIDE -->
-                <div style="display: flex; flex: 1; min-height: 0;">
+                <!-- SUB-TAB BAR: Simulation | Compare Teachers -->
+                <div class="sim-sub-tabs" id="sim-sub-tabs">
+                    <button class="sim-sub-tab active" data-sim-tab="simulation" id="sim-sub-tab-simulation">Simulation</button>
+                    <button class="sim-sub-tab" data-sim-tab="comparison" id="sim-sub-tab-comparison">Compare Teachers</button>
+                </div>
 
-                <!-- SIMULATION SIDE -->
-                <div class="panel" id="simulation-panel" style="flex: 3; min-width: 0; overflow-y: auto; padding: 32px; background: #0a1628; border-right: 1px solid rgba(26, 58, 92, 0.5);">
-                    <h2 class="section-header">Simulation</h2>
+                <!-- SIMULATION + COMPARISON (tabbed, full width) -->
+                <div style="flex: 1; min-height: 0; position: relative;">
+
+                <!-- SIMULATION TAB -->
+                <div class="panel sim-tab-panel active" id="simulation-panel" style="min-width: 0; overflow-y: auto; padding: 32px; background: #0a1628;">
                     <div class="tab-content active" id="simulation-tab">
                         <!-- PRE-LESSON VIEW -->
                         <div class="pre-lesson-view" id="pre-lesson-view">
@@ -451,18 +456,16 @@
                 </div>
                 <!-- END SIMULATION SIDE -->
 
-                <!-- COMPARISON SIDE -->
-                <div class="panel" id="comparison-panel" style="flex: 2; min-width: 0; overflow-y: auto; padding: 32px; background: #0a1628;">
-                    <h2 class="section-header">Comparison</h2>
+                <!-- COMPARE TEACHERS TAB -->
+                <div class="panel sim-tab-panel" id="comparison-panel" style="min-width: 0; overflow-y: auto; padding: 32px; background: #0a1628; display: none;">
                     <div class="tab-content active" id="comparison-tab">
-                        <button class="button button-primary" id="compare-teachers-btn" style="width: 100%; margin-bottom: 24px;">Compare Teachers</button>
                         <div class="comparison-container" id="comparison-container"></div>
                     </div>
                 </div>
-                <!-- END COMPARISON SIDE -->
+                <!-- END COMPARE TEACHERS TAB -->
 
                 </div>
-                <!-- END SIMULATION + COMPARISON SIDE-BY-SIDE -->
+                <!-- END SIMULATION + COMPARISON TABBED -->
             </div>
             <!-- END SIM & COMPARE PAGE -->
 
