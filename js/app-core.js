@@ -197,8 +197,13 @@ function setupEventListeners() {
     loadAgent13PromptEditor();
     displayRecommendationsPanel();
 
-    // Comparison
-    document.getElementById('compare-teachers-btn').addEventListener('click', compareTeachers);
+    // Simulation sub-tabs (Simulation | Compare Teachers)
+    document.querySelectorAll('.sim-sub-tab[data-sim-tab]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const tabName = e.target.getAttribute('data-sim-tab');
+            switchSimSubTab(tabName);
+        });
+    });
 
     // Navigation tabs (header)
     document.querySelectorAll('.nav-tab[data-tab]').forEach(btn => {
@@ -2388,10 +2393,12 @@ function compareTeachers() {
 
 function selectCharacterFromComparison(charKey) {
     currentCharacter = charKey;
-    document.getElementById('character-select').value = charKey;
+    const charSelect = document.getElementById('character-select');
+    if (charSelect) charSelect.value = charKey;
     loadCharacterData(charKey);
-    compareTeachers(); // Refresh to update active state
     showToast('Switched to ' + characters[charKey].name, 'success');
+    // Switch back to simulation tab so user can begin testing
+    switchSimSubTab('simulation');
 }
 
 function generateConversationSnippets(characterKey, unit) {
@@ -3163,6 +3170,44 @@ function displayRecommendationsPanel() {
         container.innerHTML = '<div class="rec-empty">' + msgs[currentRecTab] + '</div>';
     } else {
         container.innerHTML = items.map(rec => renderRecCard(rec, currentRecTab === 'pending')).join('');
+    }
+}
+
+function switchSimSubTab(tabName) {
+    // Update sub-tab active states
+    const tabs = document.querySelectorAll('.sim-sub-tab');
+    tabs.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-sim-tab') === tabName) {
+            btn.classList.add('active');
+        }
+    });
+
+    // Show/hide panels
+    const simPanel = document.getElementById('simulation-panel');
+    const compPanel = document.getElementById('comparison-panel');
+
+    if (simPanel) {
+        simPanel.classList.remove('active');
+        simPanel.style.display = 'none';
+    }
+    if (compPanel) {
+        compPanel.classList.remove('active');
+        compPanel.style.display = 'none';
+    }
+
+    if (tabName === 'simulation') {
+        if (simPanel) {
+            simPanel.classList.add('active');
+            simPanel.style.display = 'block';
+        }
+    } else if (tabName === 'comparison') {
+        if (compPanel) {
+            compPanel.classList.add('active');
+            compPanel.style.display = 'block';
+        }
+        // Auto-load comparison cards when switching to tab
+        compareTeachers();
     }
 }
 

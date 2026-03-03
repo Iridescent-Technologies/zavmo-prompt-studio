@@ -1521,10 +1521,56 @@ input[type="range"]::-moz-range-thumb:hover {
     width: 100%;
 }
 
+/* SIMULATION SUB-TABS */
+.sim-sub-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 32px;
+    background: rgba(10, 22, 40, 0.6);
+    border-bottom: 1px solid rgba(26, 58, 92, 0.5);
+}
+
+.sim-sub-tab {
+    padding: 12px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #6b7c93;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sim-sub-tab:hover {
+    color: #b8c5d6;
+}
+
+.sim-sub-tab.active {
+    color: #00d9c0;
+    border-bottom-color: #00d9c0;
+}
+
+.sim-tab-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    display: none;
+}
+
+.sim-tab-panel.active {
+    display: block;
+}
+
 /* COMPARISON PANEL */
 .comparison-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
     flex: 1;
     overflow-y: auto;
