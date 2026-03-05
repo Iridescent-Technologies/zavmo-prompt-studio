@@ -858,7 +858,7 @@ function initializeSimulation() {
         // Build dropdown items from the characters object
         function buildSimCharDropdown() {
             charDropdownMenu.innerHTML = '';
-            for (const key of Object.keys(characters)) {
+            for (const key of Object.keys(characters).filter(k => k !== 'agent-13')) {
                 const c = characters[key];
                 const item = document.createElement('div');
                 item.className = 'sim-char-dropdown-item' + (key === currentCharacter ? ' active' : '');
