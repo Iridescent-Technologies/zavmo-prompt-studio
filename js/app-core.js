@@ -3917,19 +3917,16 @@ const STUDIO_TO_ZAVMO_MAP = {
     'foundation-builder': 'builder',
     'challenge-coach': 'coach',
     'career-navigator': 'navigator',
-    'experiment-space': null,         // No direct match yet
+    'experiment-space': 'explorer',
     'pattern-connector': 'connector',
-    'practical-builder': null,        // No direct match yet
+    'practical-builder': 'practitioner',
     'systems-analyst': 'analyst',
     'collaboration-guide': 'collaborator',
-    'creative-catalyst': null,        // No direct match yet
-    'evidence-evaluator': 'challenger',
-    'qualification-certifier': null,  // No direct match yet
-    'integrator': null                // No direct match yet
+    'creative-catalyst': 'catalyst',
+    'evidence-evaluator': 'evaluator',
+    'qualification-certifier': 'certifier',
+    'integrator': 'integrator'
 };
-
-// Zavmo characters that exist in backend but not in Studio
-// storyteller → no match in Studio
 
 function getZavmoApiSettings() {
     const saved = localStorage.getItem('zavmo_api_settings');
@@ -4052,6 +4049,44 @@ async function pushCurrentPromptToZavmo() {
     }
 }
 
+async function pushTeachingCharterToZavmo() {
+    const btn = document.getElementById('push-charter-btn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '&#8987; Pushing...';
+    btn.disabled = true;
+
+    try {
+        if (!getAccessToken()) {
+            showToast('Backend not authenticated. Please reload the page.', 'error');
+            return;
+        }
+
+        const settings = getZavmoApiSettings();
+        const response = await zavmoFetch(`${settings.baseUrl}/api/deliver/teaching-charter/`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                teaching_charter: currentTeachingCharter,
+                updated_from: 'prompt-studio',
+                updated_by: sessionStorage.getItem('zavmo_access') || 'unknown'
+            })
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            showToast(`Charter push failed: ${response.status} — ${text}`, 'error');
+            return;
+        }
+
+        showToast('Teaching Charter pushed to Zavmo', 'success');
+    } catch (e) {
+        showToast('Charter push failed: ' + e.message, 'error');
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+
 async function pushAllPromptsToZavmo() {
     const btn = document.getElementById('push-all-zavmo-btn');
     const originalText = btn.innerHTML;
@@ -4093,6 +4128,7 @@ async function pushAllPromptsToZavmo() {
 
         // Also push Teaching Charter
         if (results.errors.length === 0 || !results.errors[0]?.includes('endpoint')) {
+            btn.innerHTML = '&#8987; Pushing Teaching Charter...';
             try {
                 const settings = getZavmoApiSettings();
                 const charterResp = await zavmoFetch(`${settings.baseUrl}/api/deliver/teaching-charter/`, {
@@ -4104,8 +4140,16 @@ async function pushAllPromptsToZavmo() {
                         updated_by: sessionStorage.getItem('zavmo_access') || 'unknown'
                     })
                 });
-                // Teaching charter push is bonus — don't break on failure
-            } catch (e) {}
+                if (charterResp.ok) {
+                    results.charterPushed = true;
+                } else {
+                    results.charterPushed = false;
+                    results.errors.push('Teaching Charter: API error ' + charterResp.status);
+                }
+            } catch (e) {
+                results.charterPushed = false;
+                results.errors.push('Teaching Charter: ' + e.message);
+            }
         }
 
         if (results.errors.length > 0 && results.errors[0]?.includes('endpoint')) {
@@ -4122,8 +4166,9 @@ async function pushAllPromptsToZavmo() {
                 exportAllPrompts();
             }
         } else {
+            const charterStatus = results.charterPushed ? ' + Teaching Charter' : '';
             showToast(
-                `Push complete: ${results.success} pushed, ${results.skipped} skipped (no mapping), ${results.failed} failed`,
+                `Push complete: ${results.success} characters${charterStatus} pushed, ${results.skipped} skipped, ${results.failed} failed`,
                 results.failed > 0 ? 'error' : 'success'
             );
         }
@@ -4138,6 +4183,7 @@ async function pushAllPromptsToZavmo() {
 // Wire up Push to Zavmo buttons
 document.getElementById('push-to-zavmo-btn').addEventListener('click', pushCurrentPromptToZavmo);
 document.getElementById('push-all-zavmo-btn').addEventListener('click', pushAllPromptsToZavmo);
+document.getElementById('push-charter-btn').addEventListener('click', pushTeachingCharterToZavmo);
 
 // API token is now handled automatically via Zavmo backend login
 
