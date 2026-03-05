@@ -851,13 +851,90 @@ function initializeSimulation() {
         });
     }
 
-    // Character dropdown
+    // Character dropdown — populate and toggle
     const charDropdown = document.getElementById('lesson-character-dropdown');
-    if (charDropdown) {
-        charDropdown.addEventListener('click', () => {
-            showToast('Character selection coming soon', 'info');
+    const charDropdownMenu = document.getElementById('sim-char-dropdown');
+    if (charDropdown && charDropdownMenu) {
+        // Build dropdown items from the characters object
+        function buildSimCharDropdown() {
+            charDropdownMenu.innerHTML = '';
+            for (const key of Object.keys(characters)) {
+                const c = characters[key];
+                const item = document.createElement('div');
+                item.className = 'sim-char-dropdown-item' + (key === currentCharacter ? ' active' : '');
+                item.dataset.charKey = key;
+                item.innerHTML = `<span class="sim-char-dot" style="background:${c.colour}"></span><span>${c.name}</span>`;
+                item.addEventListener('click', () => {
+                    switchSimCharacter(key);
+                    charDropdownMenu.classList.remove('open');
+                });
+                charDropdownMenu.appendChild(item);
+            }
+        }
+        buildSimCharDropdown();
+
+        charDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            buildSimCharDropdown(); // refresh active state
+            charDropdownMenu.classList.toggle('open');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!charDropdownMenu.contains(e.target) && e.target !== charDropdown) {
+                charDropdownMenu.classList.remove('open');
+            }
         });
     }
+}
+
+/**
+ * Switch character in the simulation view (mid-lesson or before starting).
+ */
+function switchSimCharacter(charKey) {
+    if (charKey === currentCharacter) return;
+    const previousCharacter = currentCharacter;
+    currentCharacter = charKey;
+
+    const character = characters[charKey];
+    if (!character) return;
+
+    // Sync the main character-select dropdown
+    const charSelect = document.getElementById('character-select');
+    if (charSelect) charSelect.value = charKey;
+    loadCharacterData(charKey);
+
+    // Update simulation header
+    const lessonCharName = document.getElementById('lesson-character-name');
+    const lessonCharSubtitle = document.getElementById('lesson-character-subtitle');
+    const lessonCharIcon = document.getElementById('lesson-character-icon');
+    const lessonSidebarChar = document.getElementById('lesson-sidebar-character');
+    const bloomBadge = document.getElementById('bloom-badge');
+    if (lessonCharName) lessonCharName.textContent = character.name;
+    if (lessonCharSubtitle) lessonCharSubtitle.textContent = character.subtitle || 'Expert';
+    if (lessonCharIcon) lessonCharIcon.style.color = character.colour;
+    if (lessonSidebarChar) lessonSidebarChar.textContent = character.name.toLowerCase().replace(/\s/g, '');
+    if (bloomBadge) bloomBadge.textContent = `Bloom: ${character.blooms || 'Level 2'} — Understand`;
+
+    // If a lesson is in progress, hand over in the chat
+    if (conversationState.unit && conversationState.phase !== 'COMPLETE') {
+        const prevChar = characters[previousCharacter];
+        if (prevChar) {
+            addMessageToChat(
+                prevChar.name,
+                `I'm going to hand you over to ${character.name} now — they'll continue working with you on "${conversationState.unit.title}". You're in great hands!`,
+                prevChar.colour,
+                getXAPIVerb(conversationState.phase)
+            );
+        }
+        setTimeout(() => {
+            const response = generateCharacterResponse(character, conversationState.phase);
+            addMessageToChat(character.name, response, character.colour, getXAPIVerb(conversationState.phase));
+            updateXAPIPreview(character, conversationState.unit.title);
+        }, 500);
+    }
+
+    showToast('Switched to ' + character.name, 'success');
 }
 
 function onAPIProviderChange(e) {
