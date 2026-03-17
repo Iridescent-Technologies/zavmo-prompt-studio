@@ -537,6 +537,11 @@
                                     <option value="5">Level 5</option>
                                     <option value="6">Level 6</option>
                                 </select>
+                                <select id="ls-filter-source" class="jd-filter-dropdown" aria-label="Filter by source type">
+                                    <option value="">All Types</option>
+                                    <option value="qualification">Qualification</option>
+                                    <option value="skills">Skills</option>
+                                </select>
                             </div>
                         </div>
 
@@ -598,6 +603,9 @@
                                 <div class="ls-empty-text">Enter a keyword to explore OFQUAL qualifications, NOS standards, and job descriptions stored in Neo4j</div>
                             </div>
                         </div>
+
+                        <!-- Pagination -->
+                        <div id="ls-pagination" style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 24px; padding-bottom: 16px;"></div>
 
                     </div>
                 </div>

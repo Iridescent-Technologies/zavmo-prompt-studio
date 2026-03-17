@@ -15,7 +15,9 @@ const lsDataCache = {
     sectors: new Set(),
     currentSort: 'popular',
     apiCards: null,
-    currentData: null
+    currentData: null,
+    currentPage: 1,
+    allSortedCards: null
 };
 
 let lsSearchTimeout = null;
@@ -60,9 +62,11 @@ function initLearningSpecsPage() {
     const filterLevel = document.getElementById('ls-filter-level');
     const filterSector = document.getElementById('ls-filter-sector');
     const filterType = document.getElementById('ls-filter-type');
+    const filterSource = document.getElementById('ls-filter-source');
     if (filterLevel) filterLevel.addEventListener('change', onLSFilterChange);
     if (filterSector) filterSector.addEventListener('change', onLSFilterChange);
     if (filterType) filterType.addEventListener('change', onLSFilterChange);
+    if (filterSource) filterSource.addEventListener('change', onLSFilterChange);
 
     // Wire up clear filters
     const clearBtn = document.getElementById('ls-clear-filters');
@@ -130,25 +134,33 @@ function clearLSFilters() {
     const filterLevel = document.getElementById('ls-filter-level');
     const filterSector = document.getElementById('ls-filter-sector');
     const filterType = document.getElementById('ls-filter-type');
+    const filterSource = document.getElementById('ls-filter-source');
 
     if (searchInput) searchInput.value = '';
     if (filterLevel) filterLevel.value = '';
     if (filterSector) filterSector.value = '';
     if (filterType) filterType.value = '';
+    if (filterSource) filterSource.value = '';
 
-    // Clear results and show empty state
-    const container = document.getElementById('ls-results-container');
+    // Clear cards from grid (preserve the grid element itself)
+    const grid = document.getElementById('ls-results-grid');
+    if (grid) grid.innerHTML = '';
+
+    // Clear pagination
+    const paginationEl = document.getElementById('ls-pagination');
+    if (paginationEl) paginationEl.innerHTML = '';
+
+    // Hide results header, show empty state
     const header = document.getElementById('ls-results-header');
     const emptyState = document.getElementById('ls-empty-state');
-    if (container) container.innerHTML = '';
     if (header) header.style.display = 'none';
-    if (emptyState) {
-        container.appendChild(emptyState);
-        emptyState.style.display = '';
-    }
+    if (emptyState) emptyState.style.display = '';
 
     lsDataCache.results = null;
     lsDataCache.lastQuery = '';
+    lsDataCache.currentPage = 1;
+    lsDataCache.allSortedCards = null;
+    lsDataCache.currentData = null;
 }
 
 /**
@@ -161,12 +173,14 @@ async function executeLSSearch() {
     if (!query) return;
 
     const filterLevel = document.getElementById('ls-filter-level');
-    const filterType = document.getElementById('ls-filter-type');
+    const filterSource = document.getElementById('ls-filter-source');
 
     const level = filterLevel ? filterLevel.value : '';
-    let typeFilter = filterType ? filterType.value : '';
-    // Learning Specs: default to NOS and OFQUAL only (no JD unless user selects "Job Descriptions Only")
-    if (!typeFilter) typeFilter = 'ofqual,nos';
+    const sourceVal = filterSource ? filterSource.value : '';
+    // Map frontend labels to backend type values
+    let typeFilter = 'ofqual,nos';
+    if (sourceVal === 'qualification') typeFilter = 'ofqual';
+    else if (sourceVal === 'skills') typeFilter = 'nos';
 
     try {
         showLSLoading();
@@ -184,9 +198,7 @@ async function executeLSSearch() {
             populateSectorFilter();
         }
 
-        displayLSResults(data, lsDataCache.activeTab);
-
-        // Also update card grid view
+        // Build card array and render as grid (always card view)
         const cards = [];
         data.ofqual.forEach(item => {
             cards.push({
@@ -218,10 +230,23 @@ async function executeLSSearch() {
                 _source: 'api', _raw: item
             });
         });
+
         if (cards.length > 0) {
             lsDataCache.apiCards = cards;
+            lsDataCache.currentPage = 1;
             renderLSCards(cards);
+        } else {
+            showLSEmpty('No results found. Try a different search term or adjust your filters.');
         }
+
+        // Update results header
+        const header = document.getElementById('ls-results-header');
+        const countEl = document.getElementById('ls-results-count');
+        const queryEl = document.getElementById('ls-results-query');
+        if (header) header.style.display = cards.length > 0 ? 'flex' : 'none';
+        if (countEl) countEl.textContent = `${cards.length} result${cards.length !== 1 ? 's' : ''}`;
+        if (queryEl) queryEl.textContent = query ? `for "${query}"` : '';
+
     } catch (err) {
         showToast('Search failed: ' + (err.message || 'Unknown error'), 'error');
         showLSEmpty('Search failed. Please check your connection and try again.');
@@ -1332,12 +1357,34 @@ async function loadRealLSData() {
     }
 }
 
-function renderLSCards(data) {
-    const grid = document.getElementById('ls-results-grid');
-    if (!grid) return;
+const LS_PAGE_SIZE = 10;
+
+function renderLSCards(data, page) {
+    const currentPage = page || 1;
+    lsDataCache.currentPage = currentPage;
+
+    // Ensure the grid element exists (may have been wiped by other operations)
+    let grid = document.getElementById('ls-results-grid');
+    if (!grid) {
+        const container = document.getElementById('ls-results-container');
+        if (!container) return;
+        // Clear any stale accordion content and recreate the grid
+        container.innerHTML = '';
+        grid = document.createElement('div');
+        grid.className = 'ls-results-grid';
+        grid.id = 'ls-results-grid';
+        container.appendChild(grid);
+        // Re-append the empty state element
+        const emptyState = document.getElementById('ls-empty-state');
+        if (emptyState) container.appendChild(emptyState);
+    }
     grid.innerHTML = '';
 
-    // Store current data for search re-filtering
+    // Hide empty state
+    const emptyState = document.getElementById('ls-empty-state');
+    if (emptyState) emptyState.style.display = 'none';
+
+    // Store current data for pagination
     lsDataCache.currentData = data;
 
     // Sort based on selected option
@@ -1348,15 +1395,20 @@ function renderLSCards(data) {
             const totalB = (b.enrolled || 0) + (b.inProgress || 0) + (b.completed || 0);
             return totalB - totalA;
         } else if (sortMode === 'recent') {
-            // Parse "X days ago" format — for demo, just compare title length or use fixed order
-            return 0; // Keep original order for "recently updated"
+            return 0;
         } else if (sortMode === 'alpha') {
             return (a.title || '').localeCompare(b.title || '');
         }
         return 0;
     });
 
-    sortedData.forEach((ls, index) => {
+    lsDataCache.allSortedCards = sortedData;
+
+    // Paginate: show 10 per page
+    const start = (currentPage - 1) * LS_PAGE_SIZE;
+    const pageData = sortedData.slice(start, start + LS_PAGE_SIZE);
+
+    pageData.forEach((ls, index) => {
         const card = document.createElement('div');
         card.className = 'ls-card';
 
@@ -1408,5 +1460,67 @@ function renderLSCards(data) {
 
     var resultCount = document.getElementById('ls-results-count');
     if (resultCount) resultCount.textContent = data.length + ' results';
+
+    renderLSPagination(data.length, currentPage);
+}
+
+/**
+ * Render pagination controls below the card grid.
+ */
+function renderLSPagination(totalCount, currentPage) {
+    const container = document.getElementById('ls-pagination');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const totalPages = Math.ceil(totalCount / LS_PAGE_SIZE);
+    if (totalPages <= 1) return;
+
+    const btnStyle = 'display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;padding:0 10px;border-radius:8px;border:1px solid rgba(26,58,92,0.6);background:rgba(10,22,40,0.7);color:#b8c5d6;font-size:13px;cursor:pointer;transition:all 0.15s;font-family:inherit;';
+    const activeBtnStyle = 'display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;padding:0 10px;border-radius:8px;border:1px solid rgba(0,217,192,0.5);background:rgba(0,217,192,0.15);color:#00d9c0;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600;';
+    const disabledBtnStyle = 'display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;padding:0 10px;border-radius:8px;border:1px solid rgba(26,58,92,0.3);background:rgba(10,22,40,0.3);color:#3a4a5c;font-size:13px;cursor:default;font-family:inherit;';
+
+    // Previous
+    const prevBtn = document.createElement('button');
+    prevBtn.innerHTML = '&#8592;';
+    prevBtn.style.cssText = currentPage === 1 ? disabledBtnStyle : btnStyle;
+    prevBtn.disabled = currentPage === 1;
+    if (currentPage > 1) {
+        prevBtn.addEventListener('click', () => goToLSPage(currentPage - 1));
+    }
+    container.appendChild(prevBtn);
+
+    // Page number buttons (show up to 7 pages around current)
+    const startPage = Math.max(1, currentPage - 3);
+    const endPage = Math.min(totalPages, startPage + 6);
+    for (let p = startPage; p <= endPage; p++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.textContent = p;
+        pageBtn.style.cssText = p === currentPage ? activeBtnStyle : btnStyle;
+        if (p !== currentPage) {
+            pageBtn.addEventListener('click', (function(pg) { return () => goToLSPage(pg); })(p));
+        }
+        container.appendChild(pageBtn);
+    }
+
+    // Next
+    const nextBtn = document.createElement('button');
+    nextBtn.innerHTML = '&#8594;';
+    nextBtn.style.cssText = currentPage === totalPages ? disabledBtnStyle : btnStyle;
+    nextBtn.disabled = currentPage === totalPages;
+    if (currentPage < totalPages) {
+        nextBtn.addEventListener('click', () => goToLSPage(currentPage + 1));
+    }
+    container.appendChild(nextBtn);
+}
+
+/**
+ * Navigate to a page in the card grid without re-fetching.
+ */
+function goToLSPage(page) {
+    if (!lsDataCache.currentData) return;
+    renderLSCards(lsDataCache.currentData, page);
+    // Scroll to top of results
+    const header = document.getElementById('ls-results-header');
+    if (header) header.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
