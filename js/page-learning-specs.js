@@ -942,10 +942,17 @@ async function openLSDetailModal(item, type) {
                     const allLOs = [];
                     const allACs = [];
                     units.forEach(u => {
-                        if (u.learning_outcomes && u.learning_outcomes.length) allLOs.push(...u.learning_outcomes);
-                        if (u.assessment_criteria && u.assessment_criteria.length) allACs.push(...u.assessment_criteria);
+                        const uLOs = ensureArray(u.learning_outcomes);
+                        const uACs = ensureArray(u.assessment_criteria);
+                        if (uLOs.length) allLOs.push(...uLOs);
+                        if (uACs.length) allACs.push(...uACs);
                     });
-                    if (allLOs.length > 0) item = Object.assign({}, item, { learning_outcomes: allLOs, assessment_criteria: allACs, _units: units });
+                    // Always attach _units for the per-unit breakdown; merge LOs/ACs if found
+                    item = Object.assign({}, item, {
+                        learning_outcomes: allLOs.length > 0 ? allLOs : item.learning_outcomes,
+                        assessment_criteria: allACs.length > 0 ? allACs : item.assessment_criteria,
+                        _units: units
+                    });
                 }
             }
         } catch (e) {
@@ -1071,14 +1078,15 @@ async function openLSDetailModal(item, type) {
                     unitBlock.appendChild(desc);
                 }
 
-                if (unit.learning_outcomes && unit.learning_outcomes.length > 0) {
+                const unitLOs = ensureArray(unit.learning_outcomes);
+                if (unitLOs.length > 0) {
                     const loLabel = document.createElement('p');
                     loLabel.style.cssText = 'color:#8a97a8;font-size:11px;font-weight:600;margin:6px 0 4px 0;text-transform:uppercase;letter-spacing:0.5px;';
-                    loLabel.textContent = `Learning Outcomes (${unit.learning_outcomes.length})`;
+                    loLabel.textContent = `Learning Outcomes (${unitLOs.length})`;
                     unitBlock.appendChild(loLabel);
                     const loList = document.createElement('ul');
                     loList.style.cssText = 'margin:0;padding-left:16px;';
-                    unit.learning_outcomes.forEach(lo => {
+                    unitLOs.forEach(lo => {
                         const li = document.createElement('li');
                         li.style.cssText = 'color:#b8c5d6;font-size:12px;margin-bottom:3px;';
                         li.textContent = lo;
@@ -1087,14 +1095,15 @@ async function openLSDetailModal(item, type) {
                     unitBlock.appendChild(loList);
                 }
 
-                if (unit.assessment_criteria && unit.assessment_criteria.length > 0) {
+                const unitACs = ensureArray(unit.assessment_criteria);
+                if (unitACs.length > 0) {
                     const acLabel = document.createElement('p');
                     acLabel.style.cssText = 'color:#8a97a8;font-size:11px;font-weight:600;margin:8px 0 4px 0;text-transform:uppercase;letter-spacing:0.5px;';
-                    acLabel.textContent = `Assessment Criteria (${unit.assessment_criteria.length})`;
+                    acLabel.textContent = `Assessment Criteria (${unitACs.length})`;
                     unitBlock.appendChild(acLabel);
                     const acList = document.createElement('ul');
                     acList.style.cssText = 'margin:0;padding-left:16px;';
-                    unit.assessment_criteria.forEach(ac => {
+                    unitACs.forEach(ac => {
                         const li = document.createElement('li');
                         li.style.cssText = 'color:#b8c5d6;font-size:12px;margin-bottom:3px;';
                         li.textContent = ac;
