@@ -17,7 +17,8 @@ const lsDataCache = {
     apiCards: null,
     currentData: null,
     currentPage: 1,
-    allSortedCards: null
+    allSortedCards: null,
+    masterCards: null   // full unfiltered result set — filters work on this
 };
 
 let lsSearchTimeout = null;
@@ -121,9 +122,62 @@ function onLSSearchInput() {
 
 /**
  * Handler for filter dropdown changes.
+ * If data is already loaded, apply filters client-side without hitting the API.
  */
 function onLSFilterChange() {
-    executeLSSearch();
+    if (lsDataCache.masterCards && lsDataCache.masterCards.length > 0) {
+        applyLSFiltersClientSide();
+    } else {
+        executeLSSearch();
+    }
+}
+
+/**
+ * Filter the already-fetched masterCards using current filter selections and re-render.
+ */
+function applyLSFiltersClientSide() {
+    const filterLevel = document.getElementById('ls-filter-level');
+    const filterSource = document.getElementById('ls-filter-source');
+
+    const levelVal = filterLevel ? filterLevel.value : '';
+    const sourceVal = filterSource ? filterSource.value : '';
+
+    let filtered = lsDataCache.masterCards.slice();
+
+    // Source filter: "qualification" → OFQUAL only, "skills" → NOS only
+    if (sourceVal === 'qualification') {
+        filtered = filtered.filter(c => c.body === 'OFQUAL');
+    } else if (sourceVal === 'skills') {
+        filtered = filtered.filter(c => c.body === 'NOS');
+    }
+
+    // Level filter: match "Level X" string
+    if (levelVal) {
+        filtered = filtered.filter(c => {
+            const lvl = (c.level || '').toLowerCase();
+            return lvl === 'level ' + levelVal || lvl.includes(levelVal);
+        });
+    }
+
+    lsDataCache.currentPage = 1;
+
+    // Update results header
+    const header = document.getElementById('ls-results-header');
+    const countEl = document.getElementById('ls-results-count');
+    const queryEl = document.getElementById('ls-results-query');
+    if (header) header.style.display = filtered.length > 0 ? 'flex' : 'none';
+    if (countEl) countEl.textContent = `${filtered.length} result${filtered.length !== 1 ? 's' : ''}`;
+    if (queryEl) queryEl.textContent = lsDataCache.lastQuery ? `for "${lsDataCache.lastQuery}"` : '';
+
+    if (filtered.length > 0) {
+        renderLSCards(filtered);
+    } else {
+        const grid = document.getElementById('ls-results-grid');
+        if (grid) grid.innerHTML = '';
+        const paginationEl = document.getElementById('ls-pagination');
+        if (paginationEl) paginationEl.innerHTML = '';
+        showLSEmpty('No results match the selected filters.');
+    }
 }
 
 /**
@@ -161,6 +215,7 @@ function clearLSFilters() {
     lsDataCache.currentPage = 1;
     lsDataCache.allSortedCards = null;
     lsDataCache.currentData = null;
+    lsDataCache.masterCards = null;
 }
 
 /**
@@ -173,14 +228,10 @@ async function executeLSSearch() {
     if (!query) return;
 
     const filterLevel = document.getElementById('ls-filter-level');
-    const filterSource = document.getElementById('ls-filter-source');
 
     const level = filterLevel ? filterLevel.value : '';
-    const sourceVal = filterSource ? filterSource.value : '';
-    // Map frontend labels to backend type values
-    let typeFilter = 'ofqual,nos';
-    if (sourceVal === 'qualification') typeFilter = 'ofqual';
-    else if (sourceVal === 'skills') typeFilter = 'nos';
+    // Always fetch both OFQUAL and NOS — client-side filters will narrow down
+    const typeFilter = 'ofqual,nos';
 
     try {
         showLSLoading();
@@ -198,7 +249,7 @@ async function executeLSSearch() {
             populateSectorFilter();
         }
 
-        // Build card array and render as grid (always card view)
+        // Build full card set (master) — all OFQUAL + NOS from this query
         const cards = [];
         data.ofqual.forEach(item => {
             cards.push({
@@ -231,21 +282,13 @@ async function executeLSSearch() {
             });
         });
 
-        if (cards.length > 0) {
-            lsDataCache.apiCards = cards;
-            lsDataCache.currentPage = 1;
-            renderLSCards(cards);
-        } else {
-            showLSEmpty('No results found. Try a different search term or adjust your filters.');
-        }
+        // Store as master — subsequent filter changes use this without re-fetching
+        lsDataCache.masterCards = cards;
+        lsDataCache.apiCards = cards;
+        lsDataCache.currentPage = 1;
 
-        // Update results header
-        const header = document.getElementById('ls-results-header');
-        const countEl = document.getElementById('ls-results-count');
-        const queryEl = document.getElementById('ls-results-query');
-        if (header) header.style.display = cards.length > 0 ? 'flex' : 'none';
-        if (countEl) countEl.textContent = `${cards.length} result${cards.length !== 1 ? 's' : ''}`;
-        if (queryEl) queryEl.textContent = query ? `for "${query}"` : '';
+        // Apply any already-selected filters on the fresh data
+        applyLSFiltersClientSide();
 
     } catch (err) {
         showToast('Search failed: ' + (err.message || 'Unknown error'), 'error');
@@ -868,27 +911,49 @@ async function openLSDetailModal(item, type) {
     if (subtitleEl) subtitleEl.textContent = subtitleParts.join(' · ');
 
     // Build body content
-    bodyEl.innerHTML = '';
+    bodyEl.innerHTML = '<p style="color: #8a97a8; padding: 16px; text-align:center;">Loading details…</p>';
+    modal.classList.add('open');
 
-    // For JD, fetch full details from API then render
+    const baseUrl = (typeof LS_API_BASE !== 'undefined' ? LS_API_BASE : ZAVMO_BASE_URL).replace(/\/+$/, '');
+
+    // Fetch full details from Neo4j based on type
     if (type === 'jd' && (item.job_id || item.id)) {
-        bodyEl.innerHTML = '<p style="color: #8a97a8; padding: 16px;">Loading full job description…</p>';
-        modal.classList.add('open');
-        const baseUrl = (typeof LS_API_BASE !== 'undefined' ? LS_API_BASE : ZAVMO_BASE_URL).replace(/\/+$/, '');
         const jobId = (item.job_id || item.id).toString().trim();
         try {
-            const url = `${baseUrl.replace(/\/+$/, '')}/api/discover/jd/${encodeURIComponent(jobId)}/`;
+            const url = `${baseUrl}/api/discover/jd/${encodeURIComponent(jobId)}/`;
             const response = await zavmoFetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
             if (response.ok) {
                 const json = await response.json();
-                const data = (json.data || json) || item;
-                item = normaliseJD(data);
+                item = normaliseJD((json.data || json) || item);
             }
         } catch (e) {
             console.warn('Failed to load full JD, using list data:', e);
         }
-        bodyEl.innerHTML = '';
+    } else if (type === 'ofqual' && item.ofqual_id) {
+        // Fetch all units for this OFQUAL qualification from Neo4j
+        try {
+            const url = `${baseUrl}/api/qualifications/${encodeURIComponent(item.ofqual_id)}/units/`;
+            const response = await zavmoFetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
+            if (response.ok) {
+                const json = await response.json();
+                const units = (json.data && json.data.units) ? json.data.units : [];
+                if (units.length > 0) {
+                    // Merge unit details back into item
+                    const allLOs = [];
+                    const allACs = [];
+                    units.forEach(u => {
+                        if (u.learning_outcomes && u.learning_outcomes.length) allLOs.push(...u.learning_outcomes);
+                        if (u.assessment_criteria && u.assessment_criteria.length) allACs.push(...u.assessment_criteria);
+                    });
+                    if (allLOs.length > 0) item = Object.assign({}, item, { learning_outcomes: allLOs, assessment_criteria: allACs, _units: units });
+                }
+            }
+        } catch (e) {
+            console.warn('Failed to load OFQUAL units, using search data:', e);
+        }
     }
+
+    bodyEl.innerHTML = '';
 
     // Overview / Description
     if (item.overview || item.description) {
@@ -975,6 +1040,85 @@ async function openLSDetailModal(item, type) {
             });
             acSection.appendChild(acList);
             bodyEl.appendChild(acSection);
+        }
+
+        // Units breakdown (from Neo4j full fetch)
+        if (item._units && item._units.length > 0) {
+            const unitsSection = document.createElement('div');
+            unitsSection.className = 'ls-modal-section';
+            const unitsTitle = document.createElement('div');
+            unitsTitle.className = 'ls-modal-section-title';
+            unitsTitle.textContent = `Units (${item._units.length})`;
+            unitsSection.appendChild(unitsTitle);
+
+            item._units.forEach((unit, ui) => {
+                const unitBlock = document.createElement('div');
+                unitBlock.style.cssText = 'background: rgba(10,22,40,0.5); border: 1px solid rgba(26,58,92,0.4); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;';
+
+                const unitHeader = document.createElement('div');
+                unitHeader.style.cssText = 'display:flex; align-items:center; gap:10px; margin-bottom:8px;';
+                unitHeader.innerHTML = `
+                    <span style="background:rgba(0,217,192,0.12);color:#00d9c0;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;">Unit ${ui + 1}</span>
+                    <span style="color:#ffffff;font-size:13px;font-weight:600;">${escapeHTML(unit.unit_title || unit.unit_id || '')}</span>
+                    ${unit.total_credits ? `<span style="color:#6b7c93;font-size:11px;margin-left:auto;">${unit.total_credits} credits</span>` : ''}
+                `;
+                unitBlock.appendChild(unitHeader);
+
+                if (unit.unit_description) {
+                    const desc = document.createElement('p');
+                    desc.style.cssText = 'color:#b8c5d6;font-size:12px;margin:0 0 8px 0;line-height:1.5;';
+                    desc.textContent = unit.unit_description;
+                    unitBlock.appendChild(desc);
+                }
+
+                if (unit.learning_outcomes && unit.learning_outcomes.length > 0) {
+                    const loLabel = document.createElement('p');
+                    loLabel.style.cssText = 'color:#8a97a8;font-size:11px;font-weight:600;margin:6px 0 4px 0;text-transform:uppercase;letter-spacing:0.5px;';
+                    loLabel.textContent = `Learning Outcomes (${unit.learning_outcomes.length})`;
+                    unitBlock.appendChild(loLabel);
+                    const loList = document.createElement('ul');
+                    loList.style.cssText = 'margin:0;padding-left:16px;';
+                    unit.learning_outcomes.forEach(lo => {
+                        const li = document.createElement('li');
+                        li.style.cssText = 'color:#b8c5d6;font-size:12px;margin-bottom:3px;';
+                        li.textContent = lo;
+                        loList.appendChild(li);
+                    });
+                    unitBlock.appendChild(loList);
+                }
+
+                if (unit.assessment_criteria && unit.assessment_criteria.length > 0) {
+                    const acLabel = document.createElement('p');
+                    acLabel.style.cssText = 'color:#8a97a8;font-size:11px;font-weight:600;margin:8px 0 4px 0;text-transform:uppercase;letter-spacing:0.5px;';
+                    acLabel.textContent = `Assessment Criteria (${unit.assessment_criteria.length})`;
+                    unitBlock.appendChild(acLabel);
+                    const acList = document.createElement('ul');
+                    acList.style.cssText = 'margin:0;padding-left:16px;';
+                    unit.assessment_criteria.forEach(ac => {
+                        const li = document.createElement('li');
+                        li.style.cssText = 'color:#b8c5d6;font-size:12px;margin-bottom:3px;';
+                        li.textContent = ac;
+                        acList.appendChild(li);
+                    });
+                    unitBlock.appendChild(acList);
+                }
+
+                if (unit.mapped_nos && unit.mapped_nos.length > 0) {
+                    const nosLabel = document.createElement('p');
+                    nosLabel.style.cssText = 'color:#8a97a8;font-size:11px;font-weight:600;margin:8px 0 4px 0;text-transform:uppercase;letter-spacing:0.5px;';
+                    nosLabel.textContent = 'Mapped NOS Standards';
+                    unitBlock.appendChild(nosLabel);
+                    unit.mapped_nos.forEach(n => {
+                        const tag = document.createElement('span');
+                        tag.style.cssText = 'display:inline-block;background:rgba(0,217,192,0.08);border:1px solid rgba(0,217,192,0.2);color:#00d9c0;font-size:11px;padding:2px 8px;border-radius:4px;margin:2px 4px 2px 0;';
+                        tag.textContent = n.nos_id + (n.title ? ' — ' + n.title : '');
+                        unitBlock.appendChild(tag);
+                    });
+                }
+
+                unitsSection.appendChild(unitBlock);
+            });
+            bodyEl.appendChild(unitsSection);
         }
 
     } else if (type === 'nos') {
@@ -1455,6 +1599,36 @@ function renderLSCards(data, page) {
                 </span>
             </div>
         `;
+
+        // Make the card clickable — open detail modal
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (function(cardData) {
+            return function() {
+                const itemType = cardData.body === 'OFQUAL' ? 'ofqual' : 'nos';
+                let rawItem;
+                if (cardData._source === 'api' && cardData._raw) {
+                    rawItem = cardData._raw;
+                } else {
+                    // Demo data: build a compatible item for the modal
+                    rawItem = {
+                        title: cardData.title,
+                        description: cardData.overview || '',
+                        overview: cardData.overview || '',
+                        level: (cardData.level || '').replace('Level ', ''),
+                        sector_subject_area: cardData.sector || '',
+                        industry: cardData.sector || '',
+                        qualification_type: cardData.type || '',
+                        learning_outcomes: Array.isArray(cardData.units) ? cardData.units : [],
+                        assessment_criteria: [],
+                        knowledge_understanding: [],
+                        performance_criteria: Array.isArray(cardData.units) ? cardData.units : [],
+                        qualification_level: cardData.level || ''
+                    };
+                }
+                openLSDetailModal(rawItem, itemType);
+            };
+        })(ls));
+
         grid.appendChild(card);
     });
 
