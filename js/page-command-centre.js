@@ -260,6 +260,34 @@ function initNeuralNetwork() {
 }
 
 // ══════════════════════════════════════════════════════════════════
+// TEACHING PROMPTS PAGE — collapsible charter toggle
+// ══════════════════════════════════════════════════════════════════
+
+function initChartersToggle() {
+    const toggle = document.getElementById('charter-toggle');
+    const body = document.getElementById('charter-body');
+    if (!toggle || !body) return;
+
+    // Avoid binding multiple times
+    if (toggle.dataset.bound === 'true') return;
+    toggle.dataset.bound = 'true';
+
+    toggle.addEventListener('click', function () {
+        const expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+        body.classList.toggle('cc-collapsed', expanded);
+    });
+
+    // Keyboard accessibility — Enter or Space to toggle
+    toggle.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+        }
+    });
+}
+
+// ══════════════════════════════════════════════════════════════════
 // ORG PULSE PAGE (placeholder for future expansion)
 // ══════════════════════════════════════════════════════════════════
 

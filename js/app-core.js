@@ -172,8 +172,7 @@ function setupEventListeners() {
     // Save prompt
     document.getElementById('save-prompt-btn').addEventListener('click', savePrompt);
     document.getElementById('copy-prompt-btn').addEventListener('click', copyPromptToClipboard);
-    document.getElementById('export-all-btn').addEventListener('click', exportAllPrompts);
-    document.getElementById('import-btn').addEventListener('click', importPrompts);
+    // Export/Import buttons removed to reduce cognitive load (Phase 2a)
 
     // Teaching Charter
     document.getElementById('save-charter-btn').addEventListener('click', saveTeachingCharter);
@@ -3350,8 +3349,9 @@ function switchNavTab(tabName, clickedBtn) {
         if (commandCentrePage) commandCentrePage.style.display = 'block';
         initCommandCentre();
     } else if (tabName === 'characters') {
-        // Characters page: full-width dashboard (mirrors Agent 13)
+        // Teaching Prompts page: character prompt configuration
         if (charactersPage) charactersPage.style.display = 'block';
+        if (typeof initChartersToggle === 'function') initChartersToggle();
     } else if (tabName === 'agent13') {
         // Agent 13 page: full width dashboard
         if (agent13Page) agent13Page.style.display = 'block';
