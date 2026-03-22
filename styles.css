@@ -4635,6 +4635,432 @@ input[type="range"]::-moz-range-thumb:hover {
             opacity: 0.35;
         }
 
+        /* ==========================================================
+           PHASE 2 — LIGHTENED PAGE STYLES
+           Shared classes for the cleaner, calmer page redesign.
+           All prefixed with cc- to avoid collisions.
+           ========================================================== */
+
+        /* --- Page-level layout --- */
+        .cc-page-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cc-page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(0, 217, 192, 0.12);
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .cc-page-title {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0 0 6px 0;
+            line-height: 1.2;
+        }
+
+        .cc-page-subtitle {
+            color: var(--text-secondary, #b8c5d6);
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.6;
+            max-width: 520px;
+        }
+
+        .cc-page-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* --- Select dropdown --- */
+        .cc-select {
+            background: rgba(0, 217, 192, 0.08);
+            border: 1px solid rgba(0, 217, 192, 0.25);
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            min-width: 240px;
+            transition: border-color 0.3s ease;
+        }
+        .cc-select:hover,
+        .cc-select:focus {
+            border-color: rgba(0, 217, 192, 0.5);
+            outline: none;
+        }
+
+        /* --- Button styles --- */
+        .cc-btn-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .cc-btn-primary {
+            background: #00d9c0;
+            border: none;
+            color: #0a1628;
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+        .cc-btn-primary:hover {
+            background: #00ffeb;
+            box-shadow: 0 0 16px rgba(0, 217, 192, 0.3);
+        }
+
+        .cc-btn-secondary {
+            background: rgba(0, 217, 192, 0.12);
+            border: 1px solid rgba(0, 217, 192, 0.25);
+            color: #00d9c0;
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+        .cc-btn-secondary:hover {
+            background: rgba(0, 217, 192, 0.2);
+            border-color: rgba(0, 217, 192, 0.45);
+        }
+
+        .cc-btn-ghost {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.65);
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+        .cc-btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .cc-btn-push {
+            background: linear-gradient(135deg, #7c3aed, #00d9c0);
+            border: none;
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+        .cc-btn-push:hover {
+            box-shadow: 0 0 20px rgba(0, 217, 192, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .cc-btn-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            align-items: center;
+        }
+
+        /* --- Metadata strip (horizontal, compact) --- */
+        .cc-meta-strip {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 28px;
+            padding: 14px 24px;
+            background: rgba(0, 217, 192, 0.04);
+            border: 1px solid rgba(0, 217, 192, 0.12);
+            border-radius: 12px;
+        }
+
+        .cc-meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            flex: 1;
+            padding: 0 20px;
+        }
+        .cc-meta-item:first-child {
+            padding-left: 0;
+        }
+
+        .cc-meta-label {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .cc-meta-value {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .cc-meta-teal {
+            color: #00d9c0;
+            font-weight: 600;
+        }
+
+        .cc-meta-divider {
+            width: 1px;
+            height: 28px;
+            background: rgba(0, 217, 192, 0.15);
+            flex-shrink: 0;
+        }
+
+        /* --- Charter banner (always visible, prominent) --- */
+        .cc-charter-banner {
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, rgba(0, 217, 192, 0.06) 0%, rgba(13, 30, 54, 0.8) 100%);
+            border: 1px solid rgba(0, 217, 192, 0.2);
+            border-radius: 14px;
+            padding: 18px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cc-charter-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d9c0, transparent);
+            opacity: 0.6;
+        }
+
+        .cc-charter-banner-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .cc-charter-banner-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .cc-charter-icon {
+            fill: none;
+            stroke: #00d9c0;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+            opacity: 0.8;
+        }
+
+        .cc-charter-banner-title {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cc-charter-status {
+            background: rgba(0, 217, 192, 0.15);
+            color: #00d9c0;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cc-charter-banner-preview {
+            color: var(--text-secondary, #b8c5d6);
+            font-size: 12px;
+            line-height: 1.5;
+            opacity: 0.7;
+        }
+
+        .cc-btn-expand {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* --- Section cards (charter, prompt) --- */
+        .cc-section-card {
+            margin-bottom: 24px;
+            background: rgba(13, 30, 54, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(26, 58, 92, 0.5);
+            border-radius: 16px;
+            padding: 24px;
+            transition: border-color 0.4s ease;
+        }
+        .cc-section-card:hover {
+            border-color: rgba(0, 217, 192, 0.2);
+        }
+
+        .cc-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .cc-section-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cc-section-title {
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+        }
+
+        .cc-section-chevron {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.4);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+        [aria-expanded="true"] .cc-section-chevron {
+            transform: rotate(180deg);
+        }
+
+        .cc-section-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .cc-badge {
+            background: rgba(0, 217, 192, 0.1);
+            color: rgba(0, 217, 192, 0.7);
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .cc-badge-edit {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .cc-section-desc {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 12px 0 16px 0;
+        }
+
+        /* --- Collapsible body --- */
+        .cc-section-body {
+            overflow: hidden;
+            max-height: 2000px;
+            opacity: 1;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.4s ease,
+                        margin-top 0.4s ease;
+            margin-top: 16px;
+        }
+        .cc-section-body.cc-collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        /* --- Code preview --- */
+        .cc-code-preview {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            padding: 16px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .cc-code-text {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 12px;
+            line-height: 1.7;
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: inherit;
+        }
+
+        /* --- Textareas --- */
+        .cc-textarea {
+            width: 100%;
+            min-height: 400px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 217, 192, 0.2);
+            border-radius: 10px;
+            padding: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+            line-height: 1.7;
+            resize: vertical;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+        .cc-textarea:focus {
+            border-color: rgba(0, 217, 192, 0.45);
+            outline: none;
+        }
+
+        .cc-textarea-main {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+
+        .cc-save-status {
+            display: none;
+            color: #00d9c0;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+
+        /* --- Responsive: stack on smaller screens --- */
+        @media (max-width: 768px) {
+            .cc-page-header {
+                flex-direction: column;
+            }
+            .cc-meta-strip {
+                flex-direction: column;
+                gap: 12px;
+                padding: 16px;
+            }
+            .cc-meta-divider {
+                width: 100%;
+                height: 1px;
+            }
+            .cc-meta-item {
+                padding: 0;
+            }
+        }
+
         /* === REDUCED MOTION === */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
