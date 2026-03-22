@@ -27,23 +27,221 @@
         <!-- HEADER -->
         <header class="header">
             <div class="header-content">
-                <div class="logo-section">
+                <div class="logo-section" id="nav-home" style="cursor: pointer;" role="button" aria-label="Command Centre home">
                     <div class="logo">ZAVMO</div>
                     <div class="logo-subtitle">Prompt Configuration Studio</div>
                 </div>
                 <nav class="nav-tabs">
-                    <button class="nav-tab active" data-tab="characters">Characters</button>
-                    <button class="nav-tab" data-tab="agent13" style="color: #00d9c0;">Agent 13</button>
-                    <button class="nav-tab" data-tab="sim-compare">Simulation & Comparison</button>
-                    <button class="nav-tab" data-tab="learning-specs">Learning Specs</button>
-                    <button class="nav-tab" data-tab="job-descriptions">Job Descriptions</button>
-                    <button class="nav-tab" data-tab="xapi-analytics">xAPI Analytics</button>
+                    <button class="nav-tab" data-tab="command-centre" style="color: #00d9c0; font-weight: 500;">ZAVMO</button>
+
+                    <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 32px;">
+                        <!-- Characters -->
+                        <button class="nav-icon" data-tab="characters" data-tooltip="Characters" aria-label="Characters">
+                            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </button>
+                        <!-- Agent 13 -->
+                        <button class="nav-icon teal-accent" data-tab="agent13" data-tooltip="Agent 13" aria-label="Agent 13">
+                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </button>
+                        <!-- Simulation & Comparison -->
+                        <button class="nav-icon" data-tab="sim-compare" data-tooltip="Sim & Comparison" aria-label="Simulation and Comparison">
+                            <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                        </button>
+                        <!-- Learning Specs -->
+                        <button class="nav-icon" data-tab="learning-specs" data-tooltip="Learning Specs" aria-label="Learning Specs">
+                            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        </button>
+                        <!-- Job Descriptions -->
+                        <button class="nav-icon" data-tab="job-descriptions" data-tooltip="Job Descriptions" aria-label="Job Descriptions">
+                            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                        </button>
+                        <!-- xAPI Analytics -->
+                        <button class="nav-icon" data-tab="xapi-analytics" data-tooltip="xAPI Analytics" aria-label="xAPI Analytics">
+                            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        </button>
+                        <!-- Org Pulse -->
+                        <button class="nav-icon" data-tab="org-pulse" data-tooltip="Org Pulse" aria-label="Organisation Pulse and Insights">
+                            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        </button>
+                        <!-- User Management -->
+                        <button class="nav-icon" data-tab="user-management" data-tooltip="User Management" aria-label="User Management">
+                            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </button>
+                    </div>
+
+                    <!-- Profile — right justified -->
+                    <button class="nav-icon" data-tab="profile" data-tooltip="Profile" aria-label="Profile" style="margin-left: auto;">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M6.168 18.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></svg>
+                    </button>
                 </nav>
             </div>
         </header>
 
         <!-- MAIN CONTENT -->
         <div class="main-content">
+            <!-- NEURAL NETWORK BACKGROUND CANVAS -->
+            <canvas id="cc-neural-canvas"></canvas>
+
+            <!-- COMMAND CENTRE PAGE (homepage) -->
+            <div id="command-centre-page" style="width: 100%; height: 100vh; display: none; overflow-y: auto;">
+                <!-- Centre stage greeting and chat -->
+                <div class="cc-centre-stage">
+                    <!-- GREETING -->
+                    <div class="cc-greeting">
+                        <div class="cc-greeting-text">Hello, <span class="cc-name">there</span></div>
+                        <div class="cc-greeting-sub">Welcome to the Command Centre</div>
+                    </div>
+
+                    <!-- FLOATING DIALOGUE BOX -->
+                    <div class="cc-console-wrapper">
+                        <div class="cc-console-label">Zavmo Intelligence</div>
+                        <div class="cc-chat-panel">
+                            <div class="cc-chat-messages" id="cc-chat-messages">
+                                <div class="cc-chat-msg zavmo" id="cc-welcome-msg">
+                                    Good morning. You have <strong class="cc-teal">1,247 active learners</strong> across your organisation today.
+                                    <span class="cc-insight-line" id="cc-insight-0">Engagement is up <span class="cc-teal">4.2%</span> this week — your best week since January.</span>
+                                    <span class="cc-insight-line" id="cc-insight-1"><span class="cc-teal">3 pending invitations</span> are awaiting approval for the Manchester cohort.</span>
+                                    <span class="cc-insight-line" id="cc-insight-2">Agent 13 has flagged <span class="cc-teal">2 learners</span> showing early signs of disengagement.</span>
+                                    <span class="cc-insight-line" id="cc-insight-3">Top performer this week: <span class="cc-teal">Customer Service L3, London</span> at 87% completion.</span>
+                                    <span class="cc-insight-line" id="cc-insight-4">Skills gap alert: <span class="cc-teal">Data Analysis</span> mastery is at 34% — down 3% from last month.</span>
+                                    <span class="cc-insight-line" id="cc-insight-5">Completion velocity has improved — learners are finishing <span class="cc-teal">2 days faster</span> on average.</span>
+                                    <span class="cc-insight-line" id="cc-insight-6"><span class="cc-teal">23 new starters</span> have no courses allocated yet. Shall I suggest some?</span>
+                                    <span class="cc-insight-line" id="cc-insight-7">Bloom's mastery: <span class="cc-teal">89%</span> at Remember, but only <span class="cc-teal">18%</span> reaching Create level.</span>
+                                </div>
+                            </div>
+                            <div class="cc-typing-indicator" id="cc-typing-indicator">
+                                <div class="cc-typing-dot"></div>
+                                <div class="cc-typing-dot"></div>
+                                <div class="cc-typing-dot"></div>
+                            </div>
+                            <div class="cc-chat-input-row">
+                                <input type="text" class="cc-chat-input" id="cc-chat-input" placeholder="Ask me anything about your organisation's learning..." aria-label="Ask Zavmo Intelligence a question">
+                                <button class="cc-chat-send" id="cc-chat-send" aria-label="Send message">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORG PULSE PAGE -->
+            <div id="org-pulse-page" class="cc-tab-page cc-pulse-page" style="display: none;">
+                <div class="cc-pulse-header">
+                    <div class="cc-pulse-title">Organisation Pulse</div>
+                    <div class="cc-pulse-sub">Real-time overview of your organisation's learning health</div>
+                </div>
+
+                <div class="cc-kpi-row">
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">Active Learners</div>
+                        <div class="cc-kpi-value">1,247</div>
+                        <div class="cc-kpi-change up">+12% vs last month</div>
+                    </div>
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">Engagement Rate</div>
+                        <div class="cc-kpi-value">78%</div>
+                        <div class="cc-kpi-change up">+4.2% this week</div>
+                    </div>
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">ROI Indicator</div>
+                        <div class="cc-kpi-value">3.2x<span class="cc-kpi-unit">return</span></div>
+                        <div class="cc-kpi-change up">+0.4x vs Q3</div>
+                    </div>
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">Completion Velocity</div>
+                        <div class="cc-kpi-value">14<span class="cc-kpi-unit">days avg</span></div>
+                        <div class="cc-kpi-change up">-2 days faster</div>
+                    </div>
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">Hours Saved</div>
+                        <div class="cc-kpi-value">2,840<span class="cc-kpi-unit">hrs</span></div>
+                        <div class="cc-kpi-change neutral">This quarter</div>
+                    </div>
+                </div>
+
+                <div class="cc-insight-grid">
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Bloom's Mastery Distribution</div>
+                        <div class="cc-bloom-ladder">
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Create</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:18%"></div></div><div class="cc-bloom-pct">18%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Evaluate</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:24%"></div></div><div class="cc-bloom-pct">24%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Analyse</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:35%"></div></div><div class="cc-bloom-pct">35%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Apply</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:52%"></div></div><div class="cc-bloom-pct">52%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Understand</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:71%"></div></div><div class="cc-bloom-pct">71%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Remember</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:89%"></div></div><div class="cc-bloom-pct">89%</div></div>
+                        </div>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Top Content This Week</div>
+                        <ul class="cc-pulse-list">
+                            <li><span>Health &amp; Safety L2</span><span class="cc-pl-val">342</span></li>
+                            <li><span>Customer Service L3</span><span class="cc-pl-val">287</span></li>
+                            <li><span>Leadership &amp; Mgmt L5</span><span class="cc-pl-val">198</span></li>
+                            <li><span>Digital Skills L2</span><span class="cc-pl-val">156</span></li>
+                            <li><span>Project Management L4</span><span class="cc-pl-val">134</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Top Learning Streams</div>
+                        <ul class="cc-pulse-list">
+                            <li><span>Compliance &amp; Regulation</span><span class="cc-pl-val">28%</span></li>
+                            <li><span>Leadership Development</span><span class="cc-pl-val">22%</span></li>
+                            <li><span>Technical Skills</span><span class="cc-pl-val">19%</span></li>
+                            <li><span>Customer Experience</span><span class="cc-pl-val">17%</span></li>
+                            <li><span>Digital Transformation</span><span class="cc-pl-val">14%</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Character Interactions</div>
+                        <div class="cc-char-grid">
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">BU</div><div class="cc-char-dot-label">Builder</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CO</div><div class="cc-char-dot-label">Coach</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">NA</div><div class="cc-char-dot-label">Navigator</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">EX</div><div class="cc-char-dot-label">Explorer</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CN</div><div class="cc-char-dot-label">Connector</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">PR</div><div class="cc-char-dot-label">Practitioner</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">AN</div><div class="cc-char-dot-label">Analyst</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CL</div><div class="cc-char-dot-label">Collaborator</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CT</div><div class="cc-char-dot-label">Catalyst</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">EV</div><div class="cc-char-dot-label">Evaluator</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CE</div><div class="cc-char-dot-label">Certifier</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">IN</div><div class="cc-char-dot-label">Integrator</div></div>
+                        </div>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Learners Pursuing Roles</div>
+                        <ul class="cc-pulse-list">
+                            <li><span>Financial Analyst</span><span class="cc-pl-val">89</span></li>
+                            <li><span>Project Manager</span><span class="cc-pl-val">76</span></li>
+                            <li><span>Team Leader</span><span class="cc-pl-val">64</span></li>
+                            <li><span>Data Analyst</span><span class="cc-pl-val">51</span></li>
+                            <li><span>Operations Manager</span><span class="cc-pl-val">43</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Skills Gap Analysis</div>
+                        <ul class="cc-pulse-list">
+                            <li><span>Communication</span><span class="cc-pl-val" style="color:#22c55e">82%</span></li>
+                            <li><span>H&amp;S Compliance</span><span class="cc-pl-val" style="color:#22c55e">79%</span></li>
+                            <li><span>Leadership</span><span class="cc-pl-val">58%</span></li>
+                            <li><span>Project Management</span><span class="cc-pl-val" style="color:#f59e0b">41%</span></li>
+                            <li><span>Data Analysis</span><span class="cc-pl-val" style="color:#ef4444">34%</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USER MANAGEMENT PAGE (placeholder) -->
+            <div id="user-management-page" class="cc-tab-page cc-placeholder-page" style="display: none;">
+                <svg class="cc-placeholder-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <div class="cc-placeholder-title">User Management</div>
+                <div class="cc-placeholder-desc">Add users, manage teams, assign roles, and handle allocations and invitations. Coming soon.</div>
+            </div>
+
             <!-- LEFT PANEL: CHARACTER PROMPTS -->
             <!-- CHARACTERS PAGE (full-width, mirrors Agent 13 layout) -->
             <div id="characters-page" style="width: 100%; overflow-y: auto;">
@@ -1733,6 +1931,7 @@
     <script src="js/data-qualifications.js"></script>
     <script src="js/data-characters.js"></script>
     <script src="js/app-core.js"></script>
+    <script src="js/page-command-centre.js"></script>
     <script src="js/page-learning-specs.js"></script>
     <script src="js/page-xapi-analytics.js"></script>
     <script src="js/page-job-descriptions.js"></script>
