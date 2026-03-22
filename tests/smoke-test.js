@@ -1442,7 +1442,7 @@ test('xAPI Analytics: nav tab button exists in HTML', () => {
 });
 
 test('xAPI Analytics: nav tab has correct label', () => {
-    assertIncludes(html, '>xAPI Analytics</button>', 'Nav tab must display "xAPI Analytics"');
+    assertIncludes(html, 'data-tooltip="xAPI Analytics"', 'Nav tab must have xAPI Analytics tooltip');
 });
 
 // 24b. Page container
