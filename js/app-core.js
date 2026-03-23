@@ -71,6 +71,9 @@ function initializeApp() {
     // Populate qualifications for the default country on page load
     const countrySelect = document.getElementById('country-select');
     onCountryChange({ target: countrySelect });
+
+    // Show Command Centre as default page on load
+    switchNavTab('command-centre', document.querySelector('[data-tab="command-centre"]'));
 }
 
 function initializeCollapsibles() {
@@ -169,8 +172,7 @@ function setupEventListeners() {
     // Save prompt
     document.getElementById('save-prompt-btn').addEventListener('click', savePrompt);
     document.getElementById('copy-prompt-btn').addEventListener('click', copyPromptToClipboard);
-    document.getElementById('export-all-btn').addEventListener('click', exportAllPrompts);
-    document.getElementById('import-btn').addEventListener('click', importPrompts);
+    // Export/Import buttons removed to reduce cognitive load (Phase 2a)
 
     // Teaching Charter
     document.getElementById('save-charter-btn').addEventListener('click', saveTeachingCharter);
@@ -205,12 +207,14 @@ function setupEventListeners() {
         });
     });
 
-    // Navigation tabs (header)
-    document.querySelectorAll('.nav-tab[data-tab]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const tab = e.target.getAttribute('data-tab');
-            switchNavTab(tab, e.target);
-        });
+    // Navigation tabs (header) — handle both .nav-tab and .nav-icon buttons
+    document.querySelectorAll('[data-tab]').forEach(btn => {
+        if (btn.classList.contains('nav-tab') || btn.classList.contains('nav-icon')) {
+            btn.addEventListener('click', (e) => {
+                const tab = e.target.closest('[data-tab]').getAttribute('data-tab');
+                switchNavTab(tab, e.target.closest('[data-tab]'));
+            });
+        }
     });
 
     // Tab buttons (right panel)
@@ -220,6 +224,14 @@ function setupEventListeners() {
             switchTab(tab, e.target);
         });
     });
+
+    // ZAVMO logo = home button (returns to Command Centre)
+    const navHome = document.getElementById('nav-home');
+    if (navHome) {
+        navHome.addEventListener('click', () => {
+            switchNavTab('command-centre', document.querySelector('[data-tab="command-centre"]'));
+        });
+    }
 
     // Country and Qualification Selector
     document.getElementById('country-select').addEventListener('change', onCountryChange);
@@ -3303,31 +3315,43 @@ function switchTab(tabName, clickedBtn) {
 }
 
 function switchNavTab(tabName, clickedBtn) {
-    // Update nav tab active states
-    document.querySelectorAll('.nav-tab').forEach(btn => {
+    // Update nav button active states
+    document.querySelectorAll('.nav-tab, .nav-icon').forEach(btn => {
         btn.classList.remove('active');
     });
     if (clickedBtn) clickedBtn.classList.add('active');
 
     // Get all page sections
+    const commandCentrePage = document.getElementById('command-centre-page');
     const charactersPage = document.getElementById('characters-page');
     const simComparePage = document.getElementById('sim-compare-page');
     const agent13Page = document.getElementById('agent13-page');
     const learningSpecsPage = document.getElementById('learning-specs-page');
     const jobDescriptionsPage = document.getElementById('job-descriptions-page');
     const xapiAnalyticsPage = document.getElementById('xapi-analytics-page');
+    const orgPulsePage = document.getElementById('org-pulse-page');
+    const userManagementPage = document.getElementById('user-management-page');
 
     // Hide everything first
+    if (commandCentrePage) commandCentrePage.style.display = 'none';
     if (charactersPage) charactersPage.style.display = 'none';
     if (simComparePage) simComparePage.style.display = 'none';
     if (agent13Page) agent13Page.style.display = 'none';
     if (learningSpecsPage) learningSpecsPage.style.display = 'none';
     if (jobDescriptionsPage) jobDescriptionsPage.style.display = 'none';
     if (xapiAnalyticsPage) xapiAnalyticsPage.style.display = 'none';
+    if (orgPulsePage) orgPulsePage.style.display = 'none';
+    if (userManagementPage) userManagementPage.style.display = 'none';
 
-    if (tabName === 'characters') {
-        // Characters page: full-width dashboard (mirrors Agent 13)
+    // Route to the correct page
+    if (tabName === 'command-centre') {
+        // Command Centre: homepage with greeting and chat
+        if (commandCentrePage) commandCentrePage.style.display = 'block';
+        initCommandCentre();
+    } else if (tabName === 'characters') {
+        // Teaching Prompts page: character prompt configuration
         if (charactersPage) charactersPage.style.display = 'block';
+        if (typeof initChartersToggle === 'function') initChartersToggle();
     } else if (tabName === 'agent13') {
         // Agent 13 page: full width dashboard
         if (agent13Page) agent13Page.style.display = 'block';
@@ -3346,6 +3370,15 @@ function switchNavTab(tabName, clickedBtn) {
         // xAPI Analytics: real-time learning analytics dashboard
         if (xapiAnalyticsPage) xapiAnalyticsPage.style.display = 'block';
         initXapiAnalyticsPage();
+    } else if (tabName === 'org-pulse') {
+        // Org Pulse & Insights: organisation analytics dashboard
+        if (orgPulsePage) orgPulsePage.style.display = 'block';
+        if (typeof initOrgPulsePage === 'function') {
+            initOrgPulsePage();
+        }
+    } else if (tabName === 'user-management') {
+        // User Management: placeholder page
+        if (userManagementPage) userManagementPage.style.display = 'block';
     }
 }
 

@@ -27,40 +27,233 @@
         <!-- HEADER -->
         <header class="header">
             <div class="header-content">
-                <div class="logo-section">
+                <div class="logo-section" id="nav-home" style="cursor: pointer;" role="button" aria-label="Command Centre home">
                     <div class="logo">ZAVMO</div>
-                    <div class="logo-subtitle">Prompt Configuration Studio</div>
                 </div>
                 <nav class="nav-tabs">
-                    <button class="nav-tab active" data-tab="characters">Characters</button>
-                    <button class="nav-tab" data-tab="agent13" style="color: #00d9c0;">Agent 13</button>
-                    <button class="nav-tab" data-tab="sim-compare">Simulation & Comparison</button>
-                    <button class="nav-tab" data-tab="learning-specs">Learning Specs</button>
-                    <button class="nav-tab" data-tab="job-descriptions">Job Descriptions</button>
-                    <button class="nav-tab" data-tab="xapi-analytics">xAPI Analytics</button>
+                    <button class="nav-tab" data-tab="command-centre" style="color: #00d9c0; font-weight: 500;">ZAVMO</button>
+
+                    <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 32px;">
+                        <!-- Teaching Prompts (Characters) -->
+                        <button class="nav-icon" data-tab="characters" data-tooltip="Teaching Prompts" aria-label="Teaching Prompts — configure AI teaching character prompts">
+                            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </button>
+                        <!-- AI Reviewer (Agent 13) -->
+                        <button class="nav-icon teal-accent" data-tab="agent13" data-tooltip="AI Reviewer" aria-label="AI Reviewer — automated prompt quality analysis">
+                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </button>
+                        <!-- Test & Compare (Simulation) -->
+                        <button class="nav-icon" data-tab="sim-compare" data-tooltip="Test & Compare" aria-label="Test and Compare — simulate and compare teaching responses">
+                            <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                        </button>
+                        <!-- Qualifications (Learning Specs) -->
+                        <button class="nav-icon" data-tab="learning-specs" data-tooltip="Qualifications" aria-label="Qualifications — browse OFQUAL and NOS specifications">
+                            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        </button>
+                        <!-- Job Roles (Job Descriptions) -->
+                        <button class="nav-icon" data-tab="job-descriptions" data-tooltip="Job Roles" aria-label="Job Roles — search and manage job descriptions">
+                            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                        </button>
+                        <!-- Learning Analytics (xAPI) -->
+                        <button class="nav-icon" data-tab="xapi-analytics" data-tooltip="Learning Analytics" aria-label="Learning Analytics — real-time xAPI learning data">
+                            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        </button>
+                        <!-- Org Insights (Org Pulse) -->
+                        <button class="nav-icon" data-tab="org-pulse" data-tooltip="Org Insights" aria-label="Org Insights — organisation health and learning pulse">
+                            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        </button>
+                        <!-- Team & Access (User Management) -->
+                        <button class="nav-icon" data-tab="user-management" data-tooltip="Team & Access" aria-label="Team and Access — manage users, invitations, and allocations">
+                            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </button>
+                    </div>
+
+                    <!-- Profile — right justified -->
+                    <button class="nav-icon" data-tab="profile" data-tooltip="Profile" aria-label="Profile" style="margin-left: auto;">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M6.168 18.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></svg>
+                    </button>
                 </nav>
             </div>
         </header>
 
         <!-- MAIN CONTENT -->
         <div class="main-content">
-            <!-- LEFT PANEL: CHARACTER PROMPTS -->
-            <!-- CHARACTERS PAGE (full-width, mirrors Agent 13 layout) -->
-            <div id="characters-page" style="width: 100%; overflow-y: auto;">
-                <div class="panel" style="width: 100%;">
-                    <div style="width: 100%; box-sizing: border-box; padding: 24px;">
+            <!-- NEURAL NETWORK BACKGROUND CANVAS -->
+            <canvas id="cc-neural-canvas"></canvas>
 
-                        <!-- HEADER — Character Selector + Metadata -->
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
-                            <div style="display: flex; align-items: center; gap: 16px;">
-                                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #00d9c0;" id="colour-swatch">12</div>
-                                <div>
-                                    <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Teaching Characters</h2>
-                                    <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">12 pedagogical characters · Bloom's taxonomy progression · Personalised learning paths</p>
+            <!-- COMMAND CENTRE PAGE (homepage) -->
+            <div id="command-centre-page" style="width: 100%; height: 100vh; display: none; overflow-y: auto;">
+                <!-- Centre stage greeting and chat -->
+                <div class="cc-centre-stage">
+                    <!-- GREETING -->
+                    <div class="cc-greeting">
+                        <div class="cc-greeting-text">Hello, <span class="cc-name">there</span></div>
+                        <div class="cc-greeting-sub">Welcome to the Command Centre</div>
+                    </div>
+
+                    <!-- FLOATING DIALOGUE BOX -->
+                    <div class="cc-console-wrapper">
+                        <div class="cc-console-label">Zavmo Intelligence</div>
+                        <div class="cc-chat-panel">
+                            <div class="cc-chat-messages" id="cc-chat-messages">
+                                <div class="cc-chat-msg zavmo" id="cc-welcome-msg">
+                                    Good morning. You have <strong class="cc-teal">1,247 active learners</strong> across your organisation today.
+                                    <span class="cc-insight-line" id="cc-insight-0">Engagement is up <span class="cc-teal">4.2%</span> this week — your best week since January.</span>
+                                    <span class="cc-insight-line" id="cc-insight-1"><span class="cc-teal">3 pending invitations</span> are awaiting approval for the Manchester cohort.</span>
+                                    <span class="cc-insight-line" id="cc-insight-2">Agent 13 has flagged <span class="cc-teal">2 learners</span> showing early signs of disengagement.</span>
+                                    <span class="cc-insight-line" id="cc-insight-3">Top performer this week: <span class="cc-teal">Customer Service L3, London</span> at 87% completion.</span>
+                                    <span class="cc-insight-line" id="cc-insight-4">Skills gap alert: <span class="cc-teal">Data Analysis</span> mastery is at 34% — down 3% from last month.</span>
+                                    <span class="cc-insight-line" id="cc-insight-5">Completion velocity has improved — learners are finishing <span class="cc-teal">2 days faster</span> on average.</span>
+                                    <span class="cc-insight-line" id="cc-insight-6"><span class="cc-teal">23 new starters</span> have no courses allocated yet. Shall I suggest some?</span>
+                                    <span class="cc-insight-line" id="cc-insight-7">Bloom's mastery: <span class="cc-teal">89%</span> at Remember, but only <span class="cc-teal">18%</span> reaching Create level.</span>
                                 </div>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <select id="character-select" style="background: rgba(0,217,192,0.1); border: 1px solid rgba(0,217,192,0.3); color: #ffffff; padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; min-width: 240px;">
+                            <div class="cc-typing-indicator" id="cc-typing-indicator">
+                                <div class="cc-typing-dot"></div>
+                                <div class="cc-typing-dot"></div>
+                                <div class="cc-typing-dot"></div>
+                            </div>
+                            <div class="cc-chat-input-row">
+                                <input type="text" class="cc-chat-input" id="cc-chat-input" placeholder="Ask me anything about your organisation's learning..." aria-label="Ask Zavmo Intelligence a question">
+                                <button class="cc-chat-send" id="cc-chat-send" aria-label="Send message">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORG PULSE PAGE -->
+            <div id="org-pulse-page" class="cc-tab-page cc-pulse-page" style="display: none;">
+                <div class="cc-pulse-header">
+                    <div class="cc-pulse-title">Organisation Pulse</div>
+                    <div class="cc-pulse-sub">Real-time overview of your organisation's learning health</div>
+                </div>
+
+                <div class="cc-kpi-row">
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">Active Learners</div>
+                        <div class="cc-kpi-value">1,247</div>
+                        <div class="cc-kpi-change up">+12% vs last month</div>
+                    </div>
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">Engagement Rate</div>
+                        <div class="cc-kpi-value">78%</div>
+                        <div class="cc-kpi-change up">+4.2% this week</div>
+                    </div>
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">ROI Indicator</div>
+                        <div class="cc-kpi-value">3.2x<span class="cc-kpi-unit">return</span></div>
+                        <div class="cc-kpi-change up">+0.4x vs Q3</div>
+                    </div>
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">Completion Velocity</div>
+                        <div class="cc-kpi-value">14<span class="cc-kpi-unit">days avg</span></div>
+                        <div class="cc-kpi-change up">-2 days faster</div>
+                    </div>
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">Hours Saved</div>
+                        <div class="cc-kpi-value">2,840<span class="cc-kpi-unit">hrs</span></div>
+                        <div class="cc-kpi-change neutral">This quarter</div>
+                    </div>
+                </div>
+
+                <div class="cc-insight-grid">
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Bloom's Mastery Distribution</div>
+                        <div class="cc-bloom-ladder">
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Create</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:18%"></div></div><div class="cc-bloom-pct">18%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Evaluate</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:24%"></div></div><div class="cc-bloom-pct">24%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Analyse</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:35%"></div></div><div class="cc-bloom-pct">35%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Apply</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:52%"></div></div><div class="cc-bloom-pct">52%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Understand</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:71%"></div></div><div class="cc-bloom-pct">71%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Remember</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:89%"></div></div><div class="cc-bloom-pct">89%</div></div>
+                        </div>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Top Content This Week</div>
+                        <ul class="cc-pulse-list">
+                            <li><span>Health &amp; Safety L2</span><span class="cc-pl-val">342</span></li>
+                            <li><span>Customer Service L3</span><span class="cc-pl-val">287</span></li>
+                            <li><span>Leadership &amp; Mgmt L5</span><span class="cc-pl-val">198</span></li>
+                            <li><span>Digital Skills L2</span><span class="cc-pl-val">156</span></li>
+                            <li><span>Project Management L4</span><span class="cc-pl-val">134</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Top Learning Streams</div>
+                        <ul class="cc-pulse-list">
+                            <li><span>Compliance &amp; Regulation</span><span class="cc-pl-val">28%</span></li>
+                            <li><span>Leadership Development</span><span class="cc-pl-val">22%</span></li>
+                            <li><span>Technical Skills</span><span class="cc-pl-val">19%</span></li>
+                            <li><span>Customer Experience</span><span class="cc-pl-val">17%</span></li>
+                            <li><span>Digital Transformation</span><span class="cc-pl-val">14%</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Character Interactions</div>
+                        <div class="cc-char-grid">
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">BU</div><div class="cc-char-dot-label">Builder</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CO</div><div class="cc-char-dot-label">Coach</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">NA</div><div class="cc-char-dot-label">Navigator</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">EX</div><div class="cc-char-dot-label">Explorer</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CN</div><div class="cc-char-dot-label">Connector</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">PR</div><div class="cc-char-dot-label">Practitioner</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">AN</div><div class="cc-char-dot-label">Analyst</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CL</div><div class="cc-char-dot-label">Collaborator</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CT</div><div class="cc-char-dot-label">Catalyst</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">EV</div><div class="cc-char-dot-label">Evaluator</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CE</div><div class="cc-char-dot-label">Certifier</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">IN</div><div class="cc-char-dot-label">Integrator</div></div>
+                        </div>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Learners Pursuing Roles</div>
+                        <ul class="cc-pulse-list">
+                            <li><span>Financial Analyst</span><span class="cc-pl-val">89</span></li>
+                            <li><span>Project Manager</span><span class="cc-pl-val">76</span></li>
+                            <li><span>Team Leader</span><span class="cc-pl-val">64</span></li>
+                            <li><span>Data Analyst</span><span class="cc-pl-val">51</span></li>
+                            <li><span>Operations Manager</span><span class="cc-pl-val">43</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Skills Gap Analysis</div>
+                        <ul class="cc-pulse-list">
+                            <li><span>Communication</span><span class="cc-pl-val" style="color:#22c55e">82%</span></li>
+                            <li><span>H&amp;S Compliance</span><span class="cc-pl-val" style="color:#22c55e">79%</span></li>
+                            <li><span>Leadership</span><span class="cc-pl-val">58%</span></li>
+                            <li><span>Project Management</span><span class="cc-pl-val" style="color:#f59e0b">41%</span></li>
+                            <li><span>Data Analysis</span><span class="cc-pl-val" style="color:#ef4444">34%</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USER MANAGEMENT PAGE (placeholder) -->
+            <div id="user-management-page" class="cc-tab-page cc-placeholder-page" style="display: none;">
+                <svg class="cc-placeholder-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <div class="cc-placeholder-title">User Management</div>
+                <div class="cc-placeholder-desc">Add users, manage teams, assign roles, and handle allocations and invitations. Coming soon.</div>
+            </div>
+
+            <!-- TEACHING PROMPTS PAGE (Characters) -->
+            <div id="characters-page" class="cc-page-container" style="width: 100%; overflow-y: auto;">
+                <div class="panel" style="width: 100%;">
+                    <div style="width: 100%; box-sizing: border-box; padding: 32px 40px;">
+
+                        <!-- PAGE HEADER — Clean title + character selector -->
+                        <div class="cc-page-header">
+                            <div>
+                                <h2 class="cc-page-title">Teaching Prompts</h2>
+                                <p class="cc-page-subtitle">Configure the AI teaching characters that guide your learners. Each character has a unique voice, Bloom's level, and teaching style.</p>
+                            </div>
+                            <div class="cc-page-actions">
+                                <select id="character-select" class="cc-select">
                                     <option value="foundation-builder">The Foundation Builder</option>
                                     <option value="challenge-coach">The Challenge Coach</option>
                                     <option value="career-navigator">The Career Navigator</option>
@@ -74,82 +267,88 @@
                                     <option value="qualification-certifier">The Qualification Certifier</option>
                                     <option value="integrator">The Integrator</option>
                                 </select>
+                                <button id="push-all-zavmo-btn" class="cc-btn-push" title="Push all 12 character prompts + Teaching Charter to Zavmo">Push All to Zavmo</button>
                             </div>
                         </div>
 
-                        <!-- CHARACTER METADATA -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 32px;">
-                            <div style="background: rgba(0,217,192,0.08); border: 1px solid rgba(0,217,192,0.2); border-radius: 12px; padding: 16px;">
-                                <div style="color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Bloom's Level</div>
-                                <div style="color: #ffffff; font-size: 14px; font-weight: 500;" id="blooms-level">Remember, Understand</div>
+                        <!-- CHARACTER AT A GLANCE — compact metadata strip -->
+                        <div class="cc-meta-strip">
+                            <div class="cc-meta-item">
+                                <span class="cc-meta-label">Bloom's Level</span>
+                                <span class="cc-meta-value" id="blooms-level">Remember, Understand</span>
                             </div>
-                            <div style="background: rgba(0,217,192,0.08); border: 1px solid rgba(0,217,192,0.2); border-radius: 12px; padding: 16px;">
-                                <div style="color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Intelligence Type</div>
-                                <div style="color: #ffffff; font-size: 14px; font-weight: 500;" id="intelligence-type">Foundation Building</div>
+                            <div class="cc-meta-divider"></div>
+                            <div class="cc-meta-item">
+                                <span class="cc-meta-label">Intelligence Type</span>
+                                <span class="cc-meta-value" id="intelligence-type">Foundation Building</span>
                             </div>
-                            <div style="background: rgba(0,217,192,0.08); border: 1px solid rgba(0,217,192,0.2); border-radius: 12px; padding: 16px;">
-                                <div style="color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Voice Pattern</div>
-                                <div style="color: #ffffff; font-size: 14px; font-weight: 500;" id="voice-pattern">Encouraging Mentor</div>
+                            <div class="cc-meta-divider"></div>
+                            <div class="cc-meta-item">
+                                <span class="cc-meta-label">Voice Pattern</span>
+                                <span class="cc-meta-value" id="voice-pattern">Encouraging Mentor</span>
                             </div>
-                            <div style="background: rgba(0,217,192,0.08); border: 1px solid rgba(0,217,192,0.2); border-radius: 12px; padding: 16px;">
-                                <div style="color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Export / Import</div>
-                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                    <button id="export-all-btn" style="background: rgba(0,217,192,0.15); border: 1px solid rgba(0,217,192,0.3); color: #00d9c0; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">Export All</button>
-                                    <button id="import-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">Import</button>
-                                    <button id="push-all-zavmo-btn" style="background: linear-gradient(135deg, #7c3aed, #00d9c0); border: none; color: #fff; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;" title="Push all 12 character prompts + Teaching Charter to Zavmo">&#9889; Push All</button>
+                            <div class="cc-meta-divider"></div>
+                            <div class="cc-meta-item" id="colour-swatch-wrap">
+                                <span class="cc-meta-label">Characters</span>
+                                <span class="cc-meta-value cc-meta-teal" id="colour-swatch">12</span>
+                            </div>
+                        </div>
+
+                        <!-- TEACHING CHARTER — always visible banner, expandable detail -->
+                        <div class="cc-charter-banner">
+                            <div class="cc-charter-banner-top">
+                                <div class="cc-charter-banner-info">
+                                    <svg class="cc-charter-icon" viewBox="0 0 24 24" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                    <div>
+                                        <div class="cc-charter-banner-title">Teaching Charter <span class="cc-charter-status">Active</span></div>
+                                        <div class="cc-charter-banner-preview" id="cc-charter-snippet">Applied to all 12 characters and Agent 13 on every API call. Governs how all characters teach, assess, and respond.</div>
+                                    </div>
+                                </div>
+                                <div class="cc-section-actions">
+                                    <button id="charter-toggle" class="cc-btn-secondary cc-btn-expand" role="button" aria-expanded="false" aria-controls="charter-body">
+                                        <span class="cc-expand-text">View Charter</span>
+                                        <svg class="cc-section-chevron" viewBox="0 0 24 24" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
+                                    </button>
+                                    <button id="charter-panel-header" class="cc-btn-secondary">Edit</button>
+                                    <button id="push-charter-btn" class="cc-btn-push" title="Push Teaching Charter to Zavmo">Push Charter</button>
+                                </div>
+                            </div>
+                            <div id="charter-body" class="cc-section-body cc-collapsed">
+                                <div id="charter-preview" class="cc-code-preview">
+                                    <pre id="charter-preview-text" class="cc-code-text"></pre>
+                                </div>
+                                <div id="charter-panel-body" style="display: none; margin-top: 16px;">
+                                    <textarea class="prompt-textarea" id="teaching-charter-textarea" class="cc-textarea" spellcheck="false" placeholder="Teaching Charter will appear here..."></textarea>
+                                    <div class="cc-btn-row">
+                                        <button id="save-charter-btn" class="cc-btn-primary">Save Charter</button>
+                                        <button id="reset-charter-btn" class="cc-btn-ghost">Reset to Default</button>
+                                        <span id="charter-save-status" class="cc-save-status">Charter saved successfully.</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- TEACHING CHARTER (first, like Agent 13 Charter) -->
-                        <div style="margin-bottom: 32px; background: rgba(0,217,192,0.05); border: 1px solid rgba(0,217,192,0.25); border-radius: 12px; padding: 24px;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Teaching Charter</h3>
-                                    <span style="background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">MANDATORY</span>
+                        <!-- CHARACTER SYSTEM PROMPT — the main working area -->
+                        <div class="cc-section-card cc-prompt-section">
+                            <div class="cc-section-header">
+                                <div class="cc-section-title-row">
+                                    <h3 class="cc-section-title">System Prompt</h3>
+                                    <span class="cc-badge cc-badge-edit">Editable</span>
                                 </div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button id="charter-panel-header" style="background: rgba(0,217,192,0.15); border: 1px solid rgba(0,217,192,0.3); color: #00d9c0; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px;">Edit Charter</button>
-                                    <button id="push-charter-btn" style="background: linear-gradient(135deg, #7c3aed, #00d9c0); border: none; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;" title="Push Teaching Charter to Zavmo">&#9889; Push Charter</button>
-                                </div>
-                            </div>
-                            <p style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6; margin: 0 0 16px 0;">This charter is appended to every API call for all 12 characters and Agent 13. It governs how all characters teach, assess, and respond. Edit here and it applies everywhere.</p>
-                            <!-- Read-only view -->
-                            <div id="charter-preview" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 16px; max-height: 300px; overflow-y: auto;">
-                                <pre id="charter-preview-text" style="color: rgba(255,255,255,0.8); font-size: 12px; line-height: 1.7; margin: 0; white-space: pre-wrap; font-family: inherit;"></pre>
-                            </div>
-                            <!-- Edit view (hidden by default) -->
-                            <div id="charter-panel-body" style="display: none; margin-top: 16px;">
-                                <textarea class="prompt-textarea" id="teaching-charter-textarea" style="width: 100%; min-height: 400px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0,217,192,0.3); border-radius: 8px; padding: 16px; color: rgba(255,255,255,0.9); font-size: 12px; line-height: 1.7; resize: vertical; font-family: inherit;" spellcheck="false" placeholder="Teaching Charter will appear here..."></textarea>
-                                <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
-                                    <button id="save-charter-btn" style="background: #00d9c0; border: none; color: #1a1a2e; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;">Save Charter</button>
-                                    <button id="reset-charter-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">Reset to Default</button>
-                                    <span id="charter-save-status" style="display: none; color: #00d9c0; font-size: 12px; margin-left: 8px;">Charter saved successfully.</span>
+                                <div class="cc-section-actions">
+                                    <button id="save-prompt-btn" class="cc-btn-primary">Save</button>
+                                    <button id="copy-prompt-btn" class="cc-btn-secondary">Copy</button>
+                                    <button id="push-to-zavmo-btn" class="cc-btn-push" title="Push this prompt to the live Zavmo application">Push to Zavmo</button>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- CHARACTER SYSTEM PROMPT -->
-                        <div style="margin-bottom: 32px; background: rgba(0,217,192,0.03); border: 1px solid rgba(0,217,192,0.15); border-radius: 12px; padding: 24px;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Character System Prompt</h3>
-                                    <span style="background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">EDITABLE</span>
-                                </div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button id="save-prompt-btn" style="background: #00d9c0; border: none; color: #1a1a2e; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;">Save Prompt</button>
-                                    <button id="copy-prompt-btn" style="background: rgba(0,217,192,0.15); border: 1px solid rgba(0,217,192,0.3); color: #00d9c0; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px;">Copy to Clipboard</button>
-                                    <button id="push-to-zavmo-btn" style="background: linear-gradient(135deg, #7c3aed, #00d9c0); border: none; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; display: flex; align-items: center; gap: 6px;" title="Push this prompt to the live Zavmo application">&#9889; Push to Zavmo</button>
-                                </div>
-                            </div>
-                            <p style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6; margin: 0 0 16px 0;">The system prompt for the selected character. The Teaching Charter above is automatically appended to this prompt in every API call.</p>
-                            <textarea class="prompt-textarea" id="prompt-textarea" style="width: 100%; min-height: 400px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0,217,192,0.3); border-radius: 8px; padding: 16px; color: rgba(255,255,255,0.9); font-size: 12px; line-height: 1.7; resize: vertical; font-family: 'SF Mono', 'Fira Code', monospace;" spellcheck="false" placeholder="Character prompt will appear here..."></textarea>
+                            <p class="cc-section-desc">The system prompt for the selected character. The Teaching Charter is automatically appended to every API call.</p>
+                            <textarea class="prompt-textarea" id="prompt-textarea" class="cc-textarea cc-textarea-main" spellcheck="false" placeholder="Character prompt will appear here..."></textarea>
                         </div>
 
                     </div>
                 </div>
             </div>
-            <!-- END CHARACTERS PAGE -->
+            <!-- END TEACHING PROMPTS PAGE -->
 
             <!-- SIM & COMPARE PAGE (hidden by default) -->
             <div id="sim-compare-page" style="display: none; width: 100%; gap: 0; height: 100%; flex-direction: column;">
@@ -1733,6 +1932,7 @@
     <script src="js/data-qualifications.js"></script>
     <script src="js/data-characters.js"></script>
     <script src="js/app-core.js"></script>
+    <script src="js/page-command-centre.js"></script>
     <script src="js/page-learning-specs.js"></script>
     <script src="js/page-xapi-analytics.js"></script>
     <script src="js/page-job-descriptions.js"></script>

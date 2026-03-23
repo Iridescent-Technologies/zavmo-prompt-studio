@@ -15,10 +15,7 @@ const lsDataCache = {
     sectors: new Set(),
     currentSort: 'popular',
     apiCards: null,
-    currentData: null,
-    currentPage: 1,
-    allSortedCards: null,
-    masterCards: null   // full unfiltered result set — filters work on this
+    currentData: null
 };
 
 let lsSearchTimeout = null;
@@ -63,11 +60,9 @@ function initLearningSpecsPage() {
     const filterLevel = document.getElementById('ls-filter-level');
     const filterSector = document.getElementById('ls-filter-sector');
     const filterType = document.getElementById('ls-filter-type');
-    const filterSource = document.getElementById('ls-filter-source');
     if (filterLevel) filterLevel.addEventListener('change', onLSFilterChange);
     if (filterSector) filterSector.addEventListener('change', onLSFilterChange);
     if (filterType) filterType.addEventListener('change', onLSFilterChange);
-    if (filterSource) filterSource.addEventListener('change', onLSFilterChange);
 
     // Wire up clear filters
     const clearBtn = document.getElementById('ls-clear-filters');
@@ -122,62 +117,9 @@ function onLSSearchInput() {
 
 /**
  * Handler for filter dropdown changes.
- * If data is already loaded, apply filters client-side without hitting the API.
  */
 function onLSFilterChange() {
-    if (lsDataCache.masterCards && lsDataCache.masterCards.length > 0) {
-        applyLSFiltersClientSide();
-    } else {
-        executeLSSearch();
-    }
-}
-
-/**
- * Filter the already-fetched masterCards using current filter selections and re-render.
- */
-function applyLSFiltersClientSide() {
-    const filterLevel = document.getElementById('ls-filter-level');
-    const filterSource = document.getElementById('ls-filter-source');
-
-    const levelVal = filterLevel ? filterLevel.value : '';
-    const sourceVal = filterSource ? filterSource.value : '';
-
-    let filtered = lsDataCache.masterCards.slice();
-
-    // Source filter: "qualification" → OFQUAL only, "skills" → NOS only
-    if (sourceVal === 'qualification') {
-        filtered = filtered.filter(c => c.body === 'OFQUAL');
-    } else if (sourceVal === 'skills') {
-        filtered = filtered.filter(c => c.body === 'NOS');
-    }
-
-    // Level filter: match "Level X" string
-    if (levelVal) {
-        filtered = filtered.filter(c => {
-            const lvl = (c.level || '').toLowerCase();
-            return lvl === 'level ' + levelVal || lvl.includes(levelVal);
-        });
-    }
-
-    lsDataCache.currentPage = 1;
-
-    // Update results header
-    const header = document.getElementById('ls-results-header');
-    const countEl = document.getElementById('ls-results-count');
-    const queryEl = document.getElementById('ls-results-query');
-    if (header) header.style.display = filtered.length > 0 ? 'flex' : 'none';
-    if (countEl) countEl.textContent = `${filtered.length} result${filtered.length !== 1 ? 's' : ''}`;
-    if (queryEl) queryEl.textContent = lsDataCache.lastQuery ? `for "${lsDataCache.lastQuery}"` : '';
-
-    if (filtered.length > 0) {
-        renderLSCards(filtered);
-    } else {
-        const grid = document.getElementById('ls-results-grid');
-        if (grid) grid.innerHTML = '';
-        const paginationEl = document.getElementById('ls-pagination');
-        if (paginationEl) paginationEl.innerHTML = '';
-        showLSEmpty('No results match the selected filters.');
-    }
+    executeLSSearch();
 }
 
 /**
@@ -188,34 +130,25 @@ function clearLSFilters() {
     const filterLevel = document.getElementById('ls-filter-level');
     const filterSector = document.getElementById('ls-filter-sector');
     const filterType = document.getElementById('ls-filter-type');
-    const filterSource = document.getElementById('ls-filter-source');
 
     if (searchInput) searchInput.value = '';
     if (filterLevel) filterLevel.value = '';
     if (filterSector) filterSector.value = '';
     if (filterType) filterType.value = '';
-    if (filterSource) filterSource.value = '';
 
-    // Clear cards from grid (preserve the grid element itself)
-    const grid = document.getElementById('ls-results-grid');
-    if (grid) grid.innerHTML = '';
-
-    // Clear pagination
-    const paginationEl = document.getElementById('ls-pagination');
-    if (paginationEl) paginationEl.innerHTML = '';
-
-    // Hide results header, show empty state
+    // Clear results and show empty state
+    const container = document.getElementById('ls-results-container');
     const header = document.getElementById('ls-results-header');
     const emptyState = document.getElementById('ls-empty-state');
+    if (container) container.innerHTML = '';
     if (header) header.style.display = 'none';
-    if (emptyState) emptyState.style.display = '';
+    if (emptyState) {
+        container.appendChild(emptyState);
+        emptyState.style.display = '';
+    }
 
     lsDataCache.results = null;
     lsDataCache.lastQuery = '';
-    lsDataCache.currentPage = 1;
-    lsDataCache.allSortedCards = null;
-    lsDataCache.currentData = null;
-    lsDataCache.masterCards = null;
 }
 
 /**
@@ -228,10 +161,12 @@ async function executeLSSearch() {
     if (!query) return;
 
     const filterLevel = document.getElementById('ls-filter-level');
+    const filterType = document.getElementById('ls-filter-type');
 
     const level = filterLevel ? filterLevel.value : '';
-    // Always fetch both OFQUAL and NOS — client-side filters will narrow down
-    const typeFilter = 'ofqual,nos';
+    let typeFilter = filterType ? filterType.value : '';
+    // Learning Specs: default to NOS and OFQUAL only (no JD unless user selects "Job Descriptions Only")
+    if (!typeFilter) typeFilter = 'ofqual,nos';
 
     try {
         showLSLoading();
@@ -249,7 +184,9 @@ async function executeLSSearch() {
             populateSectorFilter();
         }
 
-        // Build full card set (master) — all OFQUAL + NOS from this query
+        displayLSResults(data, lsDataCache.activeTab);
+
+        // Also update card grid view
         const cards = [];
         data.ofqual.forEach(item => {
             cards.push({
@@ -281,15 +218,10 @@ async function executeLSSearch() {
                 _source: 'api', _raw: item
             });
         });
-
-        // Store as master — subsequent filter changes use this without re-fetching
-        lsDataCache.masterCards = cards;
-        lsDataCache.apiCards = cards;
-        lsDataCache.currentPage = 1;
-
-        // Apply any already-selected filters on the fresh data
-        applyLSFiltersClientSide();
-
+        if (cards.length > 0) {
+            lsDataCache.apiCards = cards;
+            renderLSCards(cards);
+        }
     } catch (err) {
         showToast('Search failed: ' + (err.message || 'Unknown error'), 'error');
         showLSEmpty('Search failed. Please check your connection and try again.');
@@ -911,56 +843,27 @@ async function openLSDetailModal(item, type) {
     if (subtitleEl) subtitleEl.textContent = subtitleParts.join(' · ');
 
     // Build body content
-    bodyEl.innerHTML = '<p style="color: #8a97a8; padding: 16px; text-align:center;">Loading details…</p>';
-    modal.classList.add('open');
+    bodyEl.innerHTML = '';
 
-    const baseUrl = (typeof LS_API_BASE !== 'undefined' ? LS_API_BASE : ZAVMO_BASE_URL).replace(/\/+$/, '');
-
-    // Fetch full details from Neo4j based on type
+    // For JD, fetch full details from API then render
     if (type === 'jd' && (item.job_id || item.id)) {
+        bodyEl.innerHTML = '<p style="color: #8a97a8; padding: 16px;">Loading full job description…</p>';
+        modal.classList.add('open');
+        const baseUrl = (typeof LS_API_BASE !== 'undefined' ? LS_API_BASE : ZAVMO_BASE_URL).replace(/\/+$/, '');
         const jobId = (item.job_id || item.id).toString().trim();
         try {
-            const url = `${baseUrl}/api/discover/jd/${encodeURIComponent(jobId)}/`;
+            const url = `${baseUrl.replace(/\/+$/, '')}/api/discover/jd/${encodeURIComponent(jobId)}/`;
             const response = await zavmoFetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
             if (response.ok) {
                 const json = await response.json();
-                item = normaliseJD((json.data || json) || item);
+                const data = (json.data || json) || item;
+                item = normaliseJD(data);
             }
         } catch (e) {
             console.warn('Failed to load full JD, using list data:', e);
         }
-    } else if (type === 'ofqual' && item.ofqual_id) {
-        // Fetch all units for this OFQUAL qualification from Neo4j
-        try {
-            const url = `${baseUrl}/api/qualifications/${encodeURIComponent(item.ofqual_id)}/units/`;
-            const response = await zavmoFetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
-            if (response.ok) {
-                const json = await response.json();
-                const units = (json.data && json.data.units) ? json.data.units : [];
-                if (units.length > 0) {
-                    // Merge unit details back into item
-                    const allLOs = [];
-                    const allACs = [];
-                    units.forEach(u => {
-                        const uLOs = ensureArray(u.learning_outcomes);
-                        const uACs = ensureArray(u.assessment_criteria);
-                        if (uLOs.length) allLOs.push(...uLOs);
-                        if (uACs.length) allACs.push(...uACs);
-                    });
-                    // Always attach _units for the per-unit breakdown; merge LOs/ACs if found
-                    item = Object.assign({}, item, {
-                        learning_outcomes: allLOs.length > 0 ? allLOs : item.learning_outcomes,
-                        assessment_criteria: allACs.length > 0 ? allACs : item.assessment_criteria,
-                        _units: units
-                    });
-                }
-            }
-        } catch (e) {
-            console.warn('Failed to load OFQUAL units, using search data:', e);
-        }
+        bodyEl.innerHTML = '';
     }
-
-    bodyEl.innerHTML = '';
 
     // Overview / Description
     if (item.overview || item.description) {
@@ -1047,87 +950,6 @@ async function openLSDetailModal(item, type) {
             });
             acSection.appendChild(acList);
             bodyEl.appendChild(acSection);
-        }
-
-        // Units breakdown (from Neo4j full fetch)
-        if (item._units && item._units.length > 0) {
-            const unitsSection = document.createElement('div');
-            unitsSection.className = 'ls-modal-section';
-            const unitsTitle = document.createElement('div');
-            unitsTitle.className = 'ls-modal-section-title';
-            unitsTitle.textContent = `Units (${item._units.length})`;
-            unitsSection.appendChild(unitsTitle);
-
-            item._units.forEach((unit, ui) => {
-                const unitBlock = document.createElement('div');
-                unitBlock.style.cssText = 'background: rgba(10,22,40,0.5); border: 1px solid rgba(26,58,92,0.4); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;';
-
-                const unitHeader = document.createElement('div');
-                unitHeader.style.cssText = 'display:flex; align-items:center; gap:10px; margin-bottom:8px;';
-                unitHeader.innerHTML = `
-                    <span style="background:rgba(0,217,192,0.12);color:#00d9c0;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;">Unit ${ui + 1}</span>
-                    <span style="color:#ffffff;font-size:13px;font-weight:600;">${escapeHTML(unit.unit_title || unit.unit_id || '')}</span>
-                    ${unit.total_credits ? `<span style="color:#6b7c93;font-size:11px;margin-left:auto;">${unit.total_credits} credits</span>` : ''}
-                `;
-                unitBlock.appendChild(unitHeader);
-
-                if (unit.unit_description) {
-                    const desc = document.createElement('p');
-                    desc.style.cssText = 'color:#b8c5d6;font-size:12px;margin:0 0 8px 0;line-height:1.5;';
-                    desc.textContent = unit.unit_description;
-                    unitBlock.appendChild(desc);
-                }
-
-                const unitLOs = ensureArray(unit.learning_outcomes);
-                if (unitLOs.length > 0) {
-                    const loLabel = document.createElement('p');
-                    loLabel.style.cssText = 'color:#8a97a8;font-size:11px;font-weight:600;margin:6px 0 4px 0;text-transform:uppercase;letter-spacing:0.5px;';
-                    loLabel.textContent = `Learning Outcomes (${unitLOs.length})`;
-                    unitBlock.appendChild(loLabel);
-                    const loList = document.createElement('ul');
-                    loList.style.cssText = 'margin:0;padding-left:16px;';
-                    unitLOs.forEach(lo => {
-                        const li = document.createElement('li');
-                        li.style.cssText = 'color:#b8c5d6;font-size:12px;margin-bottom:3px;';
-                        li.textContent = lo;
-                        loList.appendChild(li);
-                    });
-                    unitBlock.appendChild(loList);
-                }
-
-                const unitACs = ensureArray(unit.assessment_criteria);
-                if (unitACs.length > 0) {
-                    const acLabel = document.createElement('p');
-                    acLabel.style.cssText = 'color:#8a97a8;font-size:11px;font-weight:600;margin:8px 0 4px 0;text-transform:uppercase;letter-spacing:0.5px;';
-                    acLabel.textContent = `Assessment Criteria (${unitACs.length})`;
-                    unitBlock.appendChild(acLabel);
-                    const acList = document.createElement('ul');
-                    acList.style.cssText = 'margin:0;padding-left:16px;';
-                    unitACs.forEach(ac => {
-                        const li = document.createElement('li');
-                        li.style.cssText = 'color:#b8c5d6;font-size:12px;margin-bottom:3px;';
-                        li.textContent = ac;
-                        acList.appendChild(li);
-                    });
-                    unitBlock.appendChild(acList);
-                }
-
-                if (unit.mapped_nos && unit.mapped_nos.length > 0) {
-                    const nosLabel = document.createElement('p');
-                    nosLabel.style.cssText = 'color:#8a97a8;font-size:11px;font-weight:600;margin:8px 0 4px 0;text-transform:uppercase;letter-spacing:0.5px;';
-                    nosLabel.textContent = 'Mapped NOS Standards';
-                    unitBlock.appendChild(nosLabel);
-                    unit.mapped_nos.forEach(n => {
-                        const tag = document.createElement('span');
-                        tag.style.cssText = 'display:inline-block;background:rgba(0,217,192,0.08);border:1px solid rgba(0,217,192,0.2);color:#00d9c0;font-size:11px;padding:2px 8px;border-radius:4px;margin:2px 4px 2px 0;';
-                        tag.textContent = n.nos_id + (n.title ? ' — ' + n.title : '');
-                        unitBlock.appendChild(tag);
-                    });
-                }
-
-                unitsSection.appendChild(unitBlock);
-            });
-            bodyEl.appendChild(unitsSection);
         }
 
     } else if (type === 'nos') {
@@ -1510,34 +1332,12 @@ async function loadRealLSData() {
     }
 }
 
-const LS_PAGE_SIZE = 10;
-
-function renderLSCards(data, page) {
-    const currentPage = page || 1;
-    lsDataCache.currentPage = currentPage;
-
-    // Ensure the grid element exists (may have been wiped by other operations)
-    let grid = document.getElementById('ls-results-grid');
-    if (!grid) {
-        const container = document.getElementById('ls-results-container');
-        if (!container) return;
-        // Clear any stale accordion content and recreate the grid
-        container.innerHTML = '';
-        grid = document.createElement('div');
-        grid.className = 'ls-results-grid';
-        grid.id = 'ls-results-grid';
-        container.appendChild(grid);
-        // Re-append the empty state element
-        const emptyState = document.getElementById('ls-empty-state');
-        if (emptyState) container.appendChild(emptyState);
-    }
+function renderLSCards(data) {
+    const grid = document.getElementById('ls-results-grid');
+    if (!grid) return;
     grid.innerHTML = '';
 
-    // Hide empty state
-    const emptyState = document.getElementById('ls-empty-state');
-    if (emptyState) emptyState.style.display = 'none';
-
-    // Store current data for pagination
+    // Store current data for search re-filtering
     lsDataCache.currentData = data;
 
     // Sort based on selected option
@@ -1548,20 +1348,15 @@ function renderLSCards(data, page) {
             const totalB = (b.enrolled || 0) + (b.inProgress || 0) + (b.completed || 0);
             return totalB - totalA;
         } else if (sortMode === 'recent') {
-            return 0;
+            // Parse "X days ago" format — for demo, just compare title length or use fixed order
+            return 0; // Keep original order for "recently updated"
         } else if (sortMode === 'alpha') {
             return (a.title || '').localeCompare(b.title || '');
         }
         return 0;
     });
 
-    lsDataCache.allSortedCards = sortedData;
-
-    // Paginate: show 10 per page
-    const start = (currentPage - 1) * LS_PAGE_SIZE;
-    const pageData = sortedData.slice(start, start + LS_PAGE_SIZE);
-
-    pageData.forEach((ls, index) => {
+    sortedData.forEach((ls, index) => {
         const card = document.createElement('div');
         card.className = 'ls-card';
 
@@ -1608,102 +1403,10 @@ function renderLSCards(data, page) {
                 </span>
             </div>
         `;
-
-        // Make the card clickable — open detail modal
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', (function(cardData) {
-            return function() {
-                const itemType = cardData.body === 'OFQUAL' ? 'ofqual' : 'nos';
-                let rawItem;
-                if (cardData._source === 'api' && cardData._raw) {
-                    rawItem = cardData._raw;
-                } else {
-                    // Demo data: build a compatible item for the modal
-                    rawItem = {
-                        title: cardData.title,
-                        description: cardData.overview || '',
-                        overview: cardData.overview || '',
-                        level: (cardData.level || '').replace('Level ', ''),
-                        sector_subject_area: cardData.sector || '',
-                        industry: cardData.sector || '',
-                        qualification_type: cardData.type || '',
-                        learning_outcomes: Array.isArray(cardData.units) ? cardData.units : [],
-                        assessment_criteria: [],
-                        knowledge_understanding: [],
-                        performance_criteria: Array.isArray(cardData.units) ? cardData.units : [],
-                        qualification_level: cardData.level || ''
-                    };
-                }
-                openLSDetailModal(rawItem, itemType);
-            };
-        })(ls));
-
         grid.appendChild(card);
     });
 
     var resultCount = document.getElementById('ls-results-count');
     if (resultCount) resultCount.textContent = data.length + ' results';
-
-    renderLSPagination(data.length, currentPage);
-}
-
-/**
- * Render pagination controls below the card grid.
- */
-function renderLSPagination(totalCount, currentPage) {
-    const container = document.getElementById('ls-pagination');
-    if (!container) return;
-    container.innerHTML = '';
-
-    const totalPages = Math.ceil(totalCount / LS_PAGE_SIZE);
-    if (totalPages <= 1) return;
-
-    const btnStyle = 'display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;padding:0 10px;border-radius:8px;border:1px solid rgba(26,58,92,0.6);background:rgba(10,22,40,0.7);color:#b8c5d6;font-size:13px;cursor:pointer;transition:all 0.15s;font-family:inherit;';
-    const activeBtnStyle = 'display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;padding:0 10px;border-radius:8px;border:1px solid rgba(0,217,192,0.5);background:rgba(0,217,192,0.15);color:#00d9c0;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600;';
-    const disabledBtnStyle = 'display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;padding:0 10px;border-radius:8px;border:1px solid rgba(26,58,92,0.3);background:rgba(10,22,40,0.3);color:#3a4a5c;font-size:13px;cursor:default;font-family:inherit;';
-
-    // Previous
-    const prevBtn = document.createElement('button');
-    prevBtn.innerHTML = '&#8592;';
-    prevBtn.style.cssText = currentPage === 1 ? disabledBtnStyle : btnStyle;
-    prevBtn.disabled = currentPage === 1;
-    if (currentPage > 1) {
-        prevBtn.addEventListener('click', () => goToLSPage(currentPage - 1));
-    }
-    container.appendChild(prevBtn);
-
-    // Page number buttons (show up to 7 pages around current)
-    const startPage = Math.max(1, currentPage - 3);
-    const endPage = Math.min(totalPages, startPage + 6);
-    for (let p = startPage; p <= endPage; p++) {
-        const pageBtn = document.createElement('button');
-        pageBtn.textContent = p;
-        pageBtn.style.cssText = p === currentPage ? activeBtnStyle : btnStyle;
-        if (p !== currentPage) {
-            pageBtn.addEventListener('click', (function(pg) { return () => goToLSPage(pg); })(p));
-        }
-        container.appendChild(pageBtn);
-    }
-
-    // Next
-    const nextBtn = document.createElement('button');
-    nextBtn.innerHTML = '&#8594;';
-    nextBtn.style.cssText = currentPage === totalPages ? disabledBtnStyle : btnStyle;
-    nextBtn.disabled = currentPage === totalPages;
-    if (currentPage < totalPages) {
-        nextBtn.addEventListener('click', () => goToLSPage(currentPage + 1));
-    }
-    container.appendChild(nextBtn);
-}
-
-/**
- * Navigate to a page in the card grid without re-fetching.
- */
-function goToLSPage(page) {
-    if (!lsDataCache.currentData) return;
-    renderLSCards(lsDataCache.currentData, page);
-    // Scroll to top of results
-    const header = document.getElementById('ls-results-header');
-    if (header) header.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
