@@ -1,0 +1,1941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zavmo - Prompt Configuration Studio</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- ACCESS GATE -->
+    <div id="access-gate">
+        <div class="gate-card">
+            <h1>Zavmo Prompt Studio</h1>
+            <p>Enter your credentials to access the configuration studio.</p>
+            <label for="gate-email">Email</label>
+            <input type="email" id="gate-email" placeholder="your.name@company.com" autocomplete="email">
+            <label for="gate-password">Password</label>
+            <input type="password" id="gate-password" placeholder="Enter your password" autocomplete="current-password">
+            <label for="gate-code">Access Code (optional)</label>
+            <input type="text" id="gate-code" placeholder="Enter access code if provided" autocomplete="off" style="display:none;">
+            <button onclick="checkAccess()">Continue</button>
+            <div class="gate-error" id="gate-error">Invalid email or password.</div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section" id="nav-home" style="cursor: pointer;" role="button" aria-label="Command Centre home">
+                    <div class="logo">ZAVMO</div>
+                </div>
+                <nav class="nav-tabs">
+                    <button class="nav-tab" data-tab="command-centre" style="color: #00d9c0; font-weight: 500;">ZAVMO</button>
+
+                    <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 32px;">
+                        <!-- Teaching Prompts (Characters) -->
+                        <button class="nav-icon" data-tab="characters" data-tooltip="Teaching Prompts" aria-label="Teaching Prompts — configure AI teaching character prompts">
+                            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </button>
+                        <!-- AI Reviewer (Agent 13) -->
+                        <button class="nav-icon teal-accent" data-tab="agent13" data-tooltip="AI Reviewer" aria-label="AI Reviewer — automated prompt quality analysis">
+                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </button>
+                        <!-- Test & Compare (Simulation) -->
+                        <button class="nav-icon" data-tab="sim-compare" data-tooltip="Test & Compare" aria-label="Test and Compare — simulate and compare teaching responses">
+                            <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                        </button>
+                        <!-- Qualifications (Learning Specs) -->
+                        <button class="nav-icon" data-tab="learning-specs" data-tooltip="Qualifications" aria-label="Qualifications — browse OFQUAL and NOS specifications">
+                            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        </button>
+                        <!-- Job Roles (Job Descriptions) -->
+                        <button class="nav-icon" data-tab="job-descriptions" data-tooltip="Job Roles" aria-label="Job Roles — search and manage job descriptions">
+                            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                        </button>
+                        <!-- Learning Analytics (xAPI) -->
+                        <button class="nav-icon" data-tab="xapi-analytics" data-tooltip="Learning Analytics" aria-label="Learning Analytics — real-time xAPI learning data">
+                            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        </button>
+                        <!-- Org Insights (Org Pulse) -->
+                        <button class="nav-icon" data-tab="org-pulse" data-tooltip="Org Insights" aria-label="Org Insights — organisation health and learning pulse">
+                            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        </button>
+                        <!-- Team & Access (User Management) -->
+                        <button class="nav-icon" data-tab="user-management" data-tooltip="Team & Access" aria-label="Team and Access — manage users, invitations, and allocations">
+                            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </button>
+                    </div>
+
+                    <!-- Profile — right justified -->
+                    <button class="nav-icon" data-tab="profile" data-tooltip="Profile" aria-label="Profile" style="margin-left: auto;">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M6.168 18.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></svg>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- NEURAL NETWORK BACKGROUND CANVAS -->
+            <canvas id="cc-neural-canvas"></canvas>
+
+            <!-- COMMAND CENTRE PAGE (homepage) -->
+            <div id="command-centre-page" style="width: 100%; height: 100vh; display: none; overflow-y: auto;">
+                <!-- Centre stage greeting and chat -->
+                <div class="cc-centre-stage">
+                    <!-- GREETING -->
+                    <div class="cc-greeting">
+                        <div class="cc-greeting-text">Hello, <span class="cc-name">there</span></div>
+                        <div class="cc-greeting-sub">Welcome to the Command Centre</div>
+                    </div>
+
+                    <!-- FLOATING DIALOGUE BOX -->
+                    <div class="cc-console-wrapper">
+                        <div class="cc-console-label">Zavmo Intelligence</div>
+                        <div class="cc-chat-panel">
+                            <div class="cc-chat-messages" id="cc-chat-messages">
+                                <div class="cc-chat-msg zavmo" id="cc-welcome-msg">
+                                    Good morning. You have <strong class="cc-teal">1,247 active learners</strong> across your organisation today.
+                                    <span class="cc-insight-line" id="cc-insight-0">Engagement is up <span class="cc-teal">4.2%</span> this week — your best week since January.</span>
+                                    <span class="cc-insight-line" id="cc-insight-1"><span class="cc-teal">3 pending invitations</span> are awaiting approval for the Manchester cohort.</span>
+                                    <span class="cc-insight-line" id="cc-insight-2">Agent 13 has flagged <span class="cc-teal">2 learners</span> showing early signs of disengagement.</span>
+                                    <span class="cc-insight-line" id="cc-insight-3">Top performer this week: <span class="cc-teal">Customer Service L3, London</span> at 87% completion.</span>
+                                    <span class="cc-insight-line" id="cc-insight-4">Skills gap alert: <span class="cc-teal">Data Analysis</span> mastery is at 34% — down 3% from last month.</span>
+                                    <span class="cc-insight-line" id="cc-insight-5">Completion velocity has improved — learners are finishing <span class="cc-teal">2 days faster</span> on average.</span>
+                                    <span class="cc-insight-line" id="cc-insight-6"><span class="cc-teal">23 new starters</span> have no courses allocated yet. Shall I suggest some?</span>
+                                    <span class="cc-insight-line" id="cc-insight-7">Bloom's mastery: <span class="cc-teal">89%</span> at Remember, but only <span class="cc-teal">18%</span> reaching Create level.</span>
+                                </div>
+                            </div>
+                            <div class="cc-typing-indicator" id="cc-typing-indicator">
+                                <div class="cc-typing-dot"></div>
+                                <div class="cc-typing-dot"></div>
+                                <div class="cc-typing-dot"></div>
+                            </div>
+                            <div class="cc-chat-input-row">
+                                <input type="text" class="cc-chat-input" id="cc-chat-input" placeholder="Ask me anything about your organisation's learning..." aria-label="Ask Zavmo Intelligence a question">
+                                <button class="cc-chat-send" id="cc-chat-send" aria-label="Send message">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORG PULSE PAGE -->
+            <div id="org-pulse-page" class="cc-tab-page cc-pulse-page" style="display: none;">
+                <div class="cc-pulse-header">
+                    <div class="cc-pulse-title">Organisation Pulse</div>
+                    <div class="cc-pulse-sub">Real-time overview of your organisation's learning health</div>
+                </div>
+
+                <div class="cc-kpi-row">
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">Active Learners</div>
+                        <div class="cc-kpi-value">1,247</div>
+                        <div class="cc-kpi-change up">+12% vs last month</div>
+                    </div>
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">Engagement Rate</div>
+                        <div class="cc-kpi-value">78%</div>
+                        <div class="cc-kpi-change up">+4.2% this week</div>
+                    </div>
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">ROI Indicator</div>
+                        <div class="cc-kpi-value">3.2x<span class="cc-kpi-unit">return</span></div>
+                        <div class="cc-kpi-change up">+0.4x vs Q3</div>
+                    </div>
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">Completion Velocity</div>
+                        <div class="cc-kpi-value">14<span class="cc-kpi-unit">days avg</span></div>
+                        <div class="cc-kpi-change up">-2 days faster</div>
+                    </div>
+                    <div class="cc-kpi-card">
+                        <div class="cc-kpi-label">Hours Saved</div>
+                        <div class="cc-kpi-value">2,840<span class="cc-kpi-unit">hrs</span></div>
+                        <div class="cc-kpi-change neutral">This quarter</div>
+                    </div>
+                </div>
+
+                <div class="cc-insight-grid">
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Bloom's Mastery Distribution</div>
+                        <div class="cc-bloom-ladder">
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Create</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:18%"></div></div><div class="cc-bloom-pct">18%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Evaluate</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:24%"></div></div><div class="cc-bloom-pct">24%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Analyse</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:35%"></div></div><div class="cc-bloom-pct">35%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Apply</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:52%"></div></div><div class="cc-bloom-pct">52%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Understand</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:71%"></div></div><div class="cc-bloom-pct">71%</div></div>
+                            <div class="cc-bloom-row"><div class="cc-bloom-label">Remember</div><div class="cc-bloom-bar-track"><div class="cc-bloom-bar" style="width:89%"></div></div><div class="cc-bloom-pct">89%</div></div>
+                        </div>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Top Content This Week</div>
+                        <ul class="cc-pulse-list">
+                            <li><span>Health &amp; Safety L2</span><span class="cc-pl-val">342</span></li>
+                            <li><span>Customer Service L3</span><span class="cc-pl-val">287</span></li>
+                            <li><span>Leadership &amp; Mgmt L5</span><span class="cc-pl-val">198</span></li>
+                            <li><span>Digital Skills L2</span><span class="cc-pl-val">156</span></li>
+                            <li><span>Project Management L4</span><span class="cc-pl-val">134</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Top Learning Streams</div>
+                        <ul class="cc-pulse-list">
+                            <li><span>Compliance &amp; Regulation</span><span class="cc-pl-val">28%</span></li>
+                            <li><span>Leadership Development</span><span class="cc-pl-val">22%</span></li>
+                            <li><span>Technical Skills</span><span class="cc-pl-val">19%</span></li>
+                            <li><span>Customer Experience</span><span class="cc-pl-val">17%</span></li>
+                            <li><span>Digital Transformation</span><span class="cc-pl-val">14%</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Character Interactions</div>
+                        <div class="cc-char-grid">
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">BU</div><div class="cc-char-dot-label">Builder</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CO</div><div class="cc-char-dot-label">Coach</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">NA</div><div class="cc-char-dot-label">Navigator</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">EX</div><div class="cc-char-dot-label">Explorer</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CN</div><div class="cc-char-dot-label">Connector</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">PR</div><div class="cc-char-dot-label">Practitioner</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">AN</div><div class="cc-char-dot-label">Analyst</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CL</div><div class="cc-char-dot-label">Collaborator</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CT</div><div class="cc-char-dot-label">Catalyst</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">EV</div><div class="cc-char-dot-label">Evaluator</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">CE</div><div class="cc-char-dot-label">Certifier</div></div>
+                            <div class="cc-char-dot"><div class="cc-char-dot-circle">IN</div><div class="cc-char-dot-label">Integrator</div></div>
+                        </div>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Learners Pursuing Roles</div>
+                        <ul class="cc-pulse-list">
+                            <li><span>Financial Analyst</span><span class="cc-pl-val">89</span></li>
+                            <li><span>Project Manager</span><span class="cc-pl-val">76</span></li>
+                            <li><span>Team Leader</span><span class="cc-pl-val">64</span></li>
+                            <li><span>Data Analyst</span><span class="cc-pl-val">51</span></li>
+                            <li><span>Operations Manager</span><span class="cc-pl-val">43</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="cc-insight-card">
+                        <div class="cc-insight-card-title">Skills Gap Analysis</div>
+                        <ul class="cc-pulse-list">
+                            <li><span>Communication</span><span class="cc-pl-val" style="color:#22c55e">82%</span></li>
+                            <li><span>H&amp;S Compliance</span><span class="cc-pl-val" style="color:#22c55e">79%</span></li>
+                            <li><span>Leadership</span><span class="cc-pl-val">58%</span></li>
+                            <li><span>Project Management</span><span class="cc-pl-val" style="color:#f59e0b">41%</span></li>
+                            <li><span>Data Analysis</span><span class="cc-pl-val" style="color:#ef4444">34%</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USER MANAGEMENT PAGE (placeholder) -->
+            <div id="user-management-page" class="cc-tab-page cc-placeholder-page" style="display: none;">
+                <svg class="cc-placeholder-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <div class="cc-placeholder-title">User Management</div>
+                <div class="cc-placeholder-desc">Add users, manage teams, assign roles, and handle allocations and invitations. Coming soon.</div>
+            </div>
+
+            <!-- TEACHING PROMPTS PAGE (Characters) -->
+            <div id="characters-page" class="cc-page-container" style="width: 100%; overflow-y: auto;">
+                <div class="panel" style="width: 100%;">
+                    <div style="width: 100%; box-sizing: border-box; padding: 32px 40px;">
+
+                        <!-- PAGE HEADER — Clean title + character selector -->
+                        <div class="cc-page-header">
+                            <div>
+                                <h2 class="cc-page-title">Teaching Prompts</h2>
+                                <p class="cc-page-subtitle">Configure the AI teaching characters that guide your learners. Each character has a unique voice, Bloom's level, and teaching style.</p>
+                            </div>
+                            <div class="cc-page-actions">
+                                <select id="character-select" class="cc-select">
+                                    <option value="foundation-builder">The Foundation Builder</option>
+                                    <option value="challenge-coach">The Challenge Coach</option>
+                                    <option value="career-navigator">The Career Navigator</option>
+                                    <option value="experiment-space">The Experiment Space</option>
+                                    <option value="pattern-connector">The Pattern Connector (Maya Patel)</option>
+                                    <option value="practical-builder">The Practical Builder (Alex Thompson)</option>
+                                    <option value="systems-analyst">The Systems Analyst (Kenji Tanaka)</option>
+                                    <option value="collaboration-guide">The Collaboration Guide (Sofia Rodriguez)</option>
+                                    <option value="creative-catalyst">The Creative Catalyst (Aisha Williams)</option>
+                                    <option value="evidence-evaluator">The Evidence Evaluator</option>
+                                    <option value="qualification-certifier">The Qualification Certifier</option>
+                                    <option value="integrator">The Integrator</option>
+                                </select>
+                                <button id="push-all-zavmo-btn" class="cc-btn-push" title="Push all 12 character prompts + Teaching Charter to Zavmo">Push All to Zavmo</button>
+                            </div>
+                        </div>
+
+                        <!-- CHARACTER AT A GLANCE — compact metadata strip -->
+                        <div class="cc-meta-strip">
+                            <div class="cc-meta-item">
+                                <span class="cc-meta-label">Bloom's Level</span>
+                                <span class="cc-meta-value" id="blooms-level">Remember, Understand</span>
+                            </div>
+                            <div class="cc-meta-divider"></div>
+                            <div class="cc-meta-item">
+                                <span class="cc-meta-label">Intelligence Type</span>
+                                <span class="cc-meta-value" id="intelligence-type">Foundation Building</span>
+                            </div>
+                            <div class="cc-meta-divider"></div>
+                            <div class="cc-meta-item">
+                                <span class="cc-meta-label">Voice Pattern</span>
+                                <span class="cc-meta-value" id="voice-pattern">Encouraging Mentor</span>
+                            </div>
+                            <div class="cc-meta-divider"></div>
+                            <div class="cc-meta-item" id="colour-swatch-wrap">
+                                <span class="cc-meta-label">Characters</span>
+                                <span class="cc-meta-value cc-meta-teal" id="colour-swatch">12</span>
+                            </div>
+                        </div>
+
+                        <!-- TEACHING CHARTER — always visible banner, expandable detail -->
+                        <div class="cc-charter-banner">
+                            <div class="cc-charter-banner-top">
+                                <div class="cc-charter-banner-info">
+                                    <svg class="cc-charter-icon" viewBox="0 0 24 24" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                    <div>
+                                        <div class="cc-charter-banner-title">Teaching Charter <span class="cc-charter-status">Active</span></div>
+                                        <div class="cc-charter-banner-preview" id="cc-charter-snippet">Applied to all 12 characters and Agent 13 on every API call. Governs how all characters teach, assess, and respond.</div>
+                                    </div>
+                                </div>
+                                <div class="cc-section-actions">
+                                    <button id="charter-toggle" class="cc-btn-secondary cc-btn-expand" role="button" aria-expanded="false" aria-controls="charter-body">
+                                        <span class="cc-expand-text">View Charter</span>
+                                        <svg class="cc-section-chevron" viewBox="0 0 24 24" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
+                                    </button>
+                                    <button id="charter-panel-header" class="cc-btn-secondary">Edit</button>
+                                    <button id="push-charter-btn" class="cc-btn-push" title="Push Teaching Charter to Zavmo">Push Charter</button>
+                                </div>
+                            </div>
+                            <div id="charter-body" class="cc-section-body cc-collapsed">
+                                <div id="charter-preview" class="cc-code-preview">
+                                    <pre id="charter-preview-text" class="cc-code-text"></pre>
+                                </div>
+                                <div id="charter-panel-body" style="display: none; margin-top: 16px;">
+                                    <textarea class="prompt-textarea" id="teaching-charter-textarea" class="cc-textarea" spellcheck="false" placeholder="Teaching Charter will appear here..."></textarea>
+                                    <div class="cc-btn-row">
+                                        <button id="save-charter-btn" class="cc-btn-primary">Save Charter</button>
+                                        <button id="reset-charter-btn" class="cc-btn-ghost">Reset to Default</button>
+                                        <span id="charter-save-status" class="cc-save-status">Charter saved successfully.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CHARACTER SYSTEM PROMPT — the main working area -->
+                        <div class="cc-section-card cc-prompt-section">
+                            <div class="cc-section-header">
+                                <div class="cc-section-title-row">
+                                    <h3 class="cc-section-title">System Prompt</h3>
+                                    <span class="cc-badge cc-badge-edit">Editable</span>
+                                </div>
+                                <div class="cc-section-actions">
+                                    <button id="save-prompt-btn" class="cc-btn-primary">Save</button>
+                                    <button id="copy-prompt-btn" class="cc-btn-secondary">Copy</button>
+                                    <button id="push-to-zavmo-btn" class="cc-btn-push" title="Push this prompt to the live Zavmo application">Push to Zavmo</button>
+                                </div>
+                            </div>
+                            <p class="cc-section-desc">The system prompt for the selected character. The Teaching Charter is automatically appended to every API call.</p>
+                            <textarea class="prompt-textarea" id="prompt-textarea" class="cc-textarea cc-textarea-main" spellcheck="false" placeholder="Character prompt will appear here..."></textarea>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END TEACHING PROMPTS PAGE -->
+
+            <!-- SIM & COMPARE PAGE (hidden by default) -->
+            <div id="sim-compare-page" style="display: none; width: 100%; gap: 0; height: 100%; flex-direction: column;">
+
+                <!-- HEADER -->
+                <div style="width: 100%; box-sizing: border-box; padding: 24px 32px 0 32px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d9c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19V6l12-3v13"/><circle cx="6" cy="19" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                            </div>
+                            <div>
+                                <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Simulation &amp; Comparison</h2>
+                                <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">Configure units, simulate character responses, and compare outputs side by side</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UNIT CONFIGURATION BAR (at top of sim-compare page) -->
+                <div style="width: 100%; background: rgba(0,217,192,0.03); border-bottom: 1px solid rgba(0,217,192,0.15); padding: 16px 32px;">
+                    <div class="qualification-selector-panel" id="qual-panel">
+                        <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" id="qual-panel-header">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Unit Configuration</h3>
+                                <span style="background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">CONFIGURE BEFORE SIMULATING</span>
+                            </div>
+                            <span id="qual-panel-toggle" style="color: #00d9c0; font-size: 18px; transition: transform 0.3s;">&#9660;</span>
+                        </div>
+
+                        <div id="qual-panel-body" style="margin-top: 16px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                                <div class="qualification-dropdown-group">
+                                    <label class="input-label" for="country-select">Country / Education System</label>
+                                    <select id="country-select" class="input-field">
+                                        <option value="uk">United Kingdom (OFQUAL)</option>
+                                        <option value="au">Australia (AQF)</option>
+                                        <option value="de">Germany (DQR)</option>
+                                    </select>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <span class="input-label">Framework</span>
+                                    <div class="input-field" id="framework-display" style="background: rgba(10,22,40,0.5); cursor: default;">OFQUAL — Office of Qualifications and Examinations Regulation</div>
+                                </div>
+                            </div>
+
+                            <div class="qualification-source-row">
+                                <div class="qualification-dropdown-group">
+                                    <label class="input-label" for="qualification-select">Qualification</label>
+                                    <select id="qualification-select" class="input-field">
+                                        <option value="">Select a qualification...</option>
+                                    </select>
+                                </div>
+                                <div class="unit-dropdown-group">
+                                    <label class="input-label" for="unit-select">Unit</label>
+                                    <select id="unit-select" class="input-field">
+                                        <option value="">Select a unit...</option>
+                                    </select>
+                                </div>
+                                <button class="api-connector-btn" id="fetch-api-btn">Fetch from API</button>
+                            </div>
+
+                            <div class="readonly-fields" id="qual-readonly-fields">
+                                <div class="readonly-field">
+                                    <span class="readonly-label">Lesson Topic</span>
+                                    <div class="readonly-value" id="lesson-topic-display">—</div>
+                                    <button class="edit-btn" id="edit-lesson-topic-btn" title="Edit lesson topic">✎</button>
+                                </div>
+                                <div class="readonly-field">
+                                    <span class="readonly-label">Credits</span>
+                                    <div class="readonly-value" id="credits-display">—</div>
+                                </div>
+                                <div class="readonly-field full-width">
+                                    <span class="readonly-label">Learning Objective</span>
+                                    <div class="readonly-value" id="learning-objective-display">—</div>
+                                    <button class="edit-btn" id="edit-objective-btn" title="Edit learning objective">✎</button>
+                                </div>
+                                <div class="readonly-field full-width">
+                                    <span class="readonly-label">Learning Outcomes (LO)</span>
+                                    <div class="readonly-value" id="learning-outcomes-display">—</div>
+                                    <button class="edit-btn" id="edit-outcomes-btn" title="Edit learning outcomes">✎</button>
+                                </div>
+                                <div class="readonly-field full-width">
+                                    <span class="readonly-label">Assessment Criteria (AC)</span>
+                                    <div class="readonly-value" id="assessment-criteria-display">—</div>
+                                    <button class="edit-btn" id="edit-criteria-btn" title="Edit assessment criteria">✎</button>
+                                </div>
+                                <div class="readonly-field">
+                                    <span class="readonly-label">Bloom's Level Range</span>
+                                    <div class="readonly-value" id="blooms-display">—</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END UNIT CONFIGURATION BAR -->
+
+                <!-- SUB-TAB BAR: Simulation | Compare Teachers -->
+                <div class="sim-sub-tabs" id="sim-sub-tabs">
+                    <button class="sim-sub-tab active" data-sim-tab="simulation" id="sim-sub-tab-simulation">Simulation</button>
+                    <button class="sim-sub-tab" data-sim-tab="comparison" id="sim-sub-tab-comparison">Compare Teachers</button>
+                </div>
+
+                <!-- SIMULATION + COMPARISON (tabbed, full width) -->
+                <div style="flex: 1; min-height: 0; position: relative;">
+
+                <!-- SIMULATION TAB -->
+                <div class="panel sim-tab-panel active" id="simulation-panel" style="min-width: 0; overflow-y: auto; padding: 32px; background: #0a1628;">
+                    <div class="tab-content active" id="simulation-tab">
+                        <!-- PRE-LESSON VIEW -->
+                        <div class="pre-lesson-view" id="pre-lesson-view">
+                            <!-- API Settings Toggle -->
+                            <button class="chat-btn secondary" id="toggle-api-settings" style="width: 100%; margin-bottom: 16px;">API Settings</button>
+
+                            <!-- API Settings Panel -->
+                            <div class="api-settings-panel" id="api-settings-panel">
+                                <div class="api-settings-row full">
+                                    <div class="input-group">
+                                        <label class="input-label">API Provider</label>
+                                        <select class="input-field" id="api-provider">
+                                            <option value="local">Local (No API)</option>
+                                            <option value="zavmo-cloud">Zavmo Cloud (Recommended)</option>
+                                            <option value="openai">OpenAI</option>
+                                            <option value="anthropic">Anthropic</option>
+                                            <option value="azure">Azure OpenAI</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="api-settings-row" id="api-key-row" style="display: none;">
+                                    <div class="input-group">
+                                        <label class="input-label">API Key</label>
+                                        <input type="password" class="input-field" id="api-key" placeholder="Enter your API key">
+                                    </div>
+                                </div>
+
+                                <div class="api-settings-row" id="model-row" style="display: none;">
+                                    <div class="input-group">
+                                        <label class="input-label">Model</label>
+                                        <select class="input-field" id="api-model">
+                                            <option value="gpt-4o">GPT-4o</option>
+                                            <option value="gpt-4o-mini">GPT-4o Mini</option>
+                                            <option value="claude-opus-4-5-20251101">Claude Opus 4.5</option>
+                                            <option value="claude-sonnet-4-5-20250929">Claude Sonnet 4.5</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <label class="input-label">Temperature</label>
+                                        <div class="slider-container">
+                                            <input type="range" id="temperature-slider" min="0" max="1" step="0.1" value="0.7">
+                                            <span class="slider-value" id="temperature-value">0.7</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="api-settings-row full" id="api-button-row" style="display: none;">
+                                    <button class="button button-primary" id="connect-api-btn" style="width: 100%;">Connect API</button>
+                                </div>
+                            </div>
+
+                            <!-- Pre-lesson card -->
+                            <div class="pre-lesson-card">
+                                <h2 class="pre-lesson-title">Ready to Begin?</h2>
+                                <p class="pre-lesson-text">Configure a unit using the panel above, then click Start Lesson to begin the simulation.</p>
+                                <button class="chat-btn" id="start-lesson-btn" style="width: 100%;">Start Lesson</button>
+                            </div>
+                        </div>
+
+                        <!-- LESSON VIEW -->
+                        <div class="lesson-view" id="lesson-view" style="display: none; flex-direction: column; height: 100%; gap: 0;">
+                            <!-- HEADER BAR -->
+                            <div class="lesson-header-bar">
+                                <div class="lesson-header-left">
+                                    <button class="lesson-back-btn" id="lesson-back-btn">&lt; Back</button>
+                                    <span class="lesson-unit-title" id="lesson-unit-title">Unit Title</span>
+                                    <span class="lesson-learning-badge">Learning</span>
+                                </div>
+                                <div class="lesson-header-center" style="position: relative;">
+                                    <div class="lesson-character-icon" id="lesson-character-icon">≋</div>
+                                    <div class="lesson-character-badge">
+                                        <div>
+                                            <span class="lesson-character-name" id="lesson-character-name">Character</span>
+                                            <span class="lesson-character-subtitle" id="lesson-character-subtitle">Subtitle</span>
+                                        </div>
+                                        <button class="lesson-character-dropdown" id="lesson-character-dropdown">▼</button>
+                                    </div>
+                                    <!-- Character selector dropdown -->
+                                    <div class="sim-char-dropdown" id="sim-char-dropdown"></div>
+                                </div>
+                                <div class="lesson-header-right">
+                                    <button class="lesson-end-session-btn" id="end-session-btn">End Session</button>
+                                </div>
+                            </div>
+
+                            <!-- OBJECTIVE BAR -->
+                            <div class="objective-bar">
+                                <div class="objective-bar-left">
+                                    <span class="objective-label">Objective:</span>
+                                    <span class="objective-text" id="objective-text">Learning objective...</span>
+                                </div>
+                                <div class="objective-badges">
+                                    <span class="bloom-badge" id="bloom-badge">Bloom: Level 2 — Understand</span>
+                                    <div class="objective-progress">
+                                        <div class="objective-progress-bar">
+                                            <div class="objective-progress-fill" id="objective-progress-fill" style="width: 0%;"></div>
+                                        </div>
+                                        <span class="objective-progress-text" id="objective-progress-text">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- COLLAPSIBLE OBJECTIVES SECTION -->
+                            <div class="objectives-section">
+                                <div class="objectives-header" id="objectives-header">
+                                    <span class="objectives-toggle-icon" id="objectives-toggle-icon">▶</span>
+                                    <span>Learning objectives, outcomes & assessment criteria</span>
+                                </div>
+                                <div class="objectives-body" id="objectives-body">
+                                    <div class="progress-objective" id="progress-objective"></div>
+                                    <div class="progress-section-label">Learning Outcomes</div>
+                                    <div id="progress-lo-list"></div>
+                                    <div class="progress-section-label">Assessment Criteria</div>
+                                    <div id="progress-ac-list"></div>
+                                </div>
+                            </div>
+
+                            <!-- MAIN CONTENT AREA - Chat & Sidebar -->
+                            <div class="lesson-main-area">
+                                <!-- CHAT COLUMN -->
+                                <div class="lesson-chat-column">
+                                    <!-- Chat Output -->
+                                    <div class="chat-output" id="chat-output"></div>
+
+                                    <!-- Helper Text -->
+                                    <div class="lesson-helper-text">Ask your teacher any questions below. When you're ready for the next part, click the button.</div>
+
+                                    <!-- Chat Input Area -->
+                                    <div class="chat-input-area" id="chat-input-area">
+                                        <input type="text" class="lesson-chat-input-field" id="learner-input" placeholder="Ask a question about this topic..." disabled>
+                                        <button class="chat-input-mic-btn" id="mic-btn" title="Microphone" disabled>🎤</button>
+                                        <button class="chat-input-send-btn" id="send-btn" title="Send message" disabled>✈</button>
+                                    </div>
+
+                                    <!-- Continue Button -->
+                                    <button class="lesson-continue-btn" id="lesson-continue-btn">Continue to next part</button>
+                                </div>
+
+                                <!-- xAPI SIDEBAR -->
+                                <div class="lesson-sidebar">
+                                    <!-- Sidebar Header -->
+                                    <div class="lesson-sidebar-header">
+                                        <div class="lesson-sidebar-header-left">
+                                            <button class="lesson-sidebar-collapse-btn" id="lesson-sidebar-collapse">◀</button>
+                                            <div>
+                                                <div class="lesson-sidebar-title">xAPI Statements</div>
+                                                <div class="lesson-sidebar-subtitle">Real-time learning analytics</div>
+                                            </div>
+                                        </div>
+                                        <span class="lesson-sidebar-badge" id="lesson-statement-count">0 statements</span>
+                                    </div>
+
+                                    <!-- Session Info -->
+                                    <div class="lesson-sidebar-section">
+                                        <div class="lesson-sidebar-info-row">
+                                            <span class="lesson-sidebar-label">Session ID</span>
+                                            <span class="lesson-sidebar-value" id="lesson-session-id">...</span>
+                                        </div>
+                                        <div class="lesson-sidebar-info-row">
+                                            <span class="lesson-sidebar-label">Character</span>
+                                            <span class="lesson-sidebar-value teal" id="lesson-sidebar-character">builder</span>
+                                        </div>
+                                        <div class="lesson-sidebar-divider"></div>
+                                    </div>
+
+                                    <!-- Learning Objectives -->
+                                    <div class="lesson-learning-objectives">
+                                        <div class="lesson-lo-title">Learning Objectives</div>
+                                        <div id="lesson-sidebar-lo-list"></div>
+                                    </div>
+
+                                    <!-- Assessment Criteria -->
+                                    <div class="lesson-learning-objectives" id="lesson-sidebar-ac-section" style="display: none;">
+                                        <div class="lesson-lo-title" style="color: #5B9BD5;">Assessment Criteria</div>
+                                        <div id="lesson-sidebar-ac-list"></div>
+                                    </div>
+
+                                    <!-- xAPI Feed -->
+                                    <div style="flex: 1; overflow-y: auto; border-bottom: 1px solid rgba(26, 58, 92, 0.5);">
+                                        <div id="xapi-toggle" style="padding: 10px 16px; cursor: pointer; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(26,58,92,0.3); user-select: none;">
+                                            <span id="xapi-toggle-icon" style="color: #00d9c0; font-size: 10px;">▼</span>
+                                            <span style="font-size: 11px; font-weight: 600; color: #8b9cb6; text-transform: uppercase; letter-spacing: 0.5px;">xAPI Feed</span>
+                                        </div>
+                                        <div id="xapi-preview" style="display: block;">
+                                            <div class="xapi-feed" id="xapi-feed"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sidebar Continue Button -->
+                                    <div class="lesson-sidebar-continue">
+                                        <button class="lesson-continue-btn" id="lesson-sidebar-continue-btn">Continue to next part</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- END SIMULATION SIDE -->
+
+                <!-- COMPARE TEACHERS TAB -->
+                <div class="panel sim-tab-panel" id="comparison-panel" style="min-width: 0; overflow-y: auto; padding: 32px; background: #0a1628; display: none;">
+                    <div class="tab-content active" id="comparison-tab">
+                        <div class="comparison-container" id="comparison-container"></div>
+                    </div>
+                </div>
+                <!-- END COMPARE TEACHERS TAB -->
+
+                </div>
+                <!-- END SIMULATION + COMPARISON TABBED -->
+            </div>
+            <!-- END SIM & COMPARE PAGE -->
+
+            <!-- LEARNING SPECIFICATIONS PAGE (hidden by default) -->
+            <div id="learning-specs-page" style="display: none; width: 100%; overflow-y: auto;">
+                <div class="panel" style="width: 100%;">
+                    <div style="width: 100%; box-sizing: border-box; padding: 24px;">
+
+                        <!-- HEADER -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d9c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                                </div>
+                                <div>
+                                    <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Learning Specifications</h2>
+                                    <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">Browse, filter and explore qualifications from OFQUAL, NOS and other awarding bodies.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEARCH & FILTER SECTION -->
+                        <div style="background: rgba(13, 30, 54, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(26, 58, 92, 0.5); border-radius: 16px; padding: 24px; margin-bottom: 32px;">
+
+                            <!-- Search bar -->
+                            <div style="position: relative; margin-bottom: 16px;">
+                                <svg style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #6b7c93; width: 18px; height: 18px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                <input type="text" id="ls-search-input" placeholder="Search qualifications..." style="width: 100%; background: rgba(10, 22, 40, 0.7); border: 1px solid rgba(26, 58, 92, 0.5); border-radius: 12px; padding: 14px 16px 14px 44px; font-size: 14px; color: #ffffff; font-family: inherit; outline: none;" aria-label="Search learning specifications">
+                            </div>
+
+                            <!-- Filter row -->
+                            <div class="jd-filter-row">
+                                <span class="jd-filter-label">Sort by:</span>
+                                <select id="ls-sort-dropdown" class="jd-filter-dropdown" aria-label="Sort learning specifications">
+                                    <option value="popular">Most Popular</option>
+                                    <option value="recent">Recently Updated</option>
+                                    <option value="alpha">Alphabetical (A-Z)</option>
+                                </select>
+                                <span class="jd-filter-label" style="margin-left: 24px;">Filter by:</span>
+                                <select id="ls-filter-country" class="jd-filter-dropdown" aria-label="Filter by country">
+                                    <option value="">All Countries</option>
+                                    <option value="uk">United Kingdom</option>
+                                    <option value="us">United States</option>
+                                    <option value="au">Australia</option>
+                                    <option value="ca">Canada</option>
+                                    <option value="ie">Ireland</option>
+                                    <option value="eu">European Union</option>
+                                    <option value="intl">International</option>
+                                </select>
+                                <select id="ls-filter-language" class="jd-filter-dropdown" aria-label="Filter by language">
+                                    <option value="">All Languages</option>
+                                    <option value="en">English</option>
+                                    <option value="cy">Welsh</option>
+                                    <option value="gd">Gaelic</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="zh">Mandarin</option>
+                                </select>
+                                <select id="ls-filter-level" class="jd-filter-dropdown" aria-label="Filter by level">
+                                    <option value="">All Levels</option>
+                                    <option value="1">Level 1</option>
+                                    <option value="2">Level 2</option>
+                                    <option value="3">Level 3</option>
+                                    <option value="4">Level 4</option>
+                                    <option value="5">Level 5</option>
+                                    <option value="6">Level 6</option>
+                                </select>
+                                <select id="ls-filter-source" class="jd-filter-dropdown" aria-label="Filter by source type">
+                                    <option value="">All Types</option>
+                                    <option value="qualification">Qualification</option>
+                                    <option value="skills">Skills</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Stats cards (hidden, loaded by API) -->
+                        <div class="ls-stats-grid" id="ls-stats-grid" style="display: none;">
+                            <div class="ls-stat-card">
+                                <div class="ls-stat-label">OFQUAL Qualifications</div>
+                                <div class="ls-stat-value" id="ls-stat-ofqual">--</div>
+                                <div class="ls-stat-detail" id="ls-stat-ofqual-detail">Loading...</div>
+                            </div>
+                            <div class="ls-stat-card">
+                                <div class="ls-stat-label">NOS Standards</div>
+                                <div class="ls-stat-value" id="ls-stat-nos">--</div>
+                                <div class="ls-stat-detail" id="ls-stat-nos-detail">Loading...</div>
+                            </div>
+                            <div class="ls-stat-card">
+                                <div class="ls-stat-label">Job Descriptions</div>
+                                <div class="ls-stat-value" id="ls-stat-jd">--</div>
+                                <div class="ls-stat-detail" id="ls-stat-jd-detail">Loading...</div>
+                            </div>
+                            <div class="ls-stat-card">
+                                <div class="ls-stat-label">Frameworks</div>
+                                <div class="ls-stat-value" id="ls-stat-frameworks">--</div>
+                                <div class="ls-stat-detail" id="ls-stat-frameworks-detail">Loading...</div>
+                            </div>
+                        </div>
+
+                        <!-- Search/Filter controls (used by existing JS) -->
+                        <div style="display: none;">
+                            <button id="ls-search-btn">Search</button>
+                            <button id="ls-refresh-btn">Refresh</button>
+                            <select id="ls-filter-sector"><option value="">All Sectors</option></select>
+                            <select id="ls-filter-type"><option value="">All Types</option><option value="ofqual">OFQUAL Only</option><option value="nos">NOS Only</option><option value="jd">Job Descriptions Only</option></select>
+                            <button id="ls-clear-filters">Clear Filters</button>
+                            <div id="ls-result-tabs">
+                                <button class="ls-tab-btn active" data-ls-tab="all">All Results</button>
+                                <button class="ls-tab-btn" data-ls-tab="ofqual">OFQUAL</button>
+                                <button class="ls-tab-btn" data-ls-tab="nos">NOS</button>
+                                <button class="ls-tab-btn" data-ls-tab="jd">Job Descriptions</button>
+                            </div>
+                        </div>
+
+                        <!-- Results header -->
+                        <div class="ls-results-header" id="ls-results-header" style="margin-bottom: 24px;">
+                            <span id="ls-results-count">6 results</span>
+                            <span id="ls-results-query"></span>
+                        </div>
+
+                        <!-- Results grid -->
+                        <div id="ls-results-container">
+                            <div class="ls-results-grid" id="ls-results-grid">
+                                <!-- Cards populated by JavaScript -->
+                            </div>
+                            <div class="ls-empty-state" id="ls-empty-state" style="display: none;">
+                                <div class="ls-empty-icon">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                </div>
+                                <div class="ls-empty-title">Search the learning database</div>
+                                <div class="ls-empty-text">Enter a keyword to explore OFQUAL qualifications, NOS standards, and job descriptions stored in Neo4j</div>
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div id="ls-pagination" style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 24px; padding-bottom: 16px;"></div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END LEARNING SPECIFICATIONS PAGE -->
+
+            <!-- JOB DESCRIPTIONS PAGE (hidden by default) -->
+            <div id="job-descriptions-page" style="display: none; width: 100%; overflow-y: auto;">
+                <div class="panel" style="width: 100%;">
+                    <div style="width: 100%; box-sizing: border-box; padding: 24px;">
+
+                        <!-- HEADER -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d9c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                </div>
+                                <div>
+                                    <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Job Descriptions</h2>
+                                    <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">Search, review, and export the full job description library. Filter by industry, level, or title to find aligned qualifications.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEARCH & FILTER SECTION -->
+                        <div style="background: rgba(13, 30, 54, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(26, 58, 92, 0.5); border-radius: 16px; padding: 24px; margin-bottom: 32px;">
+
+                            <!-- Search bar -->
+                            <div style="position: relative; margin-bottom: 16px;">
+                                <svg style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #6b7c93; width: 18px; height: 18px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                <input type="text" id="jd-search-input" placeholder="Search by job title, keyword..." style="width: 100%; background: rgba(10, 22, 40, 0.7); border: 1px solid rgba(26, 58, 92, 0.5); border-radius: 12px; padding: 14px 16px 14px 44px; font-size: 14px; color: #ffffff; font-family: inherit; outline: none;" aria-label="Search job descriptions">
+                            </div>
+
+                            <!-- Filter row -->
+                            <div class="jd-filter-row">
+                                <span class="jd-filter-label">Sort by:</span>
+                                <select id="jd-sort-dropdown" class="jd-filter-dropdown" aria-label="Sort job descriptions">
+                                    <option value="popular">Most Popular</option>
+                                    <option value="recent">Recently Updated</option>
+                                    <option value="alpha">Alphabetical (A-Z)</option>
+                                </select>
+                                <span class="jd-filter-label" style="margin-left: 24px;">Filter by:</span>
+                                <select id="jd-filter-country" class="jd-filter-dropdown" aria-label="Filter by country">
+                                    <option value="">All Countries</option>
+                                    <option value="uk">United Kingdom</option>
+                                    <option value="us">United States</option>
+                                    <option value="au">Australia</option>
+                                    <option value="ca">Canada</option>
+                                    <option value="ie">Ireland</option>
+                                    <option value="eu">European Union</option>
+                                    <option value="intl">International</option>
+                                </select>
+                                <select id="jd-filter-language" class="jd-filter-dropdown" aria-label="Filter by language">
+                                    <option value="">All Languages</option>
+                                    <option value="en">English</option>
+                                    <option value="cy">Welsh</option>
+                                    <option value="gd">Gaelic</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="zh">Mandarin</option>
+                                </select>
+                                <select id="jd-filter-industry" class="jd-filter-dropdown" aria-label="Filter by industry">
+                                    <option value="">All Industries</option>
+                                    <option value="technology">Technology</option>
+                                    <option value="healthcare">Healthcare</option>
+                                    <option value="finance">Finance &amp; Banking</option>
+                                    <option value="construction">Construction</option>
+                                    <option value="education">Education</option>
+                                    <option value="retail">Retail</option>
+                                    <option value="logistics">Logistics</option>
+                                </select>
+                                <select id="jd-filter-level" class="jd-filter-dropdown" aria-label="Filter by level">
+                                    <option value="">All Levels</option>
+                                    <option value="2">Level 2</option>
+                                    <option value="3">Level 3</option>
+                                    <option value="4">Level 4</option>
+                                    <option value="5">Level 5</option>
+                                    <option value="6">Level 6</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Results header -->
+                        <div class="jd-results-header" style="margin-bottom: 24px;">
+                            <div class="jd-results-count">Showing <strong id="jd-result-count">6</strong> of <strong>1,247</strong> job descriptions</div>
+                        </div>
+
+                        <!-- Results grid -->
+                        <div class="jd-results-grid" id="jd-results-grid">
+                            <!-- Cards populated by JavaScript -->
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="jd-pagination" style="margin-top: 32px;">
+                            <button class="jd-page-btn" aria-label="Previous page">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                            </button>
+                            <button class="jd-page-btn active">1</button>
+                            <button class="jd-page-btn">2</button>
+                            <button class="jd-page-btn">3</button>
+                            <button class="jd-page-btn">...</button>
+                            <button class="jd-page-btn">42</button>
+                            <button class="jd-page-btn" aria-label="Next page">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END JOB DESCRIPTIONS PAGE -->
+
+            <!-- JOB DESCRIPTION DETAIL OVERLAY -->
+            <div class="jd-detail-overlay" id="jd-detail-overlay" onclick="closeJDDetailIfBackdrop(event, this)">
+                <div class="jd-detail-panel" role="dialog" aria-modal="true" aria-label="Job description details">
+                    <div class="jd-detail-header">
+                        <div class="jd-detail-header-top">
+                            <div>
+                                <div class="jd-detail-title" id="jd-detail-title">Senior Software Engineer</div>
+                                <div style="margin-top:6px;">
+                                    <div class="jd-detail-meta-row" id="jd-detail-meta">
+                                        <div class="jd-detail-meta-item">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                                            <span id="jd-detail-industry">Technology</span>
+                                        </div>
+                                        <div class="jd-detail-divider"></div>
+                                        <div class="jd-detail-meta-item">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                                            <span id="jd-detail-level">Level 6 — Degree</span>
+                                        </div>
+                                        <div class="jd-detail-divider"></div>
+                                        <div class="jd-detail-meta-item">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                            <span id="jd-detail-updated">Updated 3 days ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="jd-detail-close" onclick="closeJDDetail()" aria-label="Close detail panel">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                            </button>
+                        </div>
+                        <div style="display:flex;gap:8px;margin-top:16px;">
+                            <div class="jd-export-menu">
+                                <button class="jd-btn-primary" onclick="toggleJDExport(event)" aria-label="Export options">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Export
+                                </button>
+                                <div class="jd-export-dropdown" id="jd-export-dropdown">
+                                    <div class="jd-export-option" onclick="showJDToast('Exported as PDF')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                        Export as PDF
+                                    </div>
+                                    <div class="jd-export-option" onclick="showJDToast('Exported as DOCX')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                                        Export as Word
+                                    </div>
+                                    <div class="jd-export-option" onclick="showJDToast('Copied to clipboard')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                        Copy to Clipboard
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="jd-btn-secondary" onclick="showJDToast('Added to comparison')">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/></svg>
+                                Compare
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="jd-detail-body" id="jd-detail-body">
+                        <!-- Dynamic content loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOAST NOTIFICATION -->
+            <div class="jd-toast" id="jd-toast">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span id="jd-toast-msg">Exported successfully</span>
+            </div>
+
+            <!-- DETAIL MODAL -->
+            <div class="ls-modal-backdrop" id="ls-detail-modal">
+                <div class="ls-modal-content">
+                    <div class="ls-modal-header">
+                        <div>
+                            <h3 style="color: #ffffff; font-size: 18px; margin: 0 0 4px 0;" id="ls-modal-title">Specification Details</h3>
+                            <p style="color: #6b7c93; font-size: 13px; margin: 0;" id="ls-modal-subtitle"></p>
+                        </div>
+                        <button class="ls-modal-close" id="ls-modal-close">&times;</button>
+                    </div>
+                    <div id="ls-modal-body"></div>
+                </div>
+            </div>
+
+            <!-- AGENT 13 PAGE (hidden by default) -->
+            <div id="agent13-page" style="display: none; width: 100%; overflow-y: auto;">
+                <div class="panel" style="width: 100%;">
+                    <div class="tab-content active" id="agent13-tab" style="padding: 0;">
+                        <div style="width: 100%; box-sizing: border-box; padding: 24px;">
+
+                            <!-- HEADER -->
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
+                                <div style="display: flex; align-items: center; gap: 16px;">
+                                    <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #00d9c0;">13</div>
+                                    <div>
+                                        <h2 style="color: #ffffff; font-size: 22px; margin: 0;">Agent 13 — Flow State Orchestrator</h2>
+                                        <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">Invisible meta-orchestration layer · Csíkszentmihályi's flow theory · Continuous improvement engine</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AGENT 13 CHARTER -->
+                            <div style="margin-bottom: 32px; background: rgba(0,217,192,0.05); border: 1px solid rgba(0,217,192,0.25); border-radius: 12px; padding: 24px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Agent 13 Charter</h3>
+                                        <span style="background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">MANIFESTO</span>
+                                    </div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button onclick="toggleAgent13Charter()" id="agent13-charter-toggle" style="background: rgba(0,217,192,0.15); border: 1px solid rgba(0,217,192,0.3); color: #00d9c0; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px;">Edit Charter</button>
+                                    </div>
+                                </div>
+                                <p style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6; margin: 0 0 16px 0;">This charter defines Agent 13's goals, principles, and improvement mandate. It is injected into Agent 13's system prompt and governs all continuous improvement decisions.</p>
+                                <!-- Read-only view -->
+                                <div id="agent13-charter-preview" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 16px; max-height: 300px; overflow-y: auto;">
+                                    <pre id="agent13-charter-preview-text" style="color: rgba(255,255,255,0.8); font-size: 12px; line-height: 1.7; margin: 0; white-space: pre-wrap; font-family: inherit;"></pre>
+                                </div>
+                                <!-- Edit view (hidden by default) -->
+                                <div id="agent13-charter-edit" style="display: none;">
+                                    <textarea id="agent13-charter-textarea" style="width: 100%; min-height: 400px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0,217,192,0.3); border-radius: 8px; padding: 16px; color: rgba(255,255,255,0.9); font-size: 12px; line-height: 1.7; resize: vertical; font-family: inherit;" spellcheck="false"></textarea>
+                                    <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
+                                        <button onclick="saveAgent13Charter()" style="background: #00d9c0; border: none; color: #1a1a2e; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;">Save Charter</button>
+                                        <button onclick="resetAgent13Charter()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">Reset to Default</button>
+                                        <span id="agent13-charter-save-status" style="display: none; color: #00d9c0; font-size: 12px; margin-left: 8px;">Saved</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AGENT 13 PROMPT EDITOR -->
+                            <div style="margin-bottom: 32px; background: rgba(0,217,192,0.03); border: 1px solid rgba(0,217,192,0.15); border-radius: 12px; padding: 24px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Agent 13 System Prompt</h3>
+                                        <span style="background: rgba(0,217,192,0.15); color: #00d9c0; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">EDITABLE</span>
+                                    </div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button onclick="toggleAgent13Prompt()" id="agent13-prompt-toggle" style="background: rgba(0,217,192,0.15); border: 1px solid rgba(0,217,192,0.3); color: #00d9c0; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px;">Edit Prompt</button>
+                                    </div>
+                                </div>
+                                <p style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6; margin: 0 0 16px 0;">The system prompt that defines Agent 13's technical behaviour. The charter above is automatically appended to this prompt in every API call.</p>
+                                <!-- Read-only view -->
+                                <div id="agent13-prompt-preview" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 16px; max-height: 250px; overflow-y: auto;">
+                                    <pre id="agent13-prompt-preview-text" style="color: rgba(255,255,255,0.7); font-size: 11px; line-height: 1.6; margin: 0; white-space: pre-wrap; font-family: 'SF Mono', 'Fira Code', monospace;"></pre>
+                                </div>
+                                <!-- Edit view (hidden by default) -->
+                                <div id="agent13-prompt-edit" style="display: none;">
+                                    <textarea id="agent13-prompt-textarea" style="width: 100%; min-height: 350px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0,217,192,0.3); border-radius: 8px; padding: 16px; color: rgba(255,255,255,0.9); font-size: 11px; line-height: 1.6; resize: vertical; font-family: 'SF Mono', 'Fira Code', monospace;" spellcheck="false"></textarea>
+                                    <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
+                                        <button onclick="saveAgent13Prompt()" style="background: #00d9c0; border: none; color: #1a1a2e; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;">Save Prompt</button>
+                                        <button onclick="resetAgent13Prompt()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">Reset to Default</button>
+                                        <button onclick="copyAgent13Prompt()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">Copy to Clipboard</button>
+                                        <span id="agent13-prompt-save-status" style="display: none; color: #00d9c0; font-size: 12px; margin-left: 8px;">Saved</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- THREE OPERATIONAL MODES -->
+                            <div style="margin-bottom: 32px;">
+                                <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Three Operational Modes</h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                                    <!-- OBSERVER -->
+                                    <div style="background: rgba(0,217,192,0.08); border: 1px solid rgba(0,217,192,0.2); border-radius: 12px; padding: 20px;">
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #00d9c0;"></div>
+                                            <span style="color: #00d9c0; font-weight: 600; font-size: 14px;">OBSERVER</span>
+                                        </div>
+                                        <div style="color: rgba(255,255,255,0.7); font-size: 12px; margin-bottom: 8px;">Flow: <strong style="color: #ffffff;">0.45 – 0.74</strong></div>
+                                        <p style="color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.6; margin: 0;">Default state. Do nothing. Monitor silently. Standard character progression continues. Log all flow data. Track trend — 3 consecutive declining readings → prepare for Recommendation.</p>
+                                    </div>
+                                    <!-- RECOMMENDATION -->
+                                    <div style="background: rgba(240,173,78,0.08); border: 1px solid rgba(240,173,78,0.2); border-radius: 12px; padding: 20px;">
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #f0ad4e;"></div>
+                                            <span style="color: #f0ad4e; font-weight: 600; font-size: 14px;">RECOMMENDATION</span>
+                                        </div>
+                                        <div style="color: rgba(255,255,255,0.7); font-size: 12px; margin-bottom: 8px;">Flow: <strong style="color: #ffffff;">&lt; 0.45 or &gt; 0.75</strong></div>
+                                        <p style="color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.6; margin: 0;"><strong style="color: #f0ad4e;">Path A (Recovery):</strong> Diagnose → Adapt current character → If no recovery in 2–3 turns → Switch via Integrator.<br><strong style="color: #f0ad4e;">Path B (Acceleration):</strong> Confirm sustained PEAK_FLOW (2 readings) → Accelerate Bloom's level.</p>
+                                    </div>
+                                    <!-- OVERRIDE -->
+                                    <div style="background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.2); border-radius: 12px; padding: 20px;">
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff6b6b;"></div>
+                                            <span style="color: #ff6b6b; font-weight: 600; font-size: 14px;">OVERRIDE</span>
+                                        </div>
+                                        <div style="color: rgba(255,255,255,0.7); font-size: 12px; margin-bottom: 8px;">Flow: <strong style="color: #ffffff;">&lt; 0.30 sustained (60s+)</strong></div>
+                                        <p style="color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.6; margin: 0;">Emergency. Skip adaptive mode → direct character switch. Use Integrator if possible. Log with reason code (ISO 42001). Max 3 per session → flag for human review if exceeded.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FLOW STATE VISUALISER -->
+                            <div style="margin-bottom: 32px;">
+                                <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Flow State Thresholds</h3>
+                                <div style="background: rgba(10,22,40,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px;">
+                                    <!-- Flow bar -->
+                                    <div style="position: relative; height: 48px; border-radius: 8px; overflow: hidden; margin-bottom: 16px;">
+                                        <div style="position: absolute; left: 0; width: 30%; height: 100%; background: linear-gradient(90deg, rgba(255,107,107,0.4), rgba(255,107,107,0.2)); display: flex; align-items: center; justify-content: center;">
+                                            <span style="color: #ff6b6b; font-size: 11px; font-weight: 600;">DISENGAGEMENT</span>
+                                        </div>
+                                        <div style="position: absolute; left: 30%; width: 15%; height: 100%; background: rgba(240,173,78,0.2); display: flex; align-items: center; justify-content: center;">
+                                            <span style="color: #f0ad4e; font-size: 11px; font-weight: 600;">STRUGGLE</span>
+                                        </div>
+                                        <div style="position: absolute; left: 45%; width: 30%; height: 100%; background: rgba(0,217,192,0.2); display: flex; align-items: center; justify-content: center;">
+                                            <span style="color: #00d9c0; font-size: 11px; font-weight: 600;">ENGAGEMENT / FLOW</span>
+                                        </div>
+                                        <div style="position: absolute; left: 75%; width: 25%; height: 100%; background: linear-gradient(90deg, rgba(102,126,234,0.2), rgba(102,126,234,0.4)); display: flex; align-items: center; justify-content: center;">
+                                            <span style="color: #667eea; font-size: 11px; font-weight: 600;">PEAK FLOW</span>
+                                        </div>
+                                    </div>
+                                    <!-- Labels -->
+                                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.4);">
+                                        <span>0.0</span>
+                                        <span style="position: relative; left: -5%;">0.30 (Override)</span>
+                                        <span>0.45 (Recommend)</span>
+                                        <span style="position: relative; right: -2%;">0.75 (Peak)</span>
+                                        <span>1.0</span>
+                                    </div>
+                                    <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 12px; font-style: italic;">Research: Confusion is the strongest predictor of learning gains (D'Mello & Graesser, 2012). Brief dips are healthy — only intervene when sustained > 2 minutes.</p>
+                                </div>
+                            </div>
+
+                            <!-- CHARACTER SELECTION DECISION TREES -->
+                            <div style="margin-bottom: 32px;">
+                                <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Character Selection Decision Trees</h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                                    <div style="background: rgba(255,107,107,0.06); border: 1px solid rgba(255,107,107,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #ff6b6b; font-weight: 600; font-size: 12px; margin-bottom: 6px;">challenge_too_high</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Foundation Builder</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Drop Bloom's by 1. Rebuild fundamentals and confidence.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(255,107,107,0.2); color: #ff6b6b; font-size: 9px; padding: 2px 6px; border-radius: 3px;">HIGH PRIORITY</span></div>
+                                    </div>
+                                    <div style="background: rgba(240,173,78,0.06); border: 1px solid rgba(240,173,78,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #f0ad4e; font-weight: 600; font-size: 12px; margin-bottom: 6px;">boredom</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Career Navigator / Experiment Space</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Bloom's ≥ 5: Experiment Space. Below 5: Career Navigator. Skip ahead.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(240,173,78,0.2); color: #f0ad4e; font-size: 9px; padding: 2px 6px; border-radius: 3px;">MEDIUM</span></div>
+                                    </div>
+                                    <div style="background: rgba(255,107,107,0.06); border: 1px solid rgba(255,107,107,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #ff6b6b; font-weight: 600; font-size: 12px; margin-bottom: 6px;">cognitive_overload</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Practical Builder / Foundation Builder</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Dyslexic: Practical Builder (visual/spatial). Others: Foundation Builder (smaller chunks).</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(255,107,107,0.2); color: #ff6b6b; font-size: 9px; padding: 2px 6px; border-radius: 3px;">HIGH PRIORITY</span></div>
+                                    </div>
+                                    <div style="background: rgba(156,39,176,0.06); border: 1px solid rgba(156,39,176,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #9C27B0; font-weight: 600; font-size: 12px; margin-bottom: 6px;">adhd_attention_fade</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Pattern Connector (Maya Patel)</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Cross-domain novelty. Use learner's hobbies. Suggest break if session exceeds preferred length.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(255,107,107,0.2); color: #ff6b6b; font-size: 9px; padding: 2px 6px; border-radius: 3px;">HIGH PRIORITY</span></div>
+                                    </div>
+                                    <div style="background: rgba(245,124,0,0.06); border: 1px solid rgba(245,124,0,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #F57C00; font-weight: 600; font-size: 12px; margin-bottom: 6px;">dyslexia_text_overload</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Practical Builder (Alex Thompson)</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Reduce text, increase visual. Enable dyslexia-friendly font. Offer text-to-speech.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(255,107,107,0.2); color: #ff6b6b; font-size: 9px; padding: 2px 6px; border-radius: 3px;">HIGH PRIORITY</span></div>
+                                    </div>
+                                    <div style="background: rgba(63,81,181,0.06); border: 1px solid rgba(63,81,181,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #3F51B5; font-weight: 600; font-size: 12px; margin-bottom: 6px;">autism_unexpected_change</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Systems Analyst (Kenji Tanaka)</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Restore structure and predictability. Explain what happened. Set clear expectations. Avoid surprises.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(240,173,78,0.2); color: #f0ad4e; font-size: 9px; padding: 2px 6px; border-radius: 3px;">MEDIUM</span></div>
+                                    </div>
+                                    <div style="background: rgba(0,137,123,0.06); border: 1px solid rgba(0,137,123,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #00897B; font-weight: 600; font-size: 12px; margin-bottom: 6px;">negative_sentiment</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Highest-affinity / Collaboration Guide</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Check affinity scores. If any character > 70, switch to them. Otherwise: Collaboration Guide for empathic support.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(255,107,107,0.2); color: #ff6b6b; font-size: 9px; padding: 2px 6px; border-radius: 3px;">HIGH PRIORITY</span></div>
+                                    </div>
+                                    <div style="background: rgba(102,126,234,0.06); border: 1px solid rgba(102,126,234,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #667eea; font-weight: 600; font-size: 12px; margin-bottom: 6px;">peak_flow_acceleration</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Next Bloom's level character</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Apply/Analyse → Career Navigator. Evaluate → Experiment Space. Create → Foundation Builder (mastery demo).</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(102,126,234,0.2); color: #667eea; font-size: 9px; padding: 2px 6px; border-radius: 3px;">LOW</span></div>
+                                    </div>
+                                    <div style="background: rgba(107,124,147,0.06); border: 1px solid rgba(107,124,147,0.15); border-radius: 10px; padding: 16px;">
+                                        <div style="color: #6b7c93; font-weight: 600; font-size: 12px; margin-bottom: 6px;">general_struggle</div>
+                                        <div style="color: #ffffff; font-size: 13px; margin-bottom: 4px;">→ Highest-affinity / Foundation Builder</div>
+                                        <div style="color: rgba(255,255,255,0.4); font-size: 11px;">Check affinity scores. If any > 70, switch to them. Otherwise: Foundation Builder for foundations review.</div>
+                                        <div style="margin-top: 6px;"><span style="background: rgba(240,173,78,0.2); color: #f0ad4e; font-size: 9px; padding: 2px 6px; border-radius: 3px;">MEDIUM</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- NEURODIVERSITY RULES -->
+                            <div style="margin-bottom: 32px;">
+                                <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Neurodiversity-Specific Rules</h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                                    <!-- ADHD -->
+                                    <div style="background: rgba(156,39,176,0.08); border: 1px solid rgba(156,39,176,0.2); border-radius: 12px; padding: 20px;">
+                                        <div style="color: #9C27B0; font-weight: 600; font-size: 14px; margin-bottom: 4px;">ADHD — DRIFT Intelligence</div>
+                                        <div style="color: rgba(255,255,255,0.5); font-size: 11px; margin-bottom: 12px;">Primary: Pattern Connector (Maya Patel)</div>
+                                        <ul style="color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.8; padding-left: 16px; margin: 0;">
+                                            <li>Preferred session: 25–30 mins</li>
+                                            <li>Reduce flow by 0.3 if session exceeds limit</li>
+                                            <li>Attention fade: steady decline after 15–18 mins</li>
+                                            <li>Hyperfocus (quality > 0.8 + positive + > 20 mins): do NOT interrupt</li>
+                                            <li>Always use learner's hobbies for analogies</li>
+                                            <li>Celebrate attempts, tolerate messiness</li>
+                                        </ul>
+                                    </div>
+                                    <!-- Dyslexia -->
+                                    <div style="background: rgba(245,124,0,0.08); border: 1px solid rgba(245,124,0,0.2); border-radius: 12px; padding: 20px;">
+                                        <div style="color: #F57C00; font-weight: 600; font-size: 14px; margin-bottom: 4px;">Dyslexia — ECHO Intelligence</div>
+                                        <div style="color: rgba(255,255,255,0.5); font-size: 11px; margin-bottom: 12px;">Primary: Practical Builder (Alex Thompson)</div>
+                                        <ul style="color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.8; padding-left: 16px; margin: 0;">
+                                            <li>Do NOT penalise longer response times</li>
+                                            <li>Add 0.1 to flow for longer processing (normal)</li>
+                                            <li>Text overload: clarification questions > 3</li>
+                                            <li>Switch to visual/spatial delivery</li>
+                                            <li>Reduce text density, increase visual content</li>
+                                            <li>Enable dyslexia-friendly font, text-to-speech</li>
+                                        </ul>
+                                    </div>
+                                    <!-- Autism -->
+                                    <div style="background: rgba(63,81,181,0.08); border: 1px solid rgba(63,81,181,0.2); border-radius: 12px; padding: 20px;">
+                                        <div style="color: #3F51B5; font-weight: 600; font-size: 14px; margin-bottom: 4px;">Autism — SCAFFOLD Intelligence</div>
+                                        <div style="color: rgba(255,255,255,0.5); font-size: 11px; margin-bottom: 12px;">Primary: Systems Analyst (Kenji Tanaka)</div>
+                                        <ul style="color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.8; padding-left: 16px; margin: 0;">
+                                            <li>Predictability paramount</li>
+                                            <li>Unexpected character change: reduce flow by 0.2</li>
+                                            <li>Always pre-announce changes via Integrator</li>
+                                            <li>Deep focus + quality > 0.8 = strong flow (+0.15)</li>
+                                            <li>Provide clear expectations per segment</li>
+                                            <li>Avoid surprises at all times</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ABSOLUTE CONSTRAINTS -->
+                            <div style="margin-bottom: 32px;">
+                                <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Absolute Constraints</h3>
+                                <div style="background: rgba(10,22,40,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px;">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #ff6b6b; font-size: 14px;">⛔</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">Never interrupt PEAK_FLOW</strong> — unless accelerating to higher Bloom's level</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #ff6b6b; font-size: 14px;">⛔</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">Never alter assessment</strong> — Evaluator + Certifier are OFQUAL-regulated quality gates</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #ff6b6b; font-size: 14px;">⛔</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">Never be visible</strong> — all actions mediated through the 12 characters</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #ff6b6b; font-size: 14px;">⛔</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">Never reference neurodiversity</strong> — characters adapt silently</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #00d9c0; font-size: 14px;">✓</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">Log everything</strong> — every decision, including "do nothing" (ISO 42001)</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #f0ad4e; font-size: 14px;">⚠</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">Max 3 overrides per session</strong> — flag for human review if exceeded</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #00d9c0; font-size: 14px;">✓</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">7-year data retention</strong> — OFQUAL audit requirement</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                            <span style="color: #667eea; font-size: 14px;">🔒</span>
+                                            <span style="color: rgba(255,255,255,0.6); font-size: 12px;"><strong style="color: #ffffff;">GDPR Article 9</strong> — neurodiversity = special category data, AES-256 encrypted</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- INTEGRATOR COORDINATION + xAPI -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+                                <!-- Integrator -->
+                                <div>
+                                    <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Integrator Coordination</h3>
+                                    <div style="background: rgba(38,198,218,0.08); border: 1px solid rgba(38,198,218,0.2); border-radius: 12px; padding: 20px;">
+                                        <p style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.7; margin: 0 0 12px 0;">The Integrator is the learner's <strong style="color: #26C6DA;">tour guide</strong>. Agent 13 is the invisible <strong style="color: #00d9c0;">stage manager</strong> deciding which room the tour guide takes them to next.</p>
+                                        <ul style="color: rgba(255,255,255,0.5); font-size: 11px; line-height: 1.8; padding-left: 16px; margin: 0;">
+                                            <li>Trigger switches through Integrator wherever possible</li>
+                                            <li>Never override the 5th-interaction scheduled appearance</li>
+                                            <li>In Override mode: may bypass if speed is critical</li>
+                                            <li>Do not intervene during end-of-module synthesis</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- xAPI -->
+                                <div>
+                                    <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">xAPI Logging (Every Decision)</h3>
+                                    <div style="background: rgba(10,22,40,0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; font-family: 'SF Mono', 'Fira Code', monospace;">
+                                        <pre style="color: rgba(255,255,255,0.6); font-size: 10px; line-height: 1.6; margin: 0; overflow-x: auto; white-space: pre-wrap;">{
+  "flow_score": 0.62,
+  "flow_state": "ENGAGEMENT",
+  "agent13_mode": "observer",
+  "agent13_override": false,
+  "standard_character": "Challenge Coach",
+  "actual_character": "Challenge Coach",
+  "override_reason": null,
+  "adaptive_instruction_sent": null,
+  "component_scores": {
+    "challenge_skill_balance": 0.65,
+    "engagement": 0.72,
+    "cognitive_load": 0.48
+  },
+  "session_override_count": 0,
+  "personalisation_used": "industry_example"
+}</pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- RECOMMENDATIONS ENGINE -->
+                            <div class="rec-panel">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                    <h3 style="color: #00d9c0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Recommendations Engine</h3>
+                                    <span style="background: rgba(240,173,78,0.15); color: #f0ad4e; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">TIER 3 — ADMIN APPROVAL</span>
+                                </div>
+                                <p style="color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.6; margin-bottom: 20px;">Agent 13 analyses session data and surfaces improvement recommendations. Tier 1-2 decisions (monitoring, adaptive instructions) happen automatically. Tier 3 changes (prompts, charter, thresholds) require your approval.</p>
+
+                                <!-- Session stats -->
+                                <div class="rec-stats" id="rec-stats">
+                                    <div class="rec-stat-card">
+                                        <div class="rec-stat-value" id="rec-stat-sessions">0</div>
+                                        <div class="rec-stat-label">Sessions Tracked</div>
+                                    </div>
+                                    <div class="rec-stat-card">
+                                        <div class="rec-stat-value" id="rec-stat-avg-flow">—</div>
+                                        <div class="rec-stat-label">Avg Flow Score</div>
+                                    </div>
+                                    <div class="rec-stat-card">
+                                        <div class="rec-stat-value" id="rec-stat-trend">—</div>
+                                        <div class="rec-stat-label">Flow Trend</div>
+                                    </div>
+                                </div>
+
+                                <!-- Tabs -->
+                                <div class="rec-tabs">
+                                    <button class="rec-tab-btn active" onclick="switchRecTab('pending')">Pending <span id="rec-pending-count"></span></button>
+                                    <button class="rec-tab-btn" onclick="switchRecTab('approved')">Approved <span id="rec-approved-count"></span></button>
+                                    <button class="rec-tab-btn" onclick="switchRecTab('rejected')">Rejected <span id="rec-rejected-count"></span></button>
+                                </div>
+
+                                <!-- Content -->
+                                <div id="rec-content">
+                                    <div class="rec-empty">No recommendations yet. Run simulation sessions to generate data for Agent 13 to analyse.</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END AGENT 13 PAGE -->
+
+            <!-- xAPI ANALYTICS PAGE (hidden by default) -->
+            <div id="xapi-analytics-page" style="display: none; width: 100%; overflow-y: auto;">
+                <div class="panel" style="width: 100%;">
+                    <div class="xa-page">
+
+                        <!-- HEADER -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,217,192,0.2);">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0,217,192,0.15); display: flex; align-items: center; justify-content: center;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d9c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/><ellipse cx="12" cy="5" rx="9" ry="3"/></svg>
+                                </div>
+                                <div>
+                                    <h2 style="color: #ffffff; font-size: 22px; margin: 0;">xAPI Analytics</h2>
+                                    <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 4px 0 0 0;">Real-time learning activity, agent performance, and xAPI statement intelligence</p>
+                                </div>
+                            </div>
+                            <div class="xa-time-range" id="xa-time-range">
+                                <button class="xa-time-btn active" data-period="today">Today</button>
+                                <button class="xa-time-btn" data-period="7d">7 Days</button>
+                                <button class="xa-time-btn" data-period="30d">30 Days</button>
+                                <button class="xa-time-btn" data-period="90d">90 Days</button>
+                                <button class="xa-btn-teal" id="xa-export-pdf-btn" onclick="xaExportPDF()" style="margin-left: auto;">Export PDF</button>
+                            </div>
+                        </div>
+
+                        <!-- SUB-TAB NAVIGATION -->
+                        <div class="xa-tabs" id="xa-tabs">
+                            <button class="xa-tab-btn active" data-xa-tab="xa-overview">Overview</button>
+                            <button class="xa-tab-btn" data-xa-tab="xa-live-feed">Live Feed <span class="xa-feed-badge" id="xa-feed-badge" aria-label="Statement count">0</span></button>
+                            <button class="xa-tab-btn" data-xa-tab="xa-agent-perf">Agent Performance</button>
+                            <button class="xa-tab-btn" data-xa-tab="xa-journeys">Learner Journeys</button>
+                            <button class="xa-tab-btn" data-xa-tab="xa-library">Statement Library</button>
+                            <button class="xa-tab-btn" data-xa-tab="xa-builder">Statement Builder</button>
+                        </div>
+
+                        <!-- ===== SUB-TAB 1: OVERVIEW DASHBOARD ===== -->
+                        <div class="xa-tab-content active" id="xa-overview">
+                            <!-- Engagement Ring + Goals + Anomalies Row -->
+                            <div class="xa-engagement-row" style="display: flex; gap: 24px; margin-bottom: 24px; width: 100%; align-items: stretch;">
+                                <div class="xa-glass" style="flex: 0 0 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px;">
+                                    <div class="xa-card-title" style="margin-bottom: 12px;">Engagement Score</div>
+                                    <div class="xa-engagement-ring" id="xa-engagement-ring" style="position: relative; width: 140px; height: 140px;">
+                                        <svg viewBox="0 0 140 140" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                                            <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(26,58,92,0.5)" stroke-width="10"/>
+                                            <circle id="xa-ring-fill" cx="70" cy="70" r="60" fill="none" stroke="#00d9c0" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 377" style="transition: stroke-dasharray 1.5s ease;"/>
+                                        </svg>
+                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                                            <div id="xa-ring-value" style="color: #00d9c0; font-size: 32px; font-weight: 700; line-height: 1;">0%</div>
+                                            <div style="color: #6b7c93; font-size: 11px; margin-top: 4px;">Overall</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="xa-glass" style="flex: 1; padding: 24px;" id="xa-goal-tracking-card">
+                                    <div class="xa-card-title" style="margin-bottom: 16px;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 3 6-6"/></svg>
+                                        Goal Tracking
+                                    </div>
+                                    <div id="xa-goals-container"></div>
+                                </div>
+                                <div class="xa-glass" style="flex: 0 0 320px; padding: 24px;" id="xa-anomaly-card">
+                                    <div class="xa-card-title" style="margin-bottom: 12px;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                        Anomaly Alerts
+                                    </div>
+                                    <div id="xa-anomaly-list" style="max-height: 160px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(0,217,192,0.3) transparent;"></div>
+                                </div>
+                            </div>
+
+                            <!-- KPI Cards -->
+                            <div class="xa-kpi-grid" id="xa-kpi-grid">
+                                <div class="xa-kpi-card">
+                                    <div class="xa-kpi-label">Active Learners</div>
+                                    <div class="xa-kpi-value" id="xa-kpi-learners">--</div>
+                                    <div class="xa-kpi-change positive" id="xa-kpi-learners-change"></div>
+                                    <div class="xa-kpi-sparkline" id="xa-kpi-learners-spark"></div>
+                                </div>
+                                <div class="xa-kpi-card">
+                                    <div class="xa-kpi-label">Statements Today</div>
+                                    <div class="xa-kpi-value" id="xa-kpi-statements">--</div>
+                                    <div class="xa-kpi-change positive" id="xa-kpi-statements-change"></div>
+                                    <div class="xa-kpi-sparkline" id="xa-kpi-statements-spark"></div>
+                                </div>
+                                <div class="xa-kpi-card">
+                                    <div class="xa-kpi-label">Avg Session Duration</div>
+                                    <div class="xa-kpi-value" id="xa-kpi-duration">--</div>
+                                    <div class="xa-kpi-change positive" id="xa-kpi-duration-change"></div>
+                                    <div class="xa-kpi-sparkline" id="xa-kpi-duration-spark"></div>
+                                </div>
+                                <div class="xa-kpi-card">
+                                    <div class="xa-kpi-label">Course Completions</div>
+                                    <div class="xa-kpi-value" id="xa-kpi-completions">--</div>
+                                    <div class="xa-kpi-change positive" id="xa-kpi-completions-change"></div>
+                                    <div class="xa-kpi-sparkline" id="xa-kpi-completions-spark"></div>
+                                </div>
+                                <div class="xa-kpi-card">
+                                    <div class="xa-kpi-label">Growth Mindset Score</div>
+                                    <div class="xa-kpi-value" id="xa-kpi-growth">--</div>
+                                    <div class="xa-kpi-change positive" id="xa-kpi-growth-change"></div>
+                                    <div class="xa-kpi-sparkline" id="xa-kpi-growth-spark"></div>
+                                </div>
+                                <div class="xa-kpi-card">
+                                    <div class="xa-kpi-label">Agent Interactions</div>
+                                    <div class="xa-kpi-value" id="xa-kpi-interactions">--</div>
+                                    <div class="xa-kpi-change positive" id="xa-kpi-interactions-change"></div>
+                                    <div class="xa-kpi-sparkline" id="xa-kpi-interactions-spark"></div>
+                                </div>
+                            </div>
+
+                            <!-- Charts Row 1: Popular Courses + Keyword Cloud -->
+                            <div class="xa-charts-grid">
+                                <div class="xa-glass">
+                                    <div class="xa-card-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                                        Popular Courses
+                                    </div>
+                                    <div class="xa-chart-area" id="xa-popular-courses">
+                                        <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading course data...</div>
+                                    </div>
+                                </div>
+                                <div class="xa-glass">
+                                    <div class="xa-card-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                        Trending Keywords
+                                    </div>
+                                    <div class="xa-keyword-cloud" id="xa-keyword-cloud">
+                                        <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading keywords...</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Charts Row 2: Activity Heatmap + Bloom's Distribution -->
+                            <div class="xa-charts-grid">
+                                <div class="xa-glass">
+                                    <div class="xa-card-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        Activity Heatmap
+                                    </div>
+                                    <div class="xa-chart-area" id="xa-heatmap-container">
+                                        <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading activity data...</div>
+                                    </div>
+                                </div>
+                                <div class="xa-glass">
+                                    <div class="xa-card-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                        Bloom's Taxonomy Distribution
+                                    </div>
+                                    <div class="xa-chart-area" id="xa-blooms-chart">
+                                        <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading taxonomy data...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== SUB-TAB 2: LIVE FEED ===== -->
+                        <div class="xa-tab-content" id="xa-live-feed">
+                            <div class="xa-summary-bar" id="xa-feed-summary">
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Statements</span><span class="xa-summary-value" id="xa-feed-total">0</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Unique Learners</span><span class="xa-summary-value" id="xa-feed-learners">0</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Active Agents</span><span class="xa-summary-value" id="xa-feed-agents">0</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Avg Score</span><span class="xa-summary-value" id="xa-feed-avg-score">—</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Top Verb</span><span class="xa-summary-value" id="xa-feed-top-verb">—</span></div>
+                            </div>
+                            <div class="xa-feed-toolbar">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span class="xa-pulse"></span>
+                                    <span style="color: #00d9c0; font-size: 13px; font-weight: 500;">Live</span>
+                                </div>
+                                <input type="text" class="xa-feed-search" id="xa-feed-search" placeholder="Search statements..." aria-label="Search xAPI statements">
+                                <select class="xa-feed-filter" id="xa-feed-verb-filter" aria-label="Filter by verb category">
+                                    <option value="">All Verbs</option>
+                                    <option value="remember">Remember</option>
+                                    <option value="understand">Understand</option>
+                                    <option value="apply">Apply</option>
+                                    <option value="analyse">Analyse</option>
+                                    <option value="evaluate">Evaluate</option>
+                                    <option value="create">Create</option>
+                                </select>
+                                <select class="xa-feed-filter" id="xa-feed-agent-filter" aria-label="Filter by agent">
+                                    <option value="">All Agents</option>
+                                </select>
+                                <button class="xa-btn-outline" id="xa-feed-pause-btn" aria-label="Pause live feed">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                                    Pause
+                                </button>
+                                <button class="xa-btn-outline" id="xa-feed-export-btn" aria-label="Export statements as CSV">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Export CSV
+                                </button>
+                            </div>
+                            <div class="xa-feed-container" id="xa-feed-container">
+                                <div class="xa-loading"><div class="xa-loading-spinner"></div>Connecting to live feed...</div>
+                            </div>
+                            <div style="text-align: center; margin-top: 16px;">
+                                <button class="xa-btn-outline" id="xa-feed-load-more" style="display: none;">Load More Statements</button>
+                            </div>
+                        </div>
+
+                        <!-- ===== SUB-TAB 3: AGENT PERFORMANCE ===== -->
+                        <div class="xa-tab-content" id="xa-agent-perf">
+                            <div class="xa-summary-bar" id="xa-agent-summary">
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Total Agents</span><span class="xa-summary-value">12</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Total Interactions</span><span class="xa-summary-value" id="xa-agent-total-int">—</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Avg Satisfaction</span><span class="xa-summary-value" id="xa-agent-avg-sat">—</span></div>
+                                <div class="xa-summary-divider"></div>
+                                <div class="xa-summary-stat"><span class="xa-summary-label">Avg Growth Mindset</span><span class="xa-summary-value" id="xa-agent-avg-growth">—</span></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="xa-btn-outline active" id="xa-agent-view-grid" aria-label="Grid view">Grid View</button>
+                                    <button class="xa-btn-outline" id="xa-agent-view-compare" aria-label="Comparison view">Compare Mode</button>
+                                </div>
+                                <select class="xa-feed-filter" id="xa-agent-sort" aria-label="Sort agents">
+                                    <option value="interactions">Sort by Interactions</option>
+                                    <option value="learners">Sort by Learners</option>
+                                    <option value="growth">Sort by Growth Mindset</option>
+                                    <option value="satisfaction">Sort by Satisfaction</option>
+                                </select>
+                            </div>
+                            <div class="xa-agent-grid" id="xa-agent-grid">
+                                <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading agent performance data...</div>
+                            </div>
+                            <!-- Comparison panel (hidden by default) -->
+                            <div id="xa-agent-compare-panel" style="display: none;">
+                                <div class="xa-glass" style="margin-top: 24px;">
+                                    <div class="xa-card-title">Agent Comparison</div>
+                                    <div id="xa-compare-content">
+                                        <p style="color: #6b7c93; font-size: 13px;">Select 2-3 agents above to compare their performance metrics side by side.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== SUB-TAB 4: LEARNER JOURNEYS ===== -->
+                        <div class="xa-tab-content" id="xa-journeys">
+                            <!-- Cohort Comparison -->
+                            <div class="xa-glass" style="margin-bottom: 24px; padding: 24px; width: 100%; box-sizing: border-box;">
+                                <div class="xa-card-title" style="margin-bottom: 16px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                    Cohort Comparison
+                                </div>
+                                <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;" id="xa-cohort-btns">
+                                    <button class="xa-btn-outline xa-cohort-btn active" data-cohort="all" onclick="xaSelectCohort('all')">All</button>
+                                    <button class="xa-btn-outline xa-cohort-btn" data-cohort="engineering" onclick="xaSelectCohort('engineering')">Engineering</button>
+                                    <button class="xa-btn-outline xa-cohort-btn" data-cohort="sales" onclick="xaSelectCohort('sales')">Sales</button>
+                                    <button class="xa-btn-outline xa-cohort-btn" data-cohort="marketing" onclick="xaSelectCohort('marketing')">Marketing</button>
+                                    <button class="xa-btn-outline xa-cohort-btn" data-cohort="leadership" onclick="xaSelectCohort('leadership')">Leadership</button>
+                                    <button class="xa-btn-outline xa-cohort-btn" data-cohort="customer-success" onclick="xaSelectCohort('customer-success')">Customer Success</button>
+                                </div>
+                                <div id="xa-cohort-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; width: 100%;"></div>
+                            </div>
+
+                            <div class="xa-learner-search">
+                                <input type="text" class="xa-feed-search" id="xa-learner-search-input" placeholder="Search for a learner by name or ID..." aria-label="Search for a learner" style="flex: 1;">
+                                <button class="xa-btn-teal" id="xa-learner-search-btn">Search</button>
+                            </div>
+                            <div id="xa-learner-profile" style="display: none;">
+                                <div class="xa-charts-grid" style="margin-bottom: 24px;">
+                                    <div class="xa-glass">
+                                        <div class="xa-card-title">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                            Learner Profile
+                                        </div>
+                                        <div id="xa-learner-info">
+                                            <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading learner data...</div>
+                                        </div>
+                                    </div>
+                                    <div class="xa-glass">
+                                        <div class="xa-card-title">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                                            Growth Trajectory
+                                        </div>
+                                        <div class="xa-trajectory-chart" id="xa-growth-trajectory"></div>
+                                    </div>
+                                </div>
+                                <div class="xa-glass" style="margin-bottom: 24px;">
+                                    <div class="xa-card-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        Learning Journey Timeline
+                                    </div>
+                                    <div class="xa-journey-timeline" id="xa-journey-timeline">
+                                        <div class="xa-journey-line"></div>
+                                        <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading journey data...</div>
+                                    </div>
+                                </div>
+                                <div class="xa-charts-grid">
+                                    <div class="xa-glass">
+                                        <div class="xa-card-title">Engagement Patterns</div>
+                                        <div id="xa-engagement-patterns">
+                                            <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading patterns...</div>
+                                        </div>
+                                    </div>
+                                    <div class="xa-glass">
+                                        <div class="xa-card-title">Milestones and Achievements</div>
+                                        <div id="xa-milestones">
+                                            <div class="xa-loading"><div class="xa-loading-spinner"></div>Loading milestones...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="xa-learner-empty">
+                                <div class="xa-empty">
+                                    <div class="xa-empty-icon">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    </div>
+                                    <div class="xa-empty-title">Search for a Learner</div>
+                                    <div class="xa-empty-text">Enter a learner's name or ID above to explore their unique learning journey, growth trajectory, and engagement patterns.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== SUB-TAB 5: STATEMENT LIBRARY ===== -->
+                        <div class="xa-tab-content" id="xa-library">
+                            <div class="xa-feed-toolbar" style="margin-bottom: 16px;">
+                                <input type="text" class="xa-feed-search" id="xa-lib-search" placeholder="Search verbs, IRIs, or descriptions..." aria-label="Search statement library">
+                                <select class="xa-feed-filter" id="xa-lib-bloom-filter" aria-label="Filter by Bloom's level">
+                                    <option value="">All Bloom's Levels</option>
+                                    <option value="remember">Remember</option>
+                                    <option value="understand">Understand</option>
+                                    <option value="apply">Apply</option>
+                                    <option value="analyse">Analyse</option>
+                                    <option value="evaluate">Evaluate</option>
+                                    <option value="create">Create</option>
+                                </select>
+                                <select class="xa-feed-filter" id="xa-lib-status-filter" aria-label="Filter by status">
+                                    <option value="">All Statuses</option>
+                                    <option value="active">Active</option>
+                                    <option value="available">Available</option>
+                                    <option value="deprecated">Deprecated</option>
+                                </select>
+                                <button class="xa-btn-outline" id="xa-lib-export-btn">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Export JSON
+                                </button>
+                            </div>
+                            <div class="xa-lib-scroll">
+                                <table class="xa-lib-table" id="xa-lib-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Verb</th>
+                                            <th>IRI</th>
+                                            <th>Bloom's Level</th>
+                                            <th>Description</th>
+                                            <th>Agents</th>
+                                            <th>Frequency</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="xa-lib-tbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- ===== SUB-TAB 6: STATEMENT BUILDER ===== -->
+                        <div class="xa-tab-content" id="xa-builder">
+                            <div class="xa-builder-layout">
+                                <div class="xa-glass">
+                                    <div class="xa-card-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        Build Statement Template
+                                    </div>
+                                    <div class="xa-builder-form" id="xa-builder-form">
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Verb</label>
+                                            <select class="xa-form-select" id="xa-builder-verb">
+                                                <option value="">Select a verb...</option>
+                                                <option value="experienced">experienced</option>
+                                                <option value="understood">understood</option>
+                                                <option value="applied">applied</option>
+                                                <option value="analysed">analysed</option>
+                                                <option value="evaluated">evaluated</option>
+                                                <option value="created">created</option>
+                                                <option value="planned">planned</option>
+                                                <option value="experimented">experimented</option>
+                                                <option value="connected">connected</option>
+                                                <option value="recognised">recognised</option>
+                                                <option value="demonstrated">demonstrated</option>
+                                                <option value="built">built</option>
+                                                <option value="collaborated">collaborated</option>
+                                                <option value="facilitated">facilitated</option>
+                                                <option value="innovated">innovated</option>
+                                                <option value="transformed">transformed</option>
+                                                <option value="synthesised">synthesised</option>
+                                                <option value="integrated">integrated</option>
+                                                <option value="monitored">monitored</option>
+                                                <option value="orchestrated">orchestrated</option>
+                                                <option value="custom">Custom verb...</option>
+                                            </select>
+                                            <input type="text" class="xa-form-input" id="xa-builder-custom-verb" placeholder="Enter custom verb" style="display: none;">
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Verb IRI</label>
+                                            <input type="text" class="xa-form-input" id="xa-builder-iri" placeholder="https://zavmo.co.uk/xapi/verbs/" aria-label="Verb IRI">
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Object Type</label>
+                                            <select class="xa-form-select" id="xa-builder-object-type">
+                                                <option value="Activity">Activity</option>
+                                                <option value="Agent">Agent</option>
+                                                <option value="SubStatement">SubStatement</option>
+                                                <option value="StatementRef">StatementRef</option>
+                                            </select>
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Object Name</label>
+                                            <input type="text" class="xa-form-input" id="xa-builder-object-name" placeholder="e.g. Introduction to Neuroscience" aria-label="Object name">
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Description</label>
+                                            <textarea class="xa-form-textarea" id="xa-builder-description" placeholder="Describe when this statement should be generated..." aria-label="Statement description"></textarea>
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Bloom's Taxonomy Level</label>
+                                            <div class="xa-tag-row" id="xa-builder-bloom-tags">
+                                                <button class="xa-tag" data-bloom="remember">Remember</button>
+                                                <button class="xa-tag" data-bloom="understand">Understand</button>
+                                                <button class="xa-tag" data-bloom="apply">Apply</button>
+                                                <button class="xa-tag" data-bloom="analyse">Analyse</button>
+                                                <button class="xa-tag" data-bloom="evaluate">Evaluate</button>
+                                                <button class="xa-tag" data-bloom="create">Create</button>
+                                            </div>
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Kirkpatrick Level</label>
+                                            <div class="xa-tag-row" id="xa-builder-kirk-tags">
+                                                <button class="xa-tag" data-kirk="reaction">Reaction</button>
+                                                <button class="xa-tag" data-kirk="learning">Learning</button>
+                                                <button class="xa-tag" data-kirk="behaviour">Behaviour</button>
+                                                <button class="xa-tag" data-kirk="results">Results</button>
+                                            </div>
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">WONDERS Intelligence</label>
+                                            <div class="xa-tag-row" id="xa-builder-wonders-tags">
+                                                <button class="xa-tag" data-wonders="wonder">Wonder</button>
+                                                <button class="xa-tag" data-wonders="openness">Openness</button>
+                                                <button class="xa-tag" data-wonders="narrative">Narrative</button>
+                                                <button class="xa-tag" data-wonders="drive">Drive</button>
+                                                <button class="xa-tag" data-wonders="empathy">Empathy</button>
+                                                <button class="xa-tag" data-wonders="reasoning">Reasoning</button>
+                                                <button class="xa-tag" data-wonders="synthesis">Synthesis</button>
+                                            </div>
+                                        </div>
+                                        <div class="xa-form-group">
+                                            <label class="xa-form-label">Assign to Agents</label>
+                                            <div class="xa-tag-row" id="xa-builder-agent-tags"></div>
+                                        </div>
+                                        <div style="display: flex; gap: 12px; margin-top: 8px;">
+                                            <button class="xa-btn-teal" id="xa-builder-save">Save Template</button>
+                                            <button class="xa-btn-outline" id="xa-builder-test">Test Preview</button>
+                                            <button class="xa-btn-outline" id="xa-builder-reset">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="xa-glass" style="margin-bottom: 16px;">
+                                        <div class="xa-card-title">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                                            JSON Preview
+                                        </div>
+                                        <div class="xa-json-preview" id="xa-builder-json">{
+  "actor": {
+    "mbox": "mailto:learner@example.com",
+    "name": "Learner Name"
+  },
+  "verb": {
+    "id": "",
+    "display": { "en-GB": "" }
+  },
+  "object": {
+    "objectType": "Activity",
+    "id": "",
+    "definition": {
+      "name": { "en-GB": "" },
+      "type": "https://zavmo.co.uk/xapi/activity-types/learning-activity"
+    }
+  },
+  "context": {
+    "extensions": {
+      "https://zavmo.co.uk/xapi/context/blooms-level": "",
+      "https://zavmo.co.uk/xapi/context/kirkpatrick-level": "",
+      "https://zavmo.co.uk/xapi/context/wonders-dimension": ""
+    }
+  }
+}</div>
+                                    </div>
+                                    <div class="xa-glass">
+                                        <div class="xa-card-title">Saved Templates</div>
+                                        <div id="xa-builder-templates">
+                                            <p style="color: #6b7c93; font-size: 13px;">No saved templates yet. Build a statement template and click Save to store it here.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END xAPI ANALYTICS PAGE -->
+
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- API CONNECTOR MODAL -->
+    <div class="modal-overlay" id="api-modal-overlay">
+        <div class="api-modal" style="max-height: 85vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h3 class="modal-title">Search Curriculum (Neo4j)</h3>
+                <button class="modal-close" id="modal-close-btn">&times;</button>
+            </div>
+
+            <div class="api-search-inputs">
+                <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
+                    <div class="input-group">
+                        <label class="input-label" for="api-url">API Base URL</label>
+                        <input type="text" class="input-field" id="api-url" value="https://uat.zavmo.co.uk:8000" placeholder="https://uat.zavmo.co.uk:8000">
+                        <small style="color: #6b7a8d; font-size: 11px; margin-top: 4px; display: block;">Authenticated automatically via Zavmo login</small>
+                    </div>
+                    <input type="hidden" id="api-token" value="">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="api-search-query">Search Query</label>
+                    <input type="text" class="input-field" id="api-search-query" placeholder="e.g. sales, data management, python, cloud...">
+                </div>
+
+                <button class="button button-primary" id="api-search-btn" style="width: 100%;">
+                    <span id="api-search-btn-text">Fetch Modules</span>
+                    <span id="api-search-spinner" style="display: none; margin-left: 8px;">&#8987;</span>
+                </button>
+            </div>
+
+            <div id="api-results-container" style="display: none; flex: 1; overflow-y: auto; margin: 12px 0; border: 1px solid rgba(0,217,192,0.15); border-radius: 8px; max-height: 400px;">
+                <!-- Modules and lessons will be populated here -->
+            </div>
+
+            <div id="api-lesson-detail" style="display: none; background: rgba(0,217,192,0.05); border: 1px solid rgba(0,217,192,0.2); border-radius: 8px; padding: 16px; margin: 8px 0;">
+                <h4 style="color: #00d9c0; margin: 0 0 12px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Selected Unit</h4>
+                <div id="api-lesson-summary" style="color: #b8c5d6; font-size: 13px; line-height: 1.6;"></div>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+                <button class="button button-primary" id="import-selected-btn" style="flex: 1;" disabled>Import Selected Unit</button>
+                <button class="button button-secondary" id="modal-cancel-btn" style="flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/data-qualifications.js"></script>
+    <script src="js/data-characters.js"></script>
+    <script src="js/app-core.js"></script>
+    <script src="js/page-command-centre.js"></script>
+    <script src="js/page-learning-specs.js"></script>
+    <script src="js/page-xapi-analytics.js"></script>
+    <script src="js/page-job-descriptions.js"></script>
+</body>
+</html>
+
