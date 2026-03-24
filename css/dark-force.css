@@ -71,6 +71,82 @@ a:hover { color: #33e6d1 !important; }
 /* === UI FIXES — 24 March 2026 === */
 /* Command Centre vertical breathing room */
 #command-centre-page { padding-top: 8px !important; padding-bottom: 40px !important; }
+/* Characters meta strip — teal progress bar: use subtle bg so white text is readable */
+.cc-meta-value.cc-meta-teal { background: rgba(0, 217, 192, 0.2) !important; color: #ffffff !important; border-radius: 4px !important; padding: 2px 8px !important; }
+/* ZAVMO logo clickable */
+.logo-section, .logo { cursor: pointer !important; }/* DARK MODE LOCK — Zavmo Command Centre — 24 March 2026 */
+html { color-scheme: dark only; }
+body { background-color: #0a0e17 !important; color: #e2e8f0 !important; }
+#access-gate { background: linear-gradient(135deg, #0a0e17 0%, #111827 100%) !important; color: #e2e8f0 !important; }
+.gate-card { background: rgba(17, 24, 39, 0.95) !important; color: #e2e8f0 !important; border: 1px solid rgba(0, 217, 192, 0.2) !important; }
+.gate-card h1 { color: #ffffff !important; }
+.gate-card p, .gate-card label { color: #94a3b8 !important; }
+.gate-card input { background: rgba(15, 23, 42, 0.8) !important; color: #e2e8f0 !important; border-color: rgba(100, 116, 139, 0.3) !important; }
+.gate-card button { background: linear-gradient(135deg, #00d9c0, #00b4a0) !important; color: #0a0e17 !important; }
+/* Header — more bottom margin so tooltips clear the content below */
+.header { background: rgba(10, 14, 23, 0.95) !important; border-bottom: 1px solid rgba(0, 217, 192, 0.15) !important; padding-bottom: 8px !important; margin-bottom: 0 !important; }
+/* Nav-tabs — stretch full width so profile icon can push right */
+.nav-tabs { position: relative !important; left: auto !important; transform: none !important; width: 100% !important; display: flex !important; align-items: center !important; }
+.nav-icon svg { stroke: #94a3b8 !important; fill: none !important; }
+.nav-icon:hover svg, .nav-icon.active svg { stroke: #00d9c0 !important; }
+.nav-icon.teal-accent svg, .nav-icon.cc-teal-accent svg { stroke: #00d9c0 !important; }
+/* Hide the ZAVMO text tab */
+.nav-tab { display: none !important; }
+/* Tooltips — position below icons with enough clearance */
+.nav-icon::after { background: rgba(15, 23, 42, 0.95) !important; color: #e2e8f0 !important; border: 1px solid rgba(0, 217, 192, 0.2) !important; z-index: 9999 !important; white-space: nowrap !important; }
+/* Main content — extra top padding for tooltip clearance */
+.main-content { background: #0a0e17 !important; padding-top: 32px !important; }
+/* Profile icon — push to far right */
+.nav-icon[data-tab="profile"] { margin-left: auto !important; }
+.cc-centre-stage { color: #e2e8f0 !important; margin-bottom: 24px !important; }
+.cc-greeting-text { color: #ffffff !important; }
+.cc-greeting-sub { color: #94a3b8 !important; }
+/* ZAVMO Intelligence — more space above */
+.cc-console-wrapper { background: rgba(15, 23, 42, 0.6) !important; border: 1px solid rgba(0, 217, 192, 0.15) !important; margin-top: 20px !important; }
+.cc-console-label { color: #00d9c0 !important; }
+.cc-chat-panel { background: rgba(10, 14, 23, 0.8) !important; }
+.cc-chat-msg { color: #e2e8f0 !important; }
+.cc-insight-line { color: #94a3b8 !important; }
+.cc-kpi-row { background: rgba(15, 23, 42, 0.4) !important; border: 1px solid rgba(100, 116, 139, 0.15) !important; }
+.cc-kpi-label { color: #94a3b8 !important; }
+.cc-kpi-value { color: #ffffff !important; }
+.cc-char-grid .char-card, .char-card { background: rgba(15, 23, 42, 0.6) !important; border: 1px solid rgba(100, 116, 139, 0.2) !important; color: #e2e8f0 !important; }
+.char-card:hover { border-color: rgba(0, 217, 192, 0.4) !important; }
+.cc-pulse-page { background: rgba(15, 23, 42, 0.4) !important; color: #e2e8f0 !important; }
+.cc-bloom-ladder { color: #e2e8f0 !important; }
+.cc-placeholder-page { background: rgba(15, 23, 42, 0.4) !important; color: #94a3b8 !important; }
+#characters-page { color: #e2e8f0 !important; }
+.panel, .card, .section-panel { background: rgba(15, 23, 42, 0.6) !important; color: #e2e8f0 !important; border-color: rgba(100, 116, 139, 0.2) !important; }
+input, textarea, select { background: rgba(15, 23, 42, 0.8) !important; color: #e2e8f0 !important; border-color: rgba(100, 116, 139, 0.3) !important; }
+button { color: inherit; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0a0e17; }
+::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.5); }
+.prompt-editor, .system-prompt-editor, #system-prompt { background: rgba(10, 14, 23, 0.9) !important; color: #e2e8f0 !important; }
+.chat-container, .chat-messages { background: rgba(10, 14, 23, 0.8) !important; color: #e2e8f0 !important; }
+.chat-input { background: rgba(15, 23, 42, 0.8) !important; color: #e2e8f0 !important; }
+.toast { background: rgba(15, 23, 42, 0.95) !important; color: #e2e8f0 !important; border: 1px solid rgba(0, 217, 192, 0.2) !important; }
+.tab-bar, .sub-tabs, .content-tabs { background: rgba(10, 14, 23, 0.6) !important; }
+.tab-bar button, .sub-tabs button, .content-tabs button { color: #94a3b8 !important; }
+.tab-bar button.active, .sub-tabs button.active, .content-tabs button.active { color: #00d9c0 !important; }
+.interaction-card { background: rgba(15, 23, 42, 0.6) !important; color: #e2e8f0 !important; }
+.xapi-feed, .xapi-feed-item { background: rgba(15, 23, 42, 0.4) !important; color: #e2e8f0 !important; }
+#qual-panel-header, #qual-panel-body { background: rgba(15, 23, 42, 0.6) !important; color: #e2e8f0 !important; }
+#agent13-page { color: #e2e8f0 !important; }
+.modal-overlay { background: rgba(0, 0, 0, 0.7) !important; }
+.modal-content { background: #111827 !important; color: #e2e8f0 !important; border: 1px solid rgba(0, 217, 192, 0.2) !important; }
+.charter-section, .charter-panel { background: rgba(15, 23, 42, 0.6) !important; color: #e2e8f0 !important; }
+table { color: #e2e8f0 !important; }
+th { background: rgba(15, 23, 42, 0.8) !important; color: #94a3b8 !important; border-color: rgba(100, 116, 139, 0.2) !important; }
+td { background: rgba(10, 14, 23, 0.4) !important; border-color: rgba(100, 116, 139, 0.1) !important; }
+#profile-page { color: #e2e8f0 !important; }
+.cc-teal, .teal-accent, .cc-teal-accent { color: #00d9c0 !important; }
+a { color: #00d9c0 !important; }
+a:hover { color: #33e6d1 !important; }
+/* === UI FIXES — 24 March 2026 === */
+/* Command Centre vertical breathing room */
+#command-centre-page { padding-top: 8px !important; padding-bottom: 40px !important; }
 /* Characters progress bar — make teal bar semi-transparent so text is readable */
 .char-progress-fill, [class*="char-progress"] { opacity: 0.35 !important; }
 .char-card .progress-bar, .char-card [class*="progress"] { opacity: 0.35 !important; }
