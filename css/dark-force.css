@@ -7,17 +7,26 @@ body { background-color: #0a0e17 !important; color: #e2e8f0 !important; }
 .gate-card p, .gate-card label { color: #94a3b8 !important; }
 .gate-card input { background: rgba(15, 23, 42, 0.8) !important; color: #e2e8f0 !important; border-color: rgba(100, 116, 139, 0.3) !important; }
 .gate-card button { background: linear-gradient(135deg, #00d9c0, #00b4a0) !important; color: #0a0e17 !important; }
-.header { background: rgba(10, 14, 23, 0.95) !important; border-bottom: 1px solid rgba(0, 217, 192, 0.15) !important; margin-bottom: 16px !important; }
+/* Header — more bottom margin so tooltips clear the content below */
+.header { background: rgba(10, 14, 23, 0.95) !important; border-bottom: 1px solid rgba(0, 217, 192, 0.15) !important; padding-bottom: 8px !important; margin-bottom: 0 !important; }
+/* Nav-tabs — stretch full width so profile icon can push right */
+.nav-tabs { position: relative !important; left: auto !important; transform: none !important; width: 100% !important; display: flex !important; align-items: center !important; }
 .nav-icon svg { stroke: #94a3b8 !important; fill: none !important; }
 .nav-icon:hover svg, .nav-icon.active svg { stroke: #00d9c0 !important; }
 .nav-icon.teal-accent svg, .nav-icon.cc-teal-accent svg { stroke: #00d9c0 !important; }
+/* Hide the ZAVMO text tab */
 .nav-tab { display: none !important; }
-.nav-icon::after { background: rgba(15, 23, 42, 0.95) !important; color: #e2e8f0 !important; border: 1px solid rgba(0, 217, 192, 0.2) !important; top: 52px !important; white-space: nowrap !important; z-index: 9999 !important; }
-.main-content { background: #0a0e17 !important; padding-top: 24px !important; }
+/* Tooltips — position below icons with enough clearance */
+.nav-icon::after { background: rgba(15, 23, 42, 0.95) !important; color: #e2e8f0 !important; border: 1px solid rgba(0, 217, 192, 0.2) !important; z-index: 9999 !important; white-space: nowrap !important; }
+/* Main content — extra top padding for tooltip clearance */
+.main-content { background: #0a0e17 !important; padding-top: 32px !important; }
+/* Profile icon — push to far right */
+.nav-icon[data-tab="profile"] { margin-left: auto !important; }
 .cc-centre-stage { color: #e2e8f0 !important; margin-bottom: 24px !important; }
 .cc-greeting-text { color: #ffffff !important; }
 .cc-greeting-sub { color: #94a3b8 !important; }
-.cc-console-wrapper { background: rgba(15, 23, 42, 0.6) !important; border: 1px solid rgba(0, 217, 192, 0.15) !important; }
+/* ZAVMO Intelligence — more space above */
+.cc-console-wrapper { background: rgba(15, 23, 42, 0.6) !important; border: 1px solid rgba(0, 217, 192, 0.15) !important; margin-top: 20px !important; }
 .cc-console-label { color: #00d9c0 !important; }
 .cc-chat-panel { background: rgba(10, 14, 23, 0.8) !important; }
 .cc-chat-msg { color: #e2e8f0 !important; }
@@ -60,12 +69,11 @@ td { background: rgba(10, 14, 23, 0.4) !important; border-color: rgba(100, 116, 
 a { color: #00d9c0 !important; }
 a:hover { color: #33e6d1 !important; }
 /* === UI FIXES — 24 March 2026 === */
-/* Profile icon right-justified */
-.nav-icon[data-tab="profile"] { margin-left: auto !important; }
 /* Command Centre vertical breathing room */
-#command-centre-page { padding-top: 24px !important; padding-bottom: 40px !important; }
-/* Characters progress bar — name text visible over teal bar */
-.char-card .progress-bar, .char-card .char-progress-fill, .char-card [class*="progress"] { opacity: 0.3 !important; }
+#command-centre-page { padding-top: 8px !important; padding-bottom: 40px !important; }
+/* Characters progress bar — make teal bar semi-transparent so text is readable */
+.char-progress-fill, [class*="char-progress"] { opacity: 0.35 !important; }
+.char-card .progress-bar, .char-card [class*="progress"] { opacity: 0.35 !important; }
 .char-card .char-name, .char-card .character-name, .char-card h3, .char-card h4 { position: relative !important; z-index: 2 !important; color: #ffffff !important; text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important; }
-/* ZAVMO logo clickable cursor */
-.logo { cursor: pointer !important; }
+/* ZAVMO logo clickable */
+.logo-section, .logo { cursor: pointer !important; }
