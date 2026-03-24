@@ -94,6 +94,10 @@ function initializeCollapsibles() {
         qualToggle.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(-90deg)';
     });
 
+        // Default: panel closed on page load
+        qualBody.style.display = 'none';
+        qualToggle.style.transform = 'rotate(-90deg)';
+
     // xAPI preview collapse/expand (legacy - now uses sidebar feed)
 
 }
