@@ -70,7 +70,9 @@ function initializeApp() {
     initializeCollapsibles();
     // Populate qualifications for the default country on page load
     const countrySelect = document.getElementById('country-select');
-    onCountryChange({ target: countrySelect });
+    if (countrySelect) {
+        onCountryChange({ target: countrySelect });
+    }
 
     // Show Command Centre as default page on load
     switchNavTab('command-centre', document.querySelector('[data-tab="command-centre"]'));
@@ -81,6 +83,8 @@ function initializeCollapsibles() {
     const qualHeader = document.getElementById('qual-panel-header');
     const qualBody = document.getElementById('qual-panel-body');
     const qualToggle = document.getElementById('qual-panel-toggle');
+
+    if (!qualHeader || !qualBody || !qualToggle) return;
 
     qualHeader.addEventListener('click', () => {
         const isHidden = qualBody.style.display === 'none';
@@ -262,10 +266,14 @@ function loadCharacterData(characterKey) {
     if (!character) return;
 
     // Update metadata
-    document.getElementById('blooms-level').textContent = character.blooms;
-    document.getElementById('intelligence-type').textContent = character.intelligence;
-    document.getElementById('voice-pattern').textContent = character.voice;
-    document.getElementById('colour-swatch').style.background = character.colour;
+    const bloomsEl = document.getElementById('blooms-level');
+    const intelEl = document.getElementById('intelligence-type');
+    const voiceEl = document.getElementById('voice-pattern');
+    const swatchEl = document.getElementById('colour-swatch');
+    if (bloomsEl) bloomsEl.textContent = character.blooms;
+    if (intelEl) intelEl.textContent = character.intelligence;
+    if (voiceEl) voiceEl.textContent = character.voice;
+    if (swatchEl) swatchEl.style.background = character.colour;
 
     // Load prompt (Agent 13 includes its charter dynamically)
     const textarea = document.getElementById('prompt-textarea');
@@ -273,7 +281,7 @@ function loadCharacterData(characterKey) {
     if (characterKey === 'agent-13' && typeof getAgent13Charter === 'function') {
         promptValue = promptValue + '\n\n=== AGENT 13 CHARTER — GOVERNING MANDATE ===\n\n' + getAgent13Charter();
     }
-    textarea.value = promptValue;
+    if (textarea) textarea.value = promptValue;
 }
 
 function savePrompt() {
@@ -3202,14 +3210,6 @@ function renderRecCard(rec, showActions) {
 }
 
 let currentRecTab = 'pending';
-function switchRecTab(tab) {
-    currentRecTab = tab;
-    document.querySelectorAll('.rec-tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.textContent.toLowerCase().startsWith(tab)) btn.classList.add('active');
-    });
-    displayRecommendationsPanel();
-}
 
 function displayRecommendationsPanel() {
     const pending = JSON.parse(localStorage.getItem('zavmo_pending_recommendations') || '[]');
@@ -3331,6 +3331,7 @@ function switchNavTab(tabName, clickedBtn) {
     const xapiAnalyticsPage = document.getElementById('xapi-analytics-page');
     const orgPulsePage = document.getElementById('org-pulse-page');
     const userManagementPage = document.getElementById('user-management-page');
+    const profilePage = document.getElementById('profile-page');
 
     // Hide everything first
     if (commandCentrePage) commandCentrePage.style.display = 'none';
@@ -3342,6 +3343,7 @@ function switchNavTab(tabName, clickedBtn) {
     if (xapiAnalyticsPage) xapiAnalyticsPage.style.display = 'none';
     if (orgPulsePage) orgPulsePage.style.display = 'none';
     if (userManagementPage) userManagementPage.style.display = 'none';
+    if (profilePage) profilePage.style.display = 'none';
 
     // Route to the correct page
     if (tabName === 'command-centre') {
@@ -3352,6 +3354,7 @@ function switchNavTab(tabName, clickedBtn) {
         // Teaching Prompts page: character prompt configuration
         if (charactersPage) charactersPage.style.display = 'block';
         if (typeof initChartersToggle === 'function') initChartersToggle();
+        if (typeof initInteractionsSection === 'function') initInteractionsSection();
     } else if (tabName === 'agent13') {
         // Agent 13 page: full width dashboard
         if (agent13Page) agent13Page.style.display = 'block';
@@ -3359,9 +3362,10 @@ function switchNavTab(tabName, clickedBtn) {
         // Simulation & Comparison: unit config bar + side by side
         if (simComparePage) simComparePage.style.display = 'flex';
     } else if (tabName === 'learning-specs') {
-        // Learning Specifications: card grid browser
+        // Content page: browse, create, or upload learning specifications
         if (learningSpecsPage) learningSpecsPage.style.display = 'block';
         initLearningSpecsPage();
+        if (typeof initContentPageTabs === 'function') initContentPageTabs();
     } else if (tabName === 'job-descriptions') {
         // Job Descriptions: card grid browser
         if (jobDescriptionsPage) jobDescriptionsPage.style.display = 'block';
@@ -3379,11 +3383,15 @@ function switchNavTab(tabName, clickedBtn) {
     } else if (tabName === 'user-management') {
         // User Management: placeholder page
         if (userManagementPage) userManagementPage.style.display = 'block';
+    } else if (tabName === 'profile') {
+        // Profile: placeholder page
+        if (profilePage) profilePage.style.display = 'block';
     }
 }
 
 function showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
+    if (!container) return;
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.textContent = message;
@@ -4291,9 +4299,12 @@ async function pushAllPromptsToZavmo() {
 }
 
 // Wire up Push to Zavmo buttons
-document.getElementById('push-to-zavmo-btn').addEventListener('click', pushCurrentPromptToZavmo);
-document.getElementById('push-all-zavmo-btn').addEventListener('click', pushAllPromptsToZavmo);
-document.getElementById('push-charter-btn').addEventListener('click', pushTeachingCharterToZavmo);
+const pushToZavmoBtn = document.getElementById('push-to-zavmo-btn');
+const pushAllZavmoBtn = document.getElementById('push-all-zavmo-btn');
+const pushCharterBtn = document.getElementById('push-charter-btn');
+if (pushToZavmoBtn) pushToZavmoBtn.addEventListener('click', pushCurrentPromptToZavmo);
+if (pushAllZavmoBtn) pushAllZavmoBtn.addEventListener('click', pushAllPromptsToZavmo);
+if (pushCharterBtn) pushCharterBtn.addEventListener('click', pushTeachingCharterToZavmo);
 
 // API token is now handled automatically via Zavmo backend login
 

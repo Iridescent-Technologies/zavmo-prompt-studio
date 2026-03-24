@@ -20,7 +20,13 @@ function initCommandCentre() {
 
 function initGreeting() {
     // Extract first name from logged-in user email
-    const userEmail = localStorage.getItem('zavmo_user_email');
+    // Email is stored inside zavmo_auth JSON object by auth.js, or in sessionStorage as zavmo_access
+    let userEmail = null;
+    try {
+        const auth = JSON.parse(localStorage.getItem('zavmo_auth') || 'null');
+        if (auth && auth.email) userEmail = auth.email;
+    } catch (e) { /* ignore parse errors */ }
+    if (!userEmail) userEmail = sessionStorage.getItem('zavmo_access');
     let firstName = 'there';
 
     if (userEmail && typeof userEmail === 'string') {
@@ -283,6 +289,234 @@ function initChartersToggle() {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             this.click();
+        }
+    });
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CONTENT PAGE — Sub-tab switching (Browse / Create / Upload)
+// ══════════════════════════════════════════════════════════════════
+
+let lsModeBound = false;
+
+function initContentPageTabs() {
+    if (lsModeBound) return;
+    lsModeBound = true;
+
+    const tabContainer = document.getElementById('ls-mode-tabs');
+    if (!tabContainer) return;
+
+    const browseMode = document.getElementById('ls-browse-mode');
+    const createMode = document.getElementById('ls-create-mode');
+    const uploadMode = document.getElementById('ls-upload-mode');
+
+    tabContainer.querySelectorAll('.cc-sub-tab').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            // Update active tab
+            tabContainer.querySelectorAll('.cc-sub-tab').forEach(function (b) {
+                b.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            const mode = this.getAttribute('data-ls-mode');
+
+            // Show/hide modes
+            if (browseMode) browseMode.style.display = mode === 'browse' ? 'block' : 'none';
+            if (createMode) createMode.style.display = mode === 'create' ? 'block' : 'none';
+            if (uploadMode) uploadMode.style.display = mode === 'upload' ? 'block' : 'none';
+        });
+    });
+
+    // Wire up Add Unit button
+    const addUnitBtn = document.getElementById('ls-add-unit-btn');
+    if (addUnitBtn) {
+        addUnitBtn.addEventListener('click', addNewUnit);
+    }
+
+    // Wire up upload zone click
+    const uploadZone = document.getElementById('ls-upload-zone');
+    const fileInput = document.getElementById('ls-file-input');
+    if (uploadZone && fileInput) {
+        uploadZone.addEventListener('click', function () {
+            fileInput.click();
+        });
+        // Drag and drop visual feedback
+        uploadZone.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            this.style.borderColor = 'rgba(0, 217, 192, 0.5)';
+            this.style.background = 'rgba(0, 217, 192, 0.05)';
+        });
+        uploadZone.addEventListener('dragleave', function () {
+            this.style.borderColor = '';
+            this.style.background = '';
+        });
+        uploadZone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            this.style.borderColor = '';
+            this.style.background = '';
+            // Future: handle file upload
+            if (typeof showToast === 'function') {
+                showToast('File upload will be available once the backend endpoint is ready.', 'info');
+            }
+        });
+    }
+
+    // Delegate Add LO / Add AC / Remove buttons inside units container
+    const unitsContainer = document.getElementById('ls-units-container');
+    if (unitsContainer) {
+        unitsContainer.addEventListener('click', function (e) {
+            const target = e.target;
+            if (target.classList.contains('cc-add-lo-btn')) {
+                addLORow(target.closest('.cc-unit-card'));
+            } else if (target.classList.contains('cc-add-ac-btn')) {
+                addACRow(target.closest('.cc-unit-card'));
+            } else if (target.classList.contains('cc-remove-lo')) {
+                removeLOACRow(target);
+            } else if (target.classList.contains('cc-remove-ac')) {
+                removeLOACRow(target);
+            }
+        });
+    }
+}
+
+/**
+ * Add a new unit card to the create form.
+ */
+function addNewUnit() {
+    const container = document.getElementById('ls-units-container');
+    if (!container) return;
+
+    const unitCount = container.querySelectorAll('.cc-unit-card').length + 1;
+    const unitHTML = `
+        <div class="cc-unit-card" data-unit-index="${unitCount - 1}">
+            <div class="cc-unit-header">
+                <span class="cc-unit-badge">Unit ${unitCount}</span>
+                <input type="text" class="cc-form-input cc-unit-title-input" placeholder="Unit title" data-field="title">
+                <div class="cc-unit-meta-inputs">
+                    <input type="number" class="cc-form-input-sm" placeholder="Credits" data-field="credits">
+                    <input type="number" class="cc-form-input-sm" placeholder="GLH" data-field="glh">
+                    <select class="cc-form-select-sm" data-field="mandatory">
+                        <option value="mandatory">Mandatory</option>
+                        <option value="optional">Optional</option>
+                    </select>
+                    <button class="cc-btn-icon cc-remove-unit" title="Remove unit">&times;</button>
+                </div>
+            </div>
+            <div class="cc-lo-section">
+                <div class="cc-lo-header">
+                    <span class="cc-lo-label">Learning Outcomes</span>
+                    <button class="cc-btn-sm cc-add-lo-btn">+ Add LO</button>
+                </div>
+                <div class="cc-lo-list" data-lo-list>
+                    <div class="cc-lo-row">
+                        <span class="cc-lo-num">LO1</span>
+                        <input type="text" class="cc-form-input" placeholder="Learning outcome..." data-lo-input>
+                        <button class="cc-btn-icon cc-remove-lo" title="Remove">&times;</button>
+                    </div>
+                </div>
+            </div>
+            <div class="cc-ac-section">
+                <div class="cc-ac-header">
+                    <span class="cc-ac-label">Assessment Criteria</span>
+                    <button class="cc-btn-sm cc-add-ac-btn">+ Add AC</button>
+                </div>
+                <div class="cc-ac-list" data-ac-list>
+                    <div class="cc-ac-row">
+                        <span class="cc-ac-num">AC1.1</span>
+                        <input type="text" class="cc-form-input" placeholder="Assessment criterion..." data-ac-input>
+                        <select class="cc-form-select-sm" data-ac-lo-link title="Link to LO">
+                            <option value="1">LO1</option>
+                        </select>
+                        <button class="cc-btn-icon cc-remove-ac" title="Remove">&times;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', unitHTML);
+}
+
+/**
+ * Add a Learning Outcome row to a unit card.
+ */
+function addLORow(unitCard) {
+    if (!unitCard) return;
+    const loList = unitCard.querySelector('[data-lo-list]');
+    if (!loList) return;
+    const count = loList.querySelectorAll('.cc-lo-row').length + 1;
+    const html = `
+        <div class="cc-lo-row">
+            <span class="cc-lo-num">LO${count}</span>
+            <input type="text" class="cc-form-input" placeholder="Learning outcome..." data-lo-input>
+            <button class="cc-btn-icon cc-remove-lo" title="Remove">&times;</button>
+        </div>
+    `;
+    loList.insertAdjacentHTML('beforeend', html);
+    // Update AC LO-link dropdowns for this unit
+    updateACLinkDropdowns(unitCard);
+}
+
+/**
+ * Add an Assessment Criterion row to a unit card.
+ */
+function addACRow(unitCard) {
+    if (!unitCard) return;
+    const acList = unitCard.querySelector('[data-ac-list]');
+    const loList = unitCard.querySelector('[data-lo-list]');
+    if (!acList) return;
+
+    const loCount = loList ? loList.querySelectorAll('.cc-lo-row').length : 1;
+    const acRows = acList.querySelectorAll('.cc-ac-row');
+    const nextNum = acRows.length + 1;
+
+    // Build LO options
+    let loOptions = '';
+    for (let i = 1; i <= loCount; i++) {
+        loOptions += `<option value="${i}">LO${i}</option>`;
+    }
+
+    const html = `
+        <div class="cc-ac-row">
+            <span class="cc-ac-num">AC${nextNum}.1</span>
+            <input type="text" class="cc-form-input" placeholder="Assessment criterion..." data-ac-input>
+            <select class="cc-form-select-sm" data-ac-lo-link title="Link to LO">
+                ${loOptions}
+            </select>
+            <button class="cc-btn-icon cc-remove-ac" title="Remove">&times;</button>
+        </div>
+    `;
+    acList.insertAdjacentHTML('beforeend', html);
+}
+
+/**
+ * Remove a LO or AC row.
+ */
+function removeLOACRow(btn) {
+    if (!btn) return;
+    const row = btn.closest('.cc-lo-row, .cc-ac-row');
+    if (row) row.remove();
+}
+
+/**
+ * Update the LO-link dropdowns in AC rows when LOs change.
+ */
+function updateACLinkDropdowns(unitCard) {
+    if (!unitCard) return;
+    const loRows = unitCard.querySelectorAll('[data-lo-list] .cc-lo-row');
+    const acSelects = unitCard.querySelectorAll('[data-ac-lo-link]');
+    const loCount = loRows.length;
+
+    acSelects.forEach(function (sel) {
+        const current = sel.value;
+        sel.innerHTML = '';
+        for (let i = 1; i <= loCount; i++) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = 'LO' + i;
+            sel.appendChild(opt);
+        }
+        if (current && parseInt(current) <= loCount) {
+            sel.value = current;
         }
     });
 }
