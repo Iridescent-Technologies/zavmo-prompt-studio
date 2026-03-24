@@ -74,7 +74,7 @@ function initializeApp() {
         onCountryChange({ target: countrySelect });
     }
 
-    // Show Command Centre as default page on load
+    // Show Command Studio as default page on load
     switchNavTab('command-centre', document.querySelector('[data-tab="command-centre"]'));
 }
 
@@ -233,7 +233,7 @@ function setupEventListeners() {
         });
     });
 
-    // ZAVMO logo = home button (returns to Command Centre)
+    // ZAVMO logo = home button (returns to Command Studio)
     const navHome = document.getElementById('nav-home');
     if (navHome) {
         navHome.addEventListener('click', () => {
@@ -3351,7 +3351,7 @@ function switchNavTab(tabName, clickedBtn) {
 
     // Route to the correct page
     if (tabName === 'command-centre') {
-        // Command Centre: homepage with greeting and chat
+        // Command Studio: homepage with greeting and chat
         if (commandCentrePage) commandCentrePage.style.display = 'block';
         initCommandCentre();
     } else if (tabName === 'characters') {
